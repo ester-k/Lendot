@@ -13,11 +13,11 @@ export const state = () => ({
     currentUser: {},
     createAccountStep: 1,
     userRequests: new Array(),
+    counter: 0
 
 })
-export const actions = {
-    set(state, { variable, value }) {
-        debugger
-        state[variable] = value
+export const mutations = {
+    setAccountStep(state, value) {
+        state.createAccountStep = value
     }
 }

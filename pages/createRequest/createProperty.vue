@@ -225,8 +225,8 @@ export default {
       this.type = data;
     },
      verifyEmail:function(){
-      this.$store.state.createAccountStep=3;
-      this.$router.replace({ path: "/createRequest/createAccount" });
+ this.$store.commit("setAccountStep", 3);   
+    this.$router.replace({ path: "/createRequest/createAccount" });
     }
   },
   created() {

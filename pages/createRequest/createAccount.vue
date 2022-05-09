@@ -69,7 +69,7 @@
       </form> 
     
     </div>
-    {{createAccountStep}}
+ 
     <VerifyEmail
       :currentUser="JSON.stringify(currentUser)"
       v-if="createAccountStep > 1"
@@ -144,10 +144,7 @@ export default {
         userForm.steps["createAccount"].data = newUser;
         localStorage.setItem("createRequestData", JSON.stringify(userForm));
         this.emailSend = true;
-        debugger
-        this.$store.dispatch('set',2)
-        // this.$store.state.createAccountStep = 2;
-        // useState('counter',() =>2)
+        this.$store.commit("setAccountStep", 2);
         localStorage.setItem("createAccountStep", 2);
         // }
       } else {
@@ -218,9 +215,10 @@ export default {
         this.$store.state.createAccountStep
       );
     }
-    this.$store.state.createAccountStep =
-      localStorage.getItem("createAccountStep") * 1;
+     this.$store.commit("setAccountStep", localStorage.getItem("createAccountStep") * 1);
+      
   },
+
   computed: {
     emailVerified: function () {
       return localStorage.getItem("emailVerified") == "true";
@@ -231,6 +229,7 @@ export default {
     createAccountStep: function () {
       return this.$store.state.createAccountStep;
     },
+   
   },
 };
 </script>

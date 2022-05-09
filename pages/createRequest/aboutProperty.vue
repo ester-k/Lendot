@@ -191,7 +191,7 @@ export default {
       let requestId = localStorage.getItem("requestId");
       let isFormCorrect = await this.v$.$validate();
       if (isFormCorrect) {
-        let updateLoan = {}
+        let updateLoan = {};
         updateLoan.purpose = this.loanPurpose;
         updateLoan.closeDate = this.date;
         updateLoan.price = this.price;
@@ -230,10 +230,10 @@ export default {
     changeCredit(data) {
       this.credit = data;
     },
-     verifyEmail:function(){
-      this.$store.state.createAccountStep=3;
+    verifyEmail: function () {
+      this.$store.commit("setAccountStep", 3);
       this.$router.replace({ path: "/createRequest/createAccount" });
-    }
+    },
   },
   created() {
     this.$emit("updateRequestData", {
@@ -247,12 +247,12 @@ export default {
     },
   },
   async mounted() {
-  try {
-    await this.$recaptcha.init()
-  } catch (e) {
-    console.error(e);
-  }
-}
+    try {
+      await this.$recaptcha.init();
+    } catch (e) {
+      console.error(e);
+    }
+  },
 };
 </script>
 
@@ -306,8 +306,8 @@ export default {
   .inputs-flex {
     display: block;
   }
-  button[type="submit"]{
-    margin-top:32px;
+  button[type="submit"] {
+    margin-top: 32px;
   }
 }
 </style>
