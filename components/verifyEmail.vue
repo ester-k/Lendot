@@ -45,7 +45,7 @@ export default {
     sendVerifyLink() {
       // const fb = require("../main.js");
       let email = this.user.email;
-     this.$fire.auth
+      this.$fire.auth
         .sendSignInLinkToEmail(email, actionCodeSettings)
         .then(() => {
           localStorage.setItem("emailForSignIn", email);
@@ -53,7 +53,7 @@ export default {
           data.steps["createAccount"].emailSend = "true";
           localStorage.setItem("createRequestData", JSON.stringify(data));
           this.loaclEmailSend = true;
-          this.$store.state.createAccountStep = 3;
+          this.$store.commit("setAccountStep", 3);
           localStorage.setItem("createAccountStep", 3);
           //   createUser(newUser);
         })
