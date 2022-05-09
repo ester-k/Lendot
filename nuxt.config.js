@@ -75,12 +75,11 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-        vendor: [
-            'vuelidate'
-        ]
+
     },
     server: {
-        port: 3000,
+        port: process.env.PORT,
+        host: process.env.HOST
     },
     publicRuntimeConfig: {
         axios: {
