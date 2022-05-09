@@ -80,7 +80,7 @@ export default {
         ]
     },
     server: {
-        port: 3000,
+        port: 8080,
     },
     publicRuntimeConfig: {
         axios: {
