@@ -1,0 +1,47 @@
+.mobile {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .desktop {
+        display: none;
+    }
+    .mobile {
+        display: block;
+    }
+    body {
+        font-size: 13px;
+    }
+    .main-container {
+        max-width: 264px
+    }
+    .flex-input {
+        flex-direction: column;
+    }
+    .wrap-input {
+        margin-bottom: 30px;
+    }
+    .left-input {
+        margin-bottom: 10px;
+    }
+    .input::placeholder {
+        font-size: 10px;
+    }
+    input {
+        padding: 0 8px;
+    }
+    .purchase-cnt {
+        /* display: block; */
+    }
+    .purchase-cnt label {
+        max-width: 221px;
+    }
+    .purchase-cnt input[type="number"] {
+        width: 32px;
+    }
+    button[type="submit"] {
+        height: 31px;
+        width: 85px;
+        font-size: 16px
+    }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="46.998" height="52" viewBox="0 0 46.998 52">
+  <g id="Group_802" data-name="Group 802" transform="translate(-467.5 -895)">
+    <path id="Path_166" data-name="Path 166" d="M22.946.322A1.008,1.008,0,0,0,22.222,0H5.973A5.5,5.5,0,0,0,.5,5.463V36.19a5.5,5.5,0,0,0,5.473,5.463H28.027A5.5,5.5,0,0,0,33.5,36.19v-24.4a1.083,1.083,0,0,0-.292-.7Zm.292,3.23,6.872,7.214H25.643a2.4,2.4,0,0,1-2.4-2.394Zm4.789,36.089H5.973A3.485,3.485,0,0,1,2.512,36.19V5.463A3.485,3.485,0,0,1,5.973,2.012H21.226V8.371a4.4,4.4,0,0,0,4.417,4.407h5.845V36.19A3.478,3.478,0,0,1,28.027,39.641Zm0,0" transform="translate(467 895)" fill="#161853"/>
+    <g id="Group_394" data-name="Group 394" transform="translate(-538.504 -1006.002)">
+      <g id="Group_801" data-name="Group 801">
+        <path id="Path_229" data-name="Path 229" d="M15,0A15,15,0,1,1,0,15,15,15,0,0,1,15,0Z" transform="translate(1023.002 1923.002)" fill="#ec255a"/>
+        <path id="Check" d="M0,0V5.036H9.192" transform="translate(1032.901 1939.4) rotate(-45)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+      </g>
+    </g>
+  </g>
+</svg>
