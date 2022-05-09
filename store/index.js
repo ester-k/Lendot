@@ -15,7 +15,7 @@ export const state = () => ({
     userRequests: new Array(),
 
 })
-export const mutations = {
+export const actions = {
     set(state, { variable, value }) {
         debugger
         state[variable] = value

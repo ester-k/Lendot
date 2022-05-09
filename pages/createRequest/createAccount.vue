@@ -145,7 +145,7 @@ export default {
         localStorage.setItem("createRequestData", JSON.stringify(userForm));
         this.emailSend = true;
         debugger
-        this.$store.commit('/set',2)
+        this.$store.dispatch('set',2)
         // this.$store.state.createAccountStep = 2;
         // useState('counter',() =>2)
         localStorage.setItem("createAccountStep", 2);
