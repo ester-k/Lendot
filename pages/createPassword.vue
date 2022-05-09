@@ -232,7 +232,7 @@ export default {
 .form-terms .form-term {
   margin-bottom: 32px;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
 }
 .form-terms .term-icon {
   margin-right: 17px;
