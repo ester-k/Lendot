@@ -144,7 +144,7 @@ export default {
         userForm.steps["createAccount"].data = newUser;
         localStorage.setItem("createRequestData", JSON.stringify(userForm));
         this.emailSend = true;
-        this.$store.commit("setAccountStep", 2);
+        this.$store.commit("setAccountStep", {value:2,state:"createAccountStep"});
         localStorage.setItem("createAccountStep", 2);
         // }
       } else {
@@ -208,14 +208,14 @@ export default {
     }
     if (!this.$store.state.createAccountStep) {
       if (!localStorage.getItem("createAccountStep"))
-        localStorage.setItem("createAccountStep", 1);
+        localStorage.setItem("createAccountStep", {value:1,state:"createAccountStep"});
     } else {
       localStorage.setItem(
         "createAccountStep",
         this.$store.state.createAccountStep
       );
     }
-     this.$store.commit("setAccountStep", localStorage.getItem("createAccountStep") * 1);
+     this.$store.commit("setAccountStep",{value:localStorage.getItem("createAccountStep") * 1,state:"createAccountStep"} );
       
   },
 

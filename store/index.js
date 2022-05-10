@@ -17,7 +17,7 @@ export const state = () => ({
 
 })
 export const mutations = {
-    setAccountStep(state, value) {
-        state.createAccountStep = value
+    setAccountStep(state, payload) {
+        state[payload.state] = payload.value
     }
 }

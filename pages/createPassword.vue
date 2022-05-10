@@ -156,7 +156,7 @@ export default {
             //save on mongo with isActive=false
             this.updateUser(userFromFB.email, true);
             localStorage.setItem("emailVerified", true);
- this.$store.commit("setAccountStep", 1); 
+ this.$store.commit("setAccountStep", {value:1,state:"createAccountStep"}); 
             localStorage.setItem("createAccountStep", 1);
             // localStorage.removeItem("verifyEmail");
           })
