@@ -53,7 +53,7 @@ export default {
           data.steps["createAccount"].emailSend = "true";
           localStorage.setItem("createRequestData", JSON.stringify(data));
           this.loaclEmailSend = true;
-          this.$store.commit("setAccountStep", 3);
+          this.$store.commit("setAccountStep", {value:3,state:"createAccountStep"});
           localStorage.setItem("createAccountStep", 3);
           //   createUser(newUser);
         })
