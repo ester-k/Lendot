@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-        <div class="verify-link"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
 
     <img
       class="len-title about-you-title desktop"
@@ -189,8 +189,8 @@ export default {
     async sendRequest() {
       //get the loan request
       let requestId = localStorage.getItem("requestId");
-      let isFormCorrect = await this.v$.$validate();
-      if (isFormCorrect) {
+      // let isFormCorrect = await this.v$.$validate();
+      // if (isFormCorrect) {
         let updateLoan = {};
         updateLoan.purpose = this.loanPurpose;
         updateLoan.closeDate = this.date;
@@ -213,7 +213,7 @@ export default {
             this.$router.replace({ path: "/loanerScreen" });
           });
         });
-      }
+      // }
     },
 
     showCheckedLoan() {
@@ -231,7 +231,7 @@ export default {
       this.credit = data;
     },
     verifyEmail: function () {
-      this.$store.commit("setAccountStep", 3);
+      this.$store.commit("setState",  {value:3,state:"createAccountStep"});
       this.$router.replace({ path: "/createRequest/createAccount" });
     },
   },

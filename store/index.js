@@ -16,7 +16,8 @@ export const mutations = {
 }
 export const actions = {
     onAuthStateChangedAction(state, { authUser, claims }) {
-        debugger
+        // debugger
+        console.log(authUser);
         if (!authUser) {
             this.$router.push('/login')
         } else {

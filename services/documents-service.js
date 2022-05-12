@@ -7,7 +7,7 @@ if (process.env.NODE_ENV == "development") {
     apiTarget = "http://localhost:5000"
 }
 
-const removeFile = async(params) => {
+const removeFileDB = async(params) => {
     const response = await axios.post(`${apiTarget}/documents/remove`, params);
     return response.data;
 }
@@ -15,13 +15,6 @@ const getStatusById = async(statusId) => {
     const response = await axios.get(`${apiTarget}/documents/getStatus/${statusId}`, );
     return response.data;
 }
-
-module.exports = {
-    removeFile,
-    getStatusById
-}
-
-
 const countMissingDocs = async(offer) => {
     let status = "6269565e8b7b1e5b2c6851ad";
     let avalibaleStatus = "626a2909e444b82e0c459e21";
@@ -41,5 +34,7 @@ const countMissingDocs = async(offer) => {
     return returnOffer
 }
 module.exports = {
+    removeFileDB,
+    getStatusById,
     countMissingDocs
 }

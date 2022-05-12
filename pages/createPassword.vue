@@ -12,6 +12,7 @@
             name="password"
             :id="'password_field' + 1"
             class="password-field"
+            v-model="password"
           />
           <img
             class="show-password"
@@ -113,12 +114,12 @@ export default {
       }
       password.setAttribute("type", type);
     },
-    createPassword: async function() {
+    createPassword: async function () {
       // let confirmPassword = await this.v$.$validate();
       // if (confirmPassword) {
-        let updatedUser = {};
-        updatedUser = JSON.parse(localStorage.getItem("currentUser"));
-        updatedUser["password"] = this.password;
+      let updatedUser = {};
+      updatedUser = JSON.parse(localStorage.getItem("currentUser"));
+      updatedUser["password"] = this.password;
 
       //   const ip = await this.$axios.post(
       //   "http://localhost:5000/user/createUser",
@@ -126,27 +127,36 @@ export default {
       // );
       // console.log(ip);
 
-   const auth = this.$fire.auth
-        let user = auth.currentUser;
-        console.log(user);
-        // console.log(user, getNewPassword)
-        await user.updatePassword(this.password).then(async () => {
-          console.log('It works!');
+      const auth = this.$fire.auth;
+      let user = auth.currentUser;
+      console.log(user);
+      // console.log(user, getNewPassword)
+      // await user.updatePassword(this.password).then(async () => {
+      //   console.log('It works!');
+      // })
+      auth
+        .updatePassword(user, this.password)
+        .then(() => {
+          // Update successful.
+          console.log("Update successful");
         })
-
-        await updateUser(updatedUser._id, updatedUser).then((res) => {
-
-          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-          let currentStep=JSON.parse(localStorage.getItem("createRequestData"));
-          if(!currentStep||currentStep.createRequestStep=="createAccount" )
+        .catch((error) => {
+          console.log(error);
+          // An error ocurred
+          // ...
+        });
+      await updateUser(updatedUser._id, updatedUser).then((res) => {
+        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        let currentStep = JSON.parse(localStorage.getItem("createRequestData"));
+        if (!currentStep || currentStep.createRequestStep == "createAccount")
           this.$router.replace({
             path: "/createRequest/aboutLoan",
           });
-          else
-           this.$router.replace({
-            path: "/createRequest/"+currentStep.createRequestStep,
+        else
+          this.$router.replace({
+            path: "/createRequest/" + currentStep.createRequestStep,
           });
-        });
+      });
       // }
     },
     confirmSignIn: async function () {
@@ -154,26 +164,31 @@ export default {
         let email = localStorage.getItem("emailForSignIn");
         if (!email) {
           console.log("not email");
+        } else {
+          await this.$fire.auth
+            .signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+              debugger
+              console.log("in signInWithEmailLink", email);
+              // Clear email from storage.
+              // window.localStorage.removeItem("emailForSignIn");
+              let userFromFB = result.user;
+              localStorage.setItem("currentUser", JSON.stringify(result.user));
+              //save on mongo with isActive=false
+              this.updateUser(userFromFB.email, true);
+              localStorage.setItem("emailVerified", true);
+              this.$store.commit("setAccountStep", {
+                value: 1,
+                state: "createAccountStep",
+              });
+              localStorage.setItem("createAccountStep", 1);
+              // localStorage.removeItem("verifyEmail");
+            })
+            .catch((error) => {
+              debugger
+              console.log("error", error);
+            });
         }
-        else{
-        await this.$fire.auth
-          .signInWithEmailLink(email, window.location.href)
-          .then((result) => {
-                        console.log("in signInWithEmailLink",email);
-            // Clear email from storage.
-            // window.localStorage.removeItem("emailForSignIn");
-            let userFromFB = result.user;
-            localStorage.setItem("currentUser", JSON.stringify(result.user));
-            //save on mongo with isActive=false
-            this.updateUser(userFromFB.email, true);
-            localStorage.setItem("emailVerified", true);
-            this.$store.commit("setAccountStep", {value:1,state:"createAccountStep"}); 
-            localStorage.setItem("createAccountStep", 1);
-            // localStorage.removeItem("verifyEmail");
-          })
-          .catch((error) => {
-            console.log("error", error);
-          })};
       } else {
         if (window.location.pathname == "/createRequest") {
           if (localStorage.getItem("createRequestStep")) {
