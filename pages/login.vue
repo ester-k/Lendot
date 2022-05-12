@@ -80,6 +80,7 @@ export default {
         .signInWithEmailAndPassword(email, password)
         .then((response) => {
           self.getLoginUser(email);
+        
           self.$router.replace("/loanerScreen");
         })
         .catch((error) => {
@@ -88,11 +89,13 @@ export default {
         });
     },
     async getLoginUser(email) {
+      let self=this;
       getUserByEmail(email).then((response) => {
-        this.$store.commit("setState", {
+        self.$store.commit("setState", {
           value: response,
           state: "currentUser",
         });
+          localStorage.setItem("currentUser",JSON.stringify(response))
       });
     },
   },

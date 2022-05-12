@@ -12,6 +12,16 @@ export default {
       $nuxt.$fire.auth.signOut();
     },
   },
-  created() {},
+  created() {
+    
+    
+    // TODO: get this popup function out of here
+    $(document).on("click", function (event) {
+      if (event.target.classList.contains("popup-opened")) {
+        document.getElementById("app").classList.remove("popup-opened");
+        return;
+      }
+    });
+  },
 };
 </script>

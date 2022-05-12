@@ -9,6 +9,7 @@
         <p class="user-email">{{ currentUser.email }}</p>
         <button class="border-button edit-profile" @click="this.$router.replace({path: '/loanerScreen/accountSettings'})">Edit Profile</button>
       </div>
+     <button @click="logout"> Logout </button>
 
       <div class="help-area">
         <p class="help-title">Need Help?</p>
@@ -27,7 +28,11 @@ export default {
     return {
     };
   },
-  methods() {},
+  methods: {
+     logout() {
+      $nuxt.$fire.auth.signOut();
+    },
+    },
   created() {
   
   },

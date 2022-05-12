@@ -1,6 +1,6 @@
 <template>
   <div class="actions-container page-content">
-    <div class="no-action" v-if="!offersByAction.length">
+    <div class="no-action" v-if="!actionsLength">
       <div class="no-action-text">no actions needed</div>
       <a href="/createRequest"
         ><button type="button" class="fill-button new-loan">
@@ -9,7 +9,6 @@
         </button></a
       >
     </div>
-    <!-- -->
     <div v-else>
       <div class="" v-for="(action, aIndex) of loansByAction" :key="aIndex">
         <div v-if="action.loans.length">
@@ -150,6 +149,7 @@ export default {
       statuses: LoanStatusEnum,
       offers: [],
       loans: [],
+      actionsLength:false,
     };
   },
   computed: {
@@ -249,6 +249,13 @@ export default {
       );
     }
     this.getOffers();
+
+    this.loansByAction.forEach((action) => {
+      if(action.loans.length) {
+        this.actionsLength=true
+      }
+    });
+    console.log(this.actionsLength);
   },
 };
 </script>

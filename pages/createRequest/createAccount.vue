@@ -134,6 +134,7 @@ export default {
         //
         newUser.firstName = this.firstName;
         newUser.lastName = this.lastName;
+        newUser.userName= this.firstName+this.lastName;
         newUser.email = this.email;
         newUser.phone = this.phone;
         this.currentUser = newUser;
