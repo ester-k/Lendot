@@ -77,7 +77,7 @@ import { required, minLength, sameAs } from "@vuelidate/validators";
 import { updateUser } from "~/services/user-service.js";
 import { updateUserStatus } from "~/services/user-service.js";
 
-// import { User } from "../models/user";
+// import { User } from "~/models/user";
 // import firebase from "firebase";
 export default {
   name: "CreatePassword",
@@ -106,10 +106,10 @@ export default {
       let type;
       if (password.getAttribute("type") === "password") {
         type = "text";
-        event.target.src = require("@/assets/uploads/blue_hide_password.svg");
+        event.target.src = require("~/assets/uploads/blue_hide_password.svg");
       } else {
         type = "password";
-        event.target.src = require("@/assets/uploads/blue_show_password.svg");
+        event.target.src = require("~/assets/uploads/blue_show_password.svg");
       }
       password.setAttribute("type", type);
     },
@@ -125,6 +125,15 @@ export default {
       //   user
       // );
       // console.log(ip);
+
+   const auth = this.$fire.auth
+        let user = auth.currentUser;
+        console.log(user);
+        // console.log(user, getNewPassword)
+        await user.updatePassword(this.password).then(async () => {
+          console.log('It works!');
+        })
+
         await updateUser(updatedUser._id, updatedUser).then((res) => {
 
           localStorage.setItem("currentUser", JSON.stringify(updatedUser));
@@ -146,23 +155,25 @@ export default {
         if (!email) {
           console.log("not email");
         }
-        let user = await this.$fire.auth
+        else{
+        await this.$fire.auth
           .signInWithEmailLink(email, window.location.href)
           .then((result) => {
+                        console.log("in signInWithEmailLink",email);
             // Clear email from storage.
-            window.localStorage.removeItem("emailForSignIn");
+            // window.localStorage.removeItem("emailForSignIn");
             let userFromFB = result.user;
             localStorage.setItem("currentUser", JSON.stringify(result.user));
             //save on mongo with isActive=false
             this.updateUser(userFromFB.email, true);
             localStorage.setItem("emailVerified", true);
- this.$store.commit("setAccountStep", {value:1,state:"createAccountStep"}); 
+            this.$store.commit("setAccountStep", {value:1,state:"createAccountStep"}); 
             localStorage.setItem("createAccountStep", 1);
             // localStorage.removeItem("verifyEmail");
           })
           .catch((error) => {
             console.log("error", error);
-          });
+          })};
       } else {
         if (window.location.pathname == "/createRequest") {
           if (localStorage.getItem("createRequestStep")) {

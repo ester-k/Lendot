@@ -78,9 +78,9 @@
   </div>
 </template>
 <script>
-// import { createUser } from "../services/user-service.js";
+// import { createUser } from "~/services/user-service.js";
 
-// import { User } from ".../models/user";
+// import { User } from ".~/models/user";
 // import VerifyEmail from "./verifyEmail.vue";
 //vuelidate
 import useVuelidate from "@vuelidate/core";
@@ -134,10 +134,11 @@ export default {
         //
         newUser.firstName = this.firstName;
         newUser.lastName = this.lastName;
+        newUser.userName= this.firstName+this.lastName;
         newUser.email = this.email;
         newUser.phone = this.phone;
         this.currentUser = newUser;
-        this.$store.currentUser = newUser;
+        this.$store.state.currentUser = newUser;
         this.createUser(newUser);
         localStorage.setItem("currentUser", JSON.stringify(newUser));
         let userForm = JSON.parse(localStorage.getItem("createRequestData"));
