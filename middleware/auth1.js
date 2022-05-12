@@ -1,5 +1,5 @@
 export default function({ route, redirect }) {
-    console.log("here auth");
+    debugger
     if (route.path != "/login") {
         if (!$nuxt.$fire.auth.currentUser)
             return redirect('/login');
