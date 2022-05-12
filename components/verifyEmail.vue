@@ -53,7 +53,10 @@ export default {
           data.steps["createAccount"].emailSend = "true";
           localStorage.setItem("createRequestData", JSON.stringify(data));
           this.loaclEmailSend = true;
-          this.$store.commit("setAccountStep", {value:3,state:"createAccountStep"});
+          this.$store.commit("setAccountStep", {
+            value: 3,
+            state: "createAccountStep",
+          });
           localStorage.setItem("createAccountStep", 3);
           //   createUser(newUser);
         })
@@ -63,12 +66,13 @@ export default {
     },
   },
   created() {
-    if (!this.$store.state.currentUser)
-      this.$store.state.currentUser = JSON.parse(
-        localStorage.getItem("currentUser")
-      );
-    this.user = this.$store.state.currentUser || {};
-    if (this.$store.state.createAccountStep == 3) {
+    if (!this.$store.currentUser)
+      this.$store.commit("setState", {
+        value: JSON.parse(localStorage.getItem("currentUser")),
+        state: "currentUser",
+      });
+    this.user = this.$store.currentUser || {};
+    if (this.$store.createAccountStep == 3) {
       this.sendVerifyLink();
     }
   },

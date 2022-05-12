@@ -4,7 +4,7 @@
 
     <img
       class="len-title about-you-title"
-      :src="require('@/assets/uploads/about_property_title.svg')"
+      :src="require('~/assets/uploads/about_property_title.svg')"
     />
     <form @submit.prevent="createRequest" id="form">
       <!-- address -->
@@ -67,7 +67,7 @@
 import useVuelidate from "@vuelidate/core";
 import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
 import { createRequest } from "~/services/request-service";
-// import { LoanRequest } from "../models/request";
+// import { LoanRequest } from "~/models/request";
 
 import Select from "~/components/select.vue";
 export default {
@@ -194,7 +194,7 @@ export default {
         let activeRoute = document.querySelector(".router-link-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
         let activeRouteImg = activeRoute.querySelector("img");
-        activeRouteImg.src = require("@/assets/uploads/v_icon.svg");
+        activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
         this.$emit("updateRequestData", {
           key: "steps",
           value: "true",

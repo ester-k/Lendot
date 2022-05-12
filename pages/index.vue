@@ -1,9 +1,17 @@
 <template>
-  <div class="">      <NuxtLink to="/createRequest">create request></NuxtLink></div>
+  <div class=""> 
+     <button @click="logout"> Logout </button>
+  </div>
 </template>
 
 <script>
 export default {
   name: "IndexPage",
+  methods: {
+    logout() {
+      $nuxt.$fire.auth.signOut();
+    },
+  },
+  created() {},
 };
 </script>

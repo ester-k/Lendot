@@ -37,7 +37,7 @@ export default {
     css: ['~/assets/main.css', '~/assets/mainMobile.css'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['~/plugins/service.js', '~/plugins/Vuelidate.js'],
+    plugins: ['~/plugins/service.js', '~/plugins/Vuelidate.js', '~/plugins/vue-pdf-embed.js'],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -47,13 +47,10 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-        '@nuxtjs/axios', ['@nuxtjs/recaptcha', {
+        '@nuxtjs/axios', '@nuxtjs/auth-next', ['@nuxtjs/recaptcha', {
             hideBadge: true,
-
             siteKey: '6Le3b5gfAAAAAGwcMbMTR52xBd3UCVw_ICS9t_ez',
             version: 3,
-
-
         }],
         ['@nuxtjs/firebase',
             {
@@ -67,7 +64,17 @@ export default {
                     appId: "1:346751308376:web:96aca7f424011b606bb02d"
                 },
                 services: {
-                    auth: true
+                    auth: {
+                        persistence: 'local', // default
+                        initialize: {
+                            // onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+                            onAuthStateChangedAction: 'onAuthStateChangedAction',
+                            subscribeManually: false
+                        },
+                        ssr: false, // default
+                        // emulatorPort: 9099,
+                        emulatorHost: 'http://localhost',
+                    }
                 }
             }
         ]
@@ -79,11 +86,34 @@ export default {
     },
     server: {
         port: 8080, // default: 3000
-        host: '0.0.0.0' // default: localhost
+        host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost' // default: localhost
     },
     publicRuntimeConfig: {
         axios: {
             baseURL: "http://localhost:5000"
         }
     },
+    router: {
+        middleware: ['auth1']
+    },
+    // auth: {
+    //     strategies: {
+    //         local: {
+    //             endpoints: {
+
+    //                 logout: { url: '/*logout api*/', method: 'post' },
+    //                 user: false,
+    //             }
+    //         },
+    //     },
+    //     redirect: {
+    //         login: '/login',
+    //         logout: '/',
+    //         home: '/loanerScreen',
+    //         callback: '/login'
+    //     },
+    //     watchLoggedIn: true
+    //         // Options
+    // }
+
 }

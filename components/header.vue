@@ -3,12 +3,12 @@
       <a href="">  <img
       alt="lendot logo"
       class="lendot-icon desktop"
-      :src="require('@/assets/uploads/logo.svg')"
+      :src="require('~/assets/uploads/logo.svg')"
     />
       <img
       alt="lendot logo"
       class="lendot-icon mobile"
-      :src="require('@/assets/uploads/mobile_logo.png')"
+      :src="require('~/assets/uploads/mobile_logo.png')"
     /></a>
     <!-- <button class="fill-button"> back</button> -->
     <div class="blue-header"></div>

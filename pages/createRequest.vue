@@ -3,8 +3,9 @@
     <Header />
     <div class="main-container ">
       <div class="request-steps">
+
         <div
-          v-if="!emailVerified || !finishAuthProcess"
+          v-if="!$nuxt.$fire.auth.currentUser"
           class="request-step about-you-step"
         >
           <NuxtLink to="/createRequest/createAccount" >

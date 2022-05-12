@@ -53,7 +53,7 @@ window.$ = $;
 import useVuelidate from "@vuelidate/core";
 import { required, numeric } from "@vuelidate/validators";
 
-// import { LoanRequest } from "../models/request";
+// import { LoanRequest } from "~/models/request";
 import { getRequestById, updateRequest } from "~/services/request-service";
 
 export default {

@@ -107,7 +107,7 @@
 //vuelidate
 import useVuelidate from "@vuelidate/core";
 import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
-// import { LoanRequest } from "../models/request";
+// import { LoanRequest } from "~/models/request";
 import { getRequestById, updateRequest } from "~/services/request-service";
 // import Select from "~/components/select.vue";
 export default {
