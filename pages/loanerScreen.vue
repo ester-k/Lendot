@@ -2,45 +2,44 @@
   <div class="lender-screen">
     <ProfileSidebar />
     <div class="app-container">
-      state:{{requests}}
       <div class="lender-menu">
         <div class="menu-item">
-          <router-link to="/loanerScreen/actions">
+          <NuxtLink to="/loanerScreen/actions">
             <p class="">Actions</p>
-          </router-link>
+          </NuxtLink>
         </div>
         <div class="menu-item">
-          <router-link to="/loanerScreen/loans">
+          <NuxtLink to="/loanerScreen/loans">
             <p class="">Loans</p>
-          </router-link>
+          </NuxtLink>
         </div>
         <div class="menu-item">
-          <router-link to="/loanerScreen/offers">
+          <NuxtLink to="/loanerScreen/offers">
             <p class="">Offers</p>
-          </router-link>
+          </NuxtLink>
         </div>
         <div class="menu-item">
-          <router-link to="/loanerScreen/accountSettings">
+          <NuxtLink to="/loanerScreen/accountSettings">
             <p class="">Account Settings</p>
-          </router-link>
+          </NuxtLink>
         </div>
         <div class="border-button">
-          <router-link to="/contact">
+          <NuxtLink to="/contact">
             <p>Need Help?</p>
-          </router-link>
+          </NuxtLink>
         </div>
         <div class="new-loan">
-          <router-link to="/createRequest">
+          <NuxtLink to="/createRequest">
             <div class="new-loan-button">
               <div class="plus">
                 <img :src="require('~/assets/uploads/plus_loan.svg')" />
               </div>
               <div class="new-loan-link"><p class="">New Loan</p></div>
             </div>
-          </router-link>
+          </NuxtLink>
         </div>
       </div>
-      <router-view  />
+      <NuxtChild  />
     </div>
   </div>
 </template>
@@ -68,7 +67,7 @@ export default {
   },
   computed: {
     requests() {
-      return this.$store.userRequests;
+      return this.$store.state.userRequests;
     },
   },
   async created() {
@@ -78,8 +77,7 @@ export default {
       "623c436e01cfc93560df213f",
     ];
     await this.getLoansWithAction(actionsStatuses);
-
-    if (!this.$store.userRequests) {
+    if (!this.$store.state.userRequests||!this.$store.state.userRequests.length) {
       await getOffersByLoanerRequest(this.loanerId).then((res) =>
         this.$store.commit("setState", {
           value: res,
@@ -88,18 +86,18 @@ export default {
       );
     }
 
-    // if ($nuxt.$route.path == "/loanerScreen") {
-    //   if (this.loans) {
-    //     localStorage.setItem("loansWithAction", JSON.stringify(this.loans));
-    //     this.$router.replace({
-    //       path: "/loanerScreen/actions",
-    //     });
-    //   } else {
-    //     this.$router.replace({
-    //       path: "/loanerScreen/loans",
-    //     });
-    //   }
-    // }
+    if ($nuxt.$route.path == "/loanerScreen") {
+      if (this.loans) {
+        localStorage.setItem("loansWithAction", JSON.stringify(this.loans));
+        this.$router.replace({
+          path: "/loanerScreen/actions",
+        });
+      } else {
+        this.$router.replace({
+          path: "/loanerScreen/loans",
+        });
+      }
+    }
   },
 };
 </script>
@@ -140,7 +138,7 @@ export default {
 .lender-menu .menu-item p:hover {
   color: var(--custom-pink);
 }
-.lender-menu .menu-item .router-link-active p {
+.lender-menu .menu-item .NuxtLink-active p {
   color: var(--custom-pink);
   font-weight: bold;
   border-bottom: 2px var(--custom-pink) solid;

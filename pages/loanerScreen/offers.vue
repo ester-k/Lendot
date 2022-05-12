@@ -161,13 +161,13 @@
           >
             <div
               class="wrap-declined-offer"
-              v-for="(offer, i) of loan.declinedOffers"
-              :key="i"
+              v-for="(offer, j) of loan.declinedOffers"
+              :key="j"
             >
               <div
                 class="wrap-offer tr"
-                @click="(event) => acceptDeclinedOffer(event, index, i)"
-                :id="'offer' + i"
+                @click="(event) => acceptDeclinedOffer(event, index, j)"
+                :id="'offer' + j"
               >
                 <div class="loaner-name td">{{ offer.lenderId.username }}</div>
                 <div class="td" v-if="offer.rate">
@@ -192,7 +192,7 @@
                   </button>
                 </div>
               </div>
-              <div class="wrap-offer-container" :id="'offer' + i + '-view'">
+              <div class="wrap-offer-container" :id="'offer' + j + '-view'">
                 <div class="offer-title">
                   <div class="loaner-name">
                     {{ offer.lenderId.firstName }} {{ offer.lenderId.lastName }}

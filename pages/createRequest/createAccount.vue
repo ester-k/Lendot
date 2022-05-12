@@ -137,7 +137,7 @@ export default {
         newUser.email = this.email;
         newUser.phone = this.phone;
         this.currentUser = newUser;
-        this.$store.currentUser = newUser;
+        this.$store.state.currentUser = newUser;
         this.createUser(newUser);
         localStorage.setItem("currentUser", JSON.stringify(newUser));
         let userForm = JSON.parse(localStorage.getItem("createRequestData"));

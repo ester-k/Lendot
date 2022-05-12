@@ -73,8 +73,8 @@
 
           <div
             class="single-loan"
-            v-for="(offer, index) of action.offers"
-            :key="index"
+            v-for="(offer, singleIndex) of action.offers"
+            :key="singleIndex"
             @click="
               dynamicFunctionCall(
                 statuses[offer.status.name].action.func,
@@ -152,7 +152,11 @@ export default {
       loans: [],
     };
   },
-
+  computed: {
+    requests() {
+      return this.$store.state.userRequests;
+    },
+  },
   methods: {
     getRequestsByStatus() {
       let requiredFields = [
@@ -187,6 +191,7 @@ export default {
     },
     async getOffers() {
       let self = this;
+
       this.requests.forEach((request) => {
         if (request.offers.length) {
           request.offers.forEach((offer) => {
@@ -228,11 +233,11 @@ export default {
       }
     },
   },
+
   async created() {
     this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
     this.getRequestsByStatus();
-console.log(this.requests); 
-   if (!this.requests) {
+    if (!this.requests) {
       let vue = this;
       await getOffersByLoanerRequest(this.$store.currentUser._id).then(
         (res) => {
@@ -244,11 +249,6 @@ console.log(this.requests);
       );
     }
     this.getOffers();
-  },
-  computed: {
-    requests() {
-      return this.$store.userRequests;
-    },
   },
 };
 </script>

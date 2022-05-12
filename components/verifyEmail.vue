@@ -66,13 +66,13 @@ export default {
     },
   },
   created() {
-    if (!this.$store.currentUser)
+    if (!this.$store.state.currentUser)
       this.$store.commit("setState", {
         value: JSON.parse(localStorage.getItem("currentUser")),
         state: "currentUser",
       });
-    this.user = this.$store.currentUser || {};
-    if (this.$store.createAccountStep == 3) {
+    this.user = this.$store.state.currentUser || {};
+    if (this.$store.state.createAccountStep == 3) {
       this.sendVerifyLink();
     }
   },

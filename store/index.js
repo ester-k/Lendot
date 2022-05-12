@@ -9,6 +9,7 @@
 
 // })
 
+
 export const state = () => ({
     currentUser: {},
     createAccountStep: 1,
