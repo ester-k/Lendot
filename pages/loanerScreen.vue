@@ -34,12 +34,14 @@
               <div class="plus">
                 <img :src="require('~/assets/uploads/plus_loan.svg')" />
               </div>
-              <div class="new-loan-link"><p class="">New Loan</p></div>
+              <div class="new-loan-link">
+                <p class="">New Loan</p>
+              </div>
             </div>
           </NuxtLink>
         </div>
       </div>
-      <NuxtChild  />
+      <NuxtChild />
     </div>
   </div>
 </template>
@@ -77,7 +79,7 @@ export default {
       "623c436e01cfc93560df213f",
     ];
     await this.getLoansWithAction(actionsStatuses);
-    if (!this.$store.state.userRequests||!this.$store.state.userRequests.length) {
+    if (!this.$store.state.userRequests || !this.$store.state.userRequests.length) {
       await getOffersByLoanerRequest(this.loanerId).then((res) =>
         this.$store.commit("setState", {
           value: res,
@@ -85,19 +87,18 @@ export default {
         })
       );
     }
-
-    if ($nuxt.$route.path == "/loanerScreen") {
-      if (this.loans) {
-        localStorage.setItem("loansWithAction", JSON.stringify(this.loans));
-        this.$router.replace({
-          path: "/loanerScreen/actions",
-        });
-      } else {
-        this.$router.replace({
-          path: "/loanerScreen/loans",
-        });
-      }
+    if (this.loans) {
+      localStorage.setItem("loansWithAction", JSON.stringify(this.loans));  
+      if($nuxt.$route.path!="/loanerScreen/actions")
+      this.$router.replace({
+        path: "/loanerScreen/actions",
+      });
+    } else {
+      this.$router.replace({
+        path: "/loanerScreen/loans",
+      });
     }
+
   },
 };
 </script>
@@ -109,15 +110,18 @@ export default {
   min-height: 100vh;
   background-color: var(--custom-light-gray);
 }
+
 .app-container {
   width: 100%;
   max-width: 1200px;
   margin: 63px auto;
   margin-top: 0;
 }
+
 .page-content {
   padding-top: 163px;
 }
+
 .lender-menu {
   display: flex;
   justify-content: left;
@@ -130,14 +134,17 @@ export default {
   background-color: var(--custom-light-gray);
   padding-top: 63px;
 }
+
 .lender-menu .menu-item p {
   margin-right: 57px;
   color: black;
   font-size: 18px;
 }
+
 .lender-menu .menu-item p:hover {
   color: var(--custom-pink);
 }
+
 .lender-menu .menu-item .NuxtLink-active p {
   color: var(--custom-pink);
   font-weight: bold;
@@ -150,27 +157,32 @@ export default {
   color: var(--custom-pink);
   text-align: center;
 }
+
 .lender-menu .new-loan {
   margin-left: auto;
 }
+
 .new-loan-button .plus {
   align-self: center;
   margin-right: -8px;
   z-index: 2;
   margin-top: 7px;
 }
+
 .new-loan-button {
   /* position: relative; */
   display: flex;
   height: 31px;
   align-items: center;
 }
+
 .new-loan-button .new-loan-link {
   background-color: var(--custom-pink);
   width: 132px;
   border-radius: 0 26px 26px 0;
   height: 31px;
 }
+
 .new-loan-button .new-loan-link p {
   font-size: 18px;
   font-weight: bold;
