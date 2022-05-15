@@ -2,47 +2,28 @@
   <div class="page-container">
     <Header />
     <div class="login">
-         <img
-        class="len-title about-you-title desktop"
-        :src="require('~/assets/uploads/login_title.svg')"
-        alt="login title"
-      />
-       <div class="register-link" >New to lendot?  <NuxtLink to="/createRequest/createAccount" > Create an Account</NuxtLink></div>
+      <img class="len-title about-you-title desktop" :src="require('~/assets/uploads/login_title.svg')"
+        alt="login title" />
+      <div class="register-link">New to lendot? <NuxtLink to="/createRequest/createAccount"> Create an Account
+        </NuxtLink>
+      </div>
       <form @submit.prevent="login">
-      
-
         <label class="form-label">Email Address</label>
         <div class="wrap-input">
-          <input
-            type="text"
-            name="email"
-            v-model="email"
-                    />
-         
+          <input type="text" name="email" v-model="email" />
         </div>
-       
 
         <label class="form-label"> Password</label>
         <div class="wrap-input wrap-password">
-          <input
-            type="password"
-            name="password"
-            :id="'password_field' + 1"
-            class="password-field"
-             v-model="password"
-          />
-          <img
-            class="show-password"
-            alt="edit icon"
-            :src="require('~/assets/uploads/blue_show_password.svg')"
-            @click="(event) => showPassword(event, 1)"
-          />
+          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" />
+          <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/blue_show_password.svg')"
+            @click="(event) => showPassword(event, 1)" />
         </div>
-        <p class="forgot-password">Forgot password?</p>
-      
+        <NuxtLink to="/resetPassword" class="forgot-password">Forgot password?</NuxtLink>
+
         <button type="submit" class="">Log In</button>
       </form>
-     
+
     </div>
   </div>
 </template>
@@ -79,7 +60,7 @@ export default {
         .signInWithEmailAndPassword(email, password)
         .then((response) => {
           self.getLoginUser(email);
-        
+
           self.$router.replace("/loanerScreen");
         })
         .catch((error) => {
@@ -88,13 +69,13 @@ export default {
         });
     },
     async getLoginUser(email) {
-      let self=this;
+      let self = this;
       getUserByEmail(email).then((response) => {
         self.$store.commit("setState", {
           value: response,
           state: "currentUser",
         });
-          localStorage.setItem("currentUser",JSON.stringify(response))
+        localStorage.setItem("currentUser", JSON.stringify(response))
       });
     },
   },
@@ -107,6 +88,7 @@ export default {
   max-width: 808px;
   color: var(--custom-blue);
 }
+
 .wrap-password {
   margin-bottom: 10px;
   padding: 0 20px;
@@ -117,23 +99,28 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .wrap-password input {
   border: unset;
   outline: none;
 }
+
 .register-link {
   margin-top: 10px;
   margin-bottom: 47px;
   font-size: 20px;
   font-weight: 500;
 }
+
 .register-link a {
   text-decoration: underline;
   color: var(--custom-blue);
 }
+
 button[type="submit"] {
   margin-top: 70px;
 }
+
 .forgot-password {
   margin-top: 10px;
   text-align: right;
