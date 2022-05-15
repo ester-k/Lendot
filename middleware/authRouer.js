@@ -1,7 +1,7 @@
 export default function({ route, redirect }) {
     // debugger
     if (route.path != "/login") {
-        if (route.path.indexOf("createRequest") != -1 || route.path == "/createPassword") {
+        if (route.path.indexOf("createRequest") != -1 || route.path == "/createPassword" || route.path == "/resetPassword") {
             return route
         }
         if (!$nuxt.$fire.auth.currentUser)
