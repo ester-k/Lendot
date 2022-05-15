@@ -3,8 +3,12 @@
         <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
 
     <img
-      class="len-title about-you-title"
-      :src="require('~/assets/uploads/about_property_title.svg')"
+      class="len-title about-you-title desktop"
+      :src="require('~/assets/uploads/create_property_title.svg')"
+    />
+     <img
+      class="len-title about-you-title mobile"
+      :src="require('~/assets/uploads/create_property_title_mobile.svg')"
     />
     <form @submit.prevent="createRequest" id="form">
       <!-- address -->

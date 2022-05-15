@@ -2,7 +2,7 @@
   <div class="page-container">
     <Header />
     <div class="login">
-      <img class="len-title about-you-title desktop" :src="require('~/assets/uploads/login_title.svg')"
+      <img class="len-title about-you-title" :src="require('~/assets/uploads/login_title.svg')"
         alt="login title" />
       <div class="register-link">New to lendot? <NuxtLink to="/createRequest/createAccount"> Create an Account
         </NuxtLink>
@@ -10,12 +10,12 @@
       <form @submit.prevent="login">
         <label class="form-label">Email Address</label>
         <div class="wrap-input">
-          <input type="text" name="email" v-model="email" />
+          <input type="text" name="email" v-model="email" placeholder="Yourmail@Gmail.com"/>
         </div>
 
         <label class="form-label"> Password</label>
         <div class="wrap-input wrap-password">
-          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" />
+          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" placeholder="Password" />
           <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/blue_show_password.svg')"
             @click="(event) => showPassword(event, 1)" />
                   
@@ -97,7 +97,8 @@ export default {
 
 .wrap-password {
   margin-bottom: 10px;
-  padding: 0 20px;
+  padding: 0;
+  padding-right: 20px;
   box-sizing: border-box;
   border: solid 1px var(--custom-blue);
   border-radius: 11px;
@@ -131,5 +132,27 @@ button[type="submit"] {
   margin-top: 10px;
   text-align: right;
   color: var(--custom-pink);
+}
+
+@media screen and (max-width: 768px) {
+  .login {
+    margin: 102px 27px;
+  }
+
+  .register-link {
+    font-size: 12px;
+    margin: 8px 0 26px;
+  }
+
+  .forgot-password {
+    float: right;
+    margin-top: 0;
+    font-size: 10px;
+  }
+
+  .login button[type="submit"] {
+    font-size: 12px;
+    margin-top: 41px;
+  }
 }
 </style>

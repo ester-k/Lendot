@@ -1,5 +1,6 @@
 <template>
   <div class="lender-screen">
+    <MobileHeader />
     <ProfileSidebar />
     <div class="app-container">
       <div class="lender-menu">
