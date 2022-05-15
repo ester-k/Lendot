@@ -3,7 +3,7 @@
     <Header />
     <div class="main-container ">
       <div class="request-steps">
-
+df
         <div
           v-if="!$nuxt.$fire.auth.currentUser"
           class="request-step about-you-step"
@@ -156,36 +156,38 @@ export default {
       // },
     },
     created: async function () {
+      console.log("hrer!");
       // await this.confirmSignIn(this.url);
-      // if (!localStorage.getItem("createRequestData"))
-      //   localStorage.setItem(
-      //     "createRequestData",
-      //     JSON.stringify({
-      //       steps: {
-      //         createAccount: { complete: "false" },
-      //         aboutLoan: { complete: "false" },
-      //         createProperty: { complete: "false" },
-      //         aboutProperty: { complete: "false" },
-      //       },
-      //     })
-      //   );
-      // this.createRequestData = localStorage.getItem("createRequestData");
-      // this.createRequestStep = this.createRequestData.createRequestStep;
-      // if (window.location.pathname == "/createRequest") {
-      //   if (this.createRequestStep) {
-      //     this.$router.replace({
-      //       path: "/createRequest/" + this.createRequestStep,
-      //     });
-      //   } else {
-      //     if (this.emailVerified != true) {
-      //       this.$router.replace({
-      //         path: "/createRequest/createAccount",
-      //       });
-      //     } else
-      //       this.$router.replace({
-      //         path: "/createRequest/aboutLoan",
-      //       });
-      //   }
+      if (!localStorage.getItem("createRequestData"))
+        localStorage.setItem(
+          "createRequestData",
+          JSON.stringify({
+            steps: {
+              createAccount: { complete: "false" },
+              aboutLoan: { complete: "false" },
+              createProperty: { complete: "false" },
+              aboutProperty: { complete: "false" },
+            },
+          })
+        );
+      this.createRequestData = localStorage.getItem("createRequestData");
+      this.createRequestStep = this.createRequestData.createRequestStep;
+      if (  $nuxt.$route.path!="/createRequest") {
+        if (this.createRequestStep) {
+          this.$router.replace({
+            path: "/createRequest/" + this.createRequestStep,
+          });
+        } else {
+          // if (this.emailVerified != true) {
+          //   this.$router.replace({
+          //     path: "/createRequest/createAccount",
+          //   });
+          // } else
+            this.$router.replace({
+              path: "/createRequest/aboutLoan",
+            });
+        }
+      }
     },
   },
   computed: {

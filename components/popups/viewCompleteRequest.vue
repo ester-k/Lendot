@@ -3,8 +3,10 @@
     <div class="placeholder"></div>
     <div class="inner-popup">
       <div class="content">
+      
         <div dir="ltr">
-          <div class="close-popup" @click="this.$emit('closePopup')">
+          <div class="close-popup" @click="$emit('closePopup')">
+
             <img
               :src="require('~/assets/uploads/close_view_popup.svg')"
               alt="close popup"
@@ -72,21 +74,22 @@
             </div>
           </div>
           <h3 class="title">Uploaded Documents</h3>
-          <div class="row documents-list">
+          <div >
+            <div  v-for="(document, index) of loan.selectedOffer.documents" :key="index" class="row documents-list">
             <div
               class="wrap-document"
-              v-for="(document, index) of loan.selectedOffer.documents"
-              :key="index"
+             v-for="(doc, index) of document.loanerDocs" :key="index"
+           
               onmouseover="this.classList.add('hover')"
               onmouseleave="this.classList.remove('hover')"
               @click="
-                this.openViewPdf = true;
-                this.source = document.url;
+               openViewPdf = true;
+               source = doc.url;
               "
             >
               <div class="wrap-content">
                 <img :src="require('~/assets/uploads/download_document.svg')" />
-                <p>{{ document.name }}</p>
+                <p>{{ doc.name }}</p>
               </div>
               <div class="view" :id="'view-' + index">
                 <!-- <img
@@ -97,6 +100,7 @@
               </div>
               <div :id="'view-' + index + '-pdf'"></div>
             </div>
+          </div>
           </div>
           <h3 class="title">The Process</h3>
           <div class="row">
@@ -119,7 +123,7 @@
     </div>
     <viewPdf
       v-if="openViewPdf"
-      :source="this.source"
+      :source="source"
       :height="704"
       :width="500"
     />
@@ -167,6 +171,12 @@ export default {
   justify-content: space-between;
   margin-bottom: 50px;
 }
+.popup .row.documents-list{
+  justify-content:left;
+}
+.popup .row.documents-list .wrap-document{
+ margin-right:41px ;
+}
 .title {
   margin-bottom: 10px;
 }
@@ -180,6 +190,8 @@ export default {
   border: 1px solid var(--custom-blue);
   border-radius: 11px;
   width: 119px;
+  min-width: 119px;
+  max-width: 119px;
   height: 107px;
   display: flex;
   justify-content: center;

@@ -68,10 +68,6 @@ button[type="submit"] {
   margin-left: 0;
 }
 
-.error-msg {
-  margin-bottom: 41px;
-  display: none;
-}
 
 .error-msg.show {
   display: block;
