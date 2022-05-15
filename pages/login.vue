@@ -18,7 +18,9 @@
           <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" />
           <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/blue_show_password.svg')"
             @click="(event) => showPassword(event, 1)" />
-        </div>
+                  
+
+        </div>  <p class="error-msg" id="emailError">Wrong password</p>
         <NuxtLink to="/resetPassword" class="forgot-password">Forgot password?</NuxtLink>
 
         <button type="submit" class="">Log In</button>
@@ -66,6 +68,10 @@ export default {
         .catch((error) => {
           this.errorCode = error.code;
           this.errorMessage = error.message;
+          console.log("error.code",error.code);
+           if (error.code == "auth/wrong-password") {
+            document.getElementById("emailError").classList.add("show")
+          }
         });
     },
     async getLoginUser(email) {
