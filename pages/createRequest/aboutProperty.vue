@@ -84,16 +84,7 @@
           </div>
         </div>
       </div>
-      <!-- credit score -->
-      <label class="form-label"> Credit Score</label>
-      <div class="wrap-input">
-        <Select
-          class="lendot-select"
-          :options="creditScores"
-          :default="defaultSelect"
-          v-on:input="changeCredit"
-        />
-      </div>
+    
   <!-- <recaptcha /> -->
 
       <!-- <ReCaptcha /> -->
@@ -140,15 +131,6 @@ export default {
       price: "",
       rehab: "",
       estimated: "",
-      creditScores: [
-        { value: "Under 550" },
-        { value: "551-600" },
-        { value: "601-650" },
-        { value: "651-700" },
-        { value: "701-750" },
-        { value: "751-800" },
-        { value: "800+" },
-      ],
       loanPurpose: "purchase",
       propertyType: "",
       credit: "",

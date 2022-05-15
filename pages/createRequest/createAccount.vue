@@ -58,6 +58,15 @@
             v-model="phone"
           />
         </div>
+         <label class="form-label"> Credit Score</label>
+      <div class="wrap-input">
+        <Select
+          class="lendot-select"
+          :options="creditScores"
+          :default="defaultSelect"
+          v-on:input="changeCredit"
+        />
+      </div>
         <div class="flex purchase-cnt">
           <label class="form-label"
             >How many investment properties have you purchased/refinanced in the
@@ -65,6 +74,8 @@
           >
           <input type="number" :disabled="emailVerified" />
         </div> 
+          <!-- credit score -->
+     
         <button type="submit">next</button>
       </form> 
     
@@ -104,6 +115,15 @@ export default {
       emailSend: false,
       url: window.location.href,
       currentUser: localStorage.getItem("currentUser"),
+        creditScores: [
+        { value: "Under 550" },
+        { value: "551-600" },
+        { value: "601-650" },
+        { value: "651-700" },
+        { value: "701-750" },
+        { value: "751-800" },
+        { value: "800+" },
+      ],
     };
   },
   // validations() {
@@ -254,7 +274,7 @@ export default {
 <style>
 .purchase-cnt {
   align-items: center;
-  margin-bottom: 61px;
+    margin-bottom: 61px;
 }
 .purchase-cnt input[type="number"] {
   width: 60px;
@@ -285,6 +305,7 @@ export default {
   font-size: 16px;
   text-decoration: underline;
 }
+
 @media screen and (max-width: 768px) {
   .purchase-cnt input[type="number"] {
     width: 32px;
