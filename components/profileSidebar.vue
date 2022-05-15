@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap-sidebar">
+  <div class="wrap-sidebar desktop">
     <div class="profile-sidebar">
       <a href="/"><img alt="lendot logo" :src="require('~/assets/uploads/logoapp.svg')" /></a>
       <div class="user-details">
