@@ -232,7 +232,7 @@ export default {
         this.$store.state.createAccountStep
       );
     }
-    this.$store.commit("setAccountStep", {
+    this.$store.commit("setState", {
       value: localStorage.getItem("createAccountStep") * 1,
       state: "createAccountStep",
     });

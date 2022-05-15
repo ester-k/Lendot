@@ -5,8 +5,9 @@
       <Select :options="sortList" v-on:input="sortLoans" class="sort-select" />
     </div>
     <table class="loans-table">
-      <tbody>
-        <tr class="wrap-loan" v-for="(loan, index) of loans" :key="index">
+     <tbody>
+        <tr class="wrap-loan" v-for="(loan, index) of loans" :key="index">       
+
           <td
             class="loan-status"
             v-if="loan.status"
@@ -48,7 +49,7 @@
             </button>
           </td>
         </tr>
-      </tbody>
+      </tbody> 
     </table>
     <ViewLoan
       :loan="activeLoan"

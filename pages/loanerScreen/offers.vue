@@ -121,12 +121,12 @@
                     >
                   </div>
 
-                  <!-- <vue-pdf-embed
+                  <vue-pdf-embed
                     class="pdf-embed"
                     :source="offer.terms"
                     :height="704"
                     :width="auto"
-                  /> -->
+                  />
                   <div
                     :id="'offer-view-' + i"
                     class="offer-light-box"
@@ -412,7 +412,6 @@ export default {
         !event.target.closest(".view-pdf-popup") &&
         !event.target.closest(".view")
       ) {
-        console.log(event.target);
         vue.openViewPdf = false;
       } else {
         return;
