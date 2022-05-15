@@ -12,18 +12,25 @@
     /></a>
     <!-- <button class="fill-button"> back</button> -->
     <div class="blue-header"></div>
+         <button @click="logout"> Logout </button>
+
    </div>
 </template>
 
 <script>
 export default {
   name: "Header",
+  methods: {
+    logout() {
+      $nuxt.$fire.auth.signOut();
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("createRequestData");
+    },
+  },
 };
 </script>
 
 <style>
-
-
 .blue-header {
   height: 120px;
   background-color: var(--custom-blue);
@@ -36,10 +43,10 @@ export default {
 }
 @media screen and (max-width: 768px) {
   .blue-header {
-  height: 65px;
-  background-color: var(--custom-blue);
-  width: 100%;
-}
+    height: 65px;
+    background-color: var(--custom-blue);
+    width: 100%;
+  }
 }
 </style>
 

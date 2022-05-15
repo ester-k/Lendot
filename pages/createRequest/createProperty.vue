@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-        <div class="verify-link"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
 
     <img
       class="len-title about-you-title"
@@ -168,40 +168,40 @@ export default {
   },
   methods: {
     async createRequest(event) {
-      let isFormCorrect = await this.v$.$validate();
-      if (isFormCorrect) {
-        //create new loan request
-        let newReq = {};
-        newReq.loanType = localStorage.getItem("loanType");
-        newReq.amount = localStorage.getItem("loanAmount")
-        newReq.propertyAddress = {};
-        newReq.propertyAddress.address = this.address;
-        newReq.propertyAddress.city = this.city;
-        newReq.propertyAddress.state = this.state;
-        newReq.propertyAddress.zip = this.zip;
-        newReq.propertyType = this.type;
-        localStorage.setItem("createProperty", JSON.stringify(newReq));
+      // let isFormCorrect = await this.v$.$validate();
+      // if (isFormCorrect) {
+      //create new loan request
+      let newReq = {};
+      newReq.loanType = localStorage.getItem("loanType");
+      newReq.amount = localStorage.getItem("loanAmount");
+      newReq.propertyAddress = {};
+      newReq.propertyAddress.address = this.address;
+      newReq.propertyAddress.city = this.city;
+      newReq.propertyAddress.state = this.state;
+      newReq.propertyAddress.zip = this.zip;
+      newReq.propertyType = this.type;
+      localStorage.setItem("createProperty", JSON.stringify(newReq));
 
-        let user = JSON.parse(localStorage.getItem("currentUser"));
-        if (!user) {
-          document.getElementById("verifyError").style.display = "block";
-          return;
-        }
-        newReq.loanerId = user._id;
-        await createRequest(newReq).then((newRequest) => {
-          localStorage.setItem("requestId", newRequest._id);
-        });
-        let activeRoute = document.querySelector(".router-link-active");
-        activeRoute.querySelector(".step-button").classList.add("complete");
-        let activeRouteImg = activeRoute.querySelector("img");
-        activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
-        this.$emit("updateRequestData", {
-          key: "steps",
-          value: "true",
-          step: "createProperty",
-        });
-        this.$router.replace({ path: "/createRequest/aboutProperty" });
+      let user = JSON.parse(localStorage.getItem("currentUser"));
+      if (!user) {
+        document.getElementById("verifyError").style.display = "block";
+        return;
       }
+      newReq.loanerId = user._id;
+      await createRequest(newReq).then((newRequest) => {
+        localStorage.setItem("requestId", newRequest._id);
+      });
+      let activeRoute = document.querySelector(".nuxt-link-exact-active");
+      activeRoute.querySelector(".step-button").classList.add("complete");
+      let activeRouteImg = activeRoute.querySelector("img");
+      activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
+      this.$emit("updateRequestData", {
+        key: "steps",
+        value: "true",
+        step: "createProperty",
+      });
+      this.$router.replace({ path: "/createRequest/aboutProperty" });
+      // }
     },
     customSelectColor(event) {
       event.srcElement.classList.add("checked");
@@ -224,16 +224,17 @@ export default {
     changeType(data) {
       this.type = data;
     },
-     verifyEmail:function(){
- this.$store.commit("setAccountStep", 3);   
-    this.$router.replace({ path: "/createRequest/createAccount" });
-    }
+    verifyEmail: function () {
+      this.$store.commit("setState", { value: 3, state: "createAccountStep" });
+      this.$router.replace({ path: "/createRequest/createAccount" });
+    },
   },
   created() {
-  this.$emit("updateRequestData", {
+    this.$emit("updateRequestData", {
       key: "createRequestStep",
       value: "createProperty",
-    });    let property = JSON.parse(localStorage.getItem("createProperty"));
+    });
+    let property = JSON.parse(localStorage.getItem("createProperty"));
     if (property) {
       this.address = property.propertyAddress.address;
       this.city = property.propertyAddress.city;
@@ -246,7 +247,6 @@ export default {
 </script>
 
 <style>
-
 .loan-purpose .purpose-type {
   color: var(--custom-blue);
   background-color: unset;

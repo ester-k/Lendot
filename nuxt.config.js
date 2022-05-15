@@ -94,7 +94,7 @@ export default {
         }
     },
     router: {
-        middleware: ['auth1']
+        middleware: ['authRouer']
     },
     // auth: {
     //     strategies: {

@@ -1,6 +1,6 @@
 <template>
   <div id="create-account" class="main-container">
-    <div class="main-content" v-if="createAccountStep == 1">
+    <div class="main-content" v-if="createAccountStep == 1||!createAccountStep">
       <img
         class="len-title about-you-title desktop"
         :src="require('~/assets/uploads/about_you_title.svg')"
@@ -126,31 +126,40 @@ export default {
     //     dirty: validation.$dirty,
     //   };
     // },
-    createUserOnDB: function () {
-      if (!this.currentUser) {
-        // if (this.checkValidForm()) {
-        // let newUser = new User();
-        let newUser = {};
-        //
-        newUser.firstName = this.firstName;
-        newUser.lastName = this.lastName;
-        newUser.userName= this.firstName+this.lastName;
-        newUser.email = this.email;
-        newUser.phone = this.phone;
-        this.currentUser = newUser;
-        this.$store.state.currentUser = newUser;
-        this.createUser(newUser);
-        localStorage.setItem("currentUser", JSON.stringify(newUser));
-        let userForm = JSON.parse(localStorage.getItem("createRequestData"));
-        userForm.steps["createAccount"].data = newUser;
-        localStorage.setItem("createRequestData", JSON.stringify(userForm));
-        this.emailSend = true;
-        this.$store.commit("setAccountStep", {value:2,state:"createAccountStep"});
-        localStorage.setItem("createAccountStep", 2);
-        // }
-      } else {
-        this.$router.replace({ path: "/createRequest/aboutLoan" });
-      }
+    createUserOnDB: async function () {
+      debugger;
+
+      
+      // if (!this.currentUser) {
+      // if (this.checkValidForm()) {
+      // let newUser = new User();
+      let newUser = {};
+      //
+      newUser.firstName = this.firstName;
+      newUser.lastName = this.lastName;
+      newUser.userName = this.firstName + this.lastName;
+      newUser.email = this.email;
+      newUser.phone = this.phone;
+      this.currentUser = newUser;
+      this.$store.commit("setState", {
+        value: newUser,
+        state: "currentUser",
+      });
+      this.createUser(newUser);
+      localStorage.setItem("currentUser", JSON.stringify(newUser));
+      let userForm = JSON.parse(localStorage.getItem("createRequestData"));
+      userForm.steps["createAccount"].data = newUser;
+      localStorage.setItem("createRequestData", JSON.stringify(userForm));
+      this.emailSend = true;
+      this.$store.commit("setState", {
+        value: 2,
+        state: "createAccountStep",
+      });
+      localStorage.setItem("createAccountStep", 2);
+      // }
+      // } else {
+      //   this.$router.replace({ path: "/createRequest/aboutLoan" });
+      // }
     },
     createUser: async function (user) {
       const ip = await this.$axios.post(
@@ -167,7 +176,7 @@ export default {
       let isFormCorrect = true;
       if (isFormCorrect) {
         //change the icon
-        let activeRoute = document.querySelector(".router-link-active");
+        let activeRoute = document.querySelector(".nuxt-link-exact-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
         let activeRouteImg = activeRoute.querySelector("img");
         activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
@@ -207,17 +216,25 @@ export default {
       this.lastName = userForm.lastName;
       this.phone = userForm.phone;
     }
-    if (!this.$store.state.createAccountStep) {
+    if (
+      !this.$store.state.createAccountStep ||
+      !this.$store.state.currentUser
+    ) {
       if (!localStorage.getItem("createAccountStep"))
-        localStorage.setItem("createAccountStep", {value:1,state:"createAccountStep"});
+        localStorage.setItem("createAccountStep", {
+          value: 1,
+          state: "createAccountStep",
+        });
     } else {
       localStorage.setItem(
         "createAccountStep",
         this.$store.state.createAccountStep
       );
     }
-     this.$store.commit("setAccountStep",{value:localStorage.getItem("createAccountStep") * 1,state:"createAccountStep"} );
-      
+    this.$store.commit("setAccountStep", {
+      value: localStorage.getItem("createAccountStep") * 1,
+      state: "createAccountStep",
+    });
   },
 
   computed: {
@@ -230,7 +247,6 @@ export default {
     createAccountStep: function () {
       return this.$store.state.createAccountStep;
     },
-   
   },
 };
 </script>

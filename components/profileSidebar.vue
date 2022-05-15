@@ -25,21 +25,20 @@ import { User } from "~/models/user";
 export default {
   name: "profileSidebar",
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
-     logout() {
+    logout() {
       $nuxt.$fire.auth.signOut();
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("createRequestData");
     },
-    },
-  created() {
-  
   },
+  created() {},
   computed: {
-   currentUser: function () {
-     return this.$store.state.currentUser
-   }
+    currentUser: function () {
+      return this.$store.state.currentUser;
+    },
   },
 };
 </script>
@@ -78,7 +77,7 @@ export default {
   position: relative;
   z-index: 1;
 }
-.edit-profile{
+.edit-profile {
   line-height: 19px;
 }
 </style>

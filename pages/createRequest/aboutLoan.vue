@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <div class="verify-link"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+    <div class="verify-link" v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
 
     <div class="about-loan-container">
 
@@ -126,14 +126,22 @@ export default {
       if (event.isTrusted) {
         let loanType = $(event.srcElement).closest(".loan-type")[0];
         loanType = loanType.getAttribute("data-type");
-        let isFormCorrect = await this.v$.$validate();
-        if (loanType && isFormCorrect) {
+        // let isFormCorrect = await this.v$.$validate();
+        // if (loanType && isFormCorrect) {
           //save loan property on local storage
           localStorage.setItem("loanType", loanType);
           localStorage.setItem("loanAmount", this.amount);
-
+ let activeRoute = document.querySelector(".nuxt-link-exact-active");
+        activeRoute.querySelector(".step-button").classList.add("complete");
+        let activeRouteImg = activeRoute.querySelector("img");
+        activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
+        this.$emit("updateRequestData", {
+          key: "steps",
+          value: "true",
+          step: "aboutLoan",
+        });
           this.$router.replace({ path: "/createRequest/createProperty" });
-        }
+        // }
         //update the request loan type
         if (
           localStorage.getItem("requestId") != "undefined" &&
@@ -143,7 +151,7 @@ export default {
           let requestId = localStorage.getItem("requestId");
           await getRequestById(requestId).then(async (loanReq) => {
             //update the loan property
-            let updateLoan =  {};
+            let updateLoan = {};
             updateLoan = loanReq;
             updateLoan.loanType = loanType;
             updateLoan.amount = this.amount;
@@ -162,9 +170,12 @@ export default {
           .getAttribute("active-src");
       }
     },
-    verifyEmail:function(){
- this.$store.commit("setAccountStep", 3);      this.$router.replace({ path: "/createRequest/createAccount" });
-    }
+    verifyEmail: function () {
+      this.$store.commit("setState", {value:3,state:"createAccountStep"});
+      debugger
+      console.log(this.$store.state.createAccountStep);
+      this.$router.replace({ path: "/createRequest/createAccount" });
+    },
   },
   created() {
     this.$emit("updateRequestData", {
@@ -194,7 +205,7 @@ export default {
         if (!to.path.indexOf("createAccount") > 0)
           this.$router.replace({ path: "/" });
       } else {
-        let activeRoute = document.querySelector(".router-link-active");
+        let activeRoute = document.querySelector(".nuxt-link-exact-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
         let activeRouteImg = activeRoute.querySelector("img");
         activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
@@ -230,18 +241,18 @@ export default {
   cursor: pointer;
 }
 .loan-amount {
-      margin-bottom: 10px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    border: solid 1px var(--custom-blue);
-    border-radius: 11px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
+  margin-bottom: 10px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border: solid 1px var(--custom-blue);
+  border-radius: 11px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
 }
-.loan-amount input{
-  outline:none;
-  border:unset
+.loan-amount input {
+  outline: none;
+  border: unset;
 }
 .wrap-type {
   border: 1.5px solid var(--custom-blue);
@@ -272,19 +283,19 @@ export default {
     margin-right: 13px;
   }
   .loan-type img {
-    height:50%
+    height: 50%;
   }
-  .loans-types{
-    justify-content:left;
+  .loans-types {
+    justify-content: left;
   }
-  .wrap-type{
-    height:65px;
+  .wrap-type {
+    height: 65px;
   }
-  .loan-type p{
-  font-size:12px;
+  .loan-type p {
+    font-size: 12px;
   }
-  .sub-title{
-    font-size:13px
+  .sub-title {
+    font-size: 13px;
   }
 }
 </style>

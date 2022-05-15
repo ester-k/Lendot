@@ -72,7 +72,6 @@ export default {
       password.setAttribute("type", type);
     },
     async login() {
-      console.log("login");
       let email = this.email;
       let password = this.password;
       let self = this;

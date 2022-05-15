@@ -28,7 +28,7 @@
 
 <script>
 const actionCodeSettings = {
-  url: window.location.origin + "/createPassword/",
+  url: window.location.origin + "/createPassword",
   handleCodeInApp: true,
 };
 // import firebase from "firebase";
@@ -43,11 +43,12 @@ export default {
   },
   methods: {
     sendVerifyLink() {
-      // const fb = require("../main.js");
+
       let email = this.user.email;
       this.$fire.auth
         .sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
+        .then((response) => {
+          console.log(response);
           localStorage.setItem("emailForSignIn", email);
           let data = JSON.parse(localStorage.getItem("createRequestData"));
           data.steps["createAccount"].emailSend = "true";
@@ -66,6 +67,7 @@ export default {
     },
   },
   created() {
+    
     if (!this.$store.state.currentUser)
       this.$store.commit("setState", {
         value: JSON.parse(localStorage.getItem("currentUser")),
