@@ -67,7 +67,6 @@ export default {
     },
   },
   created() {
-    
     if (!this.$store.state.currentUser)
       this.$store.commit("setState", {
         value: JSON.parse(localStorage.getItem("currentUser")),
@@ -77,6 +76,7 @@ export default {
     if (this.$store.state.createAccountStep == 3) {
       this.sendVerifyLink();
     }
+   
   },
   computed: {
     emailSend: function () {

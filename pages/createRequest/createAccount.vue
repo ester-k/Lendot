@@ -127,9 +127,7 @@ export default {
     //   };
     // },
     createUserOnDB: async function () {
-      debugger;
-
-      
+    
       // if (!this.currentUser) {
       // if (this.checkValidForm()) {
       // let newUser = new User();
@@ -148,6 +146,9 @@ export default {
       this.createUser(newUser);
       localStorage.setItem("currentUser", JSON.stringify(newUser));
       let userForm = JSON.parse(localStorage.getItem("createRequestData"));
+      if(!userForm){
+         userForm["steps"]={}
+      }
       userForm.steps["createAccount"].data = newUser;
       localStorage.setItem("createRequestData", JSON.stringify(userForm));
       this.emailSend = true;

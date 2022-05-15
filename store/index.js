@@ -16,7 +16,6 @@ export const mutations = {
 }
 export const actions = {
     onAuthStateChangedAction(state, { authUser, claims }) {
-        // debugger
         console.log(authUser);
         if (!authUser) {
             this.$router.push('/login')
@@ -31,7 +30,7 @@ export const actions = {
             if (!state.state.currentUser) {
                 localStorage.removeItem("emailVerified");
             }
-            this.$router.push('/loanerScreen')
+            // this.$router.push('/loanerScreen')
         }
     }
 }
