@@ -2,7 +2,8 @@
   <div class="reset-password">
     <Header />
     <div class="main-container">
-      <img class="len-title  desktop" :src="require('~/assets/uploads/reset_pass_title.svg')" alt="reset password" />
+      <img class="len-title desktop" :src="require('~/assets/uploads/reset_pass_title.svg')" alt="reset password" />
+      <img class="len-title mobile" :src="require('~/assets/uploads/reset_pass_title_mobile.svg')" alt="reset password" />
       <div class="intro">Please enter your email and we’ll send you a link that will reset your password.</div>
       <label class="form-label">Email Address</label>
       <div class="wrap-input">
@@ -74,5 +75,29 @@ button[type="submit"] {
 
 .error-msg.show {
   display: block;
+}
+
+@media screen and (max-width: 768px) {
+  .intro {
+    font-size: 12px;
+    margin: 8px 0 26px;
+  }
+
+  button[type="submit"] {
+    width: 142px;
+    height: 31px;
+    font-size: 12px;
+    margin: 35px 0 9px;
+  }
+
+  .link {
+    font-size: 10px;
+    padding-left: 5px;
+  }
+
+  .main-container {
+    margin: 102px 27px;
+    max-width: 100%;
+  }
 }
 </style>
