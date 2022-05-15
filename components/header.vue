@@ -12,7 +12,7 @@
     /></a>
     <!-- <button class="fill-button"> back</button> -->
     <div class="blue-header"></div>
-         <button @click="logout"> Logout </button>
+         <!-- <button @click="logout"> Logout </button> -->
 
    </div>
 </template>
@@ -25,6 +25,8 @@ export default {
       $nuxt.$fire.auth.signOut();
       localStorage.removeItem("currentUser");
       localStorage.removeItem("createRequestData");
+            localStorage.removeItem("emailVerified");
+
     },
   },
 };

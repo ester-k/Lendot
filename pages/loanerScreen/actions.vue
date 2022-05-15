@@ -2,37 +2,27 @@
   <div class="actions-container page-content">
     <div class="no-action" v-if="!actionsLength">
       <div class="no-action-text">no actions needed</div>
-      <a href="/createRequest"
-        ><button type="button" class="fill-button new-loan">
+      <a href="/createRequest"><button type="button" class="fill-button new-loan">
           <p>+</p>
           <p>New Loan</p>
-        </button></a
-      >
+        </button></a>
     </div>
     <div v-else>
       <div class="" v-for="(action, aIndex) of loansByAction" :key="aIndex">
         <div v-if="action.loans.length">
           <h3 class="action-title">{{ action.loans[0].status.name }}</h3>
 
-          <div
-            class="single-loan"
-            v-for="(loan, index) of action.loans"
-            :key="index"
-            @click="
-              dynamicFunctionCall(
-                statuses[loan.status.name].action.func,
-                statuses[loan.status.name].action.prop,
-                loan
-              )
-            "
-          >
+          <div class="single-loan" v-for="(loan, index) of action.loans" :key="index" @click="
+            dynamicFunctionCall(
+              statuses[loan.status.name].action.func,
+              statuses[loan.status.name].action.prop,
+              loan
+            )
+          ">
             <div class="action-icon">
-              <img
-                v-if="loan.status"
-                :src="
-                  require('~/assets/uploads/' + statuses[loan.status.name].icon)
-                "
-              />
+              <img v-if="loan.status" :src="
+                require('~/assets/uploads/' + statuses[loan.status.name].icon)
+              " />
             </div>
             <div class="action-name" v-if="loan.status">
               <p class="name">{{ statuses[loan.status.name].controller }}</p>
@@ -70,26 +60,18 @@
         <div v-if="action.offers.length">
           <h3 class="action-title">{{ action.offers[0].status.name }}</h3>
 
-          <div
-            class="single-loan"
-            v-for="(offer, singleIndex) of action.offers"
-            :key="singleIndex"
-            @click="
-              dynamicFunctionCall(
-                statuses[offer.status.name].action.func,
-                statuses[offer.status.name].action.prop,
-                offer
-              )
-            "
-          >
+          <div class="single-loan" v-for="(offer, singleIndex) of action.offers" :key="singleIndex" @click="
+            dynamicFunctionCall(
+              statuses[offer.status.name].action.func,
+              statuses[offer.status.name].action.prop,
+              offer
+            )
+          ">
             <div class="action-icon">
-              <img
-                v-if="offer.status"
-                :src="
-                  require('~/assets/uploads/' +
-                    statuses[offer.status.name].icon)
-                "
-              />
+              <img v-if="offer.status" :src="
+                require('~/assets/uploads/' +
+                  statuses[offer.status.name].icon)
+              " />
             </div>
             <div class="action-name" v-if="offer.status">
               <p class="name">{{ statuses[offer.status.name].controller }}</p>
@@ -129,8 +111,9 @@
 <script>
 import LoanStatusEnum from "~/enums/statusEnum";
 import { getOffersByStatus } from "~/services/offer-service";
-import { getOffersByLoanerRequest } from "~/services/request-service";
+import { getOffersByLoanerRequest, getRequestsWithAction } from "~/services/request-service";
 import { countMissingDocs } from "~/services/documents-service";
+import Vue from 'vue'
 
 export default {
   name: "Actions",
@@ -149,16 +132,20 @@ export default {
       statuses: LoanStatusEnum,
       offers: [],
       loans: [],
-      actionsLength:false,
+      actionsLength: false,
     };
   },
   computed: {
     requests() {
       return this.$store.state.userRequests;
     },
+    currentUser() {
+      return this.$store.state.currentUser;
+    },
   },
   methods: {
     getRequestsByStatus() {
+      let self = this;
       let requiredFields = [
         "amount",
         "closeDate",
@@ -171,9 +158,10 @@ export default {
         "purpose",
         "rehab",
       ];
+      this.loans = JSON.parse(localStorage.getItem("loansWithAction"))
       if (this.loans) {
         this.loansByAction.forEach((action) => {
-          this.loans.forEach((loan) => {
+          self.loans.forEach((loan) => {
             if (loan.status._id == action.id) {
               action.loans.push(loan);
             }
@@ -189,10 +177,13 @@ export default {
         });
       }
     },
-    async getOffers() {
-      let self = this;
 
-      this.requests.forEach((request) => {
+    async getOffers() {
+
+      let tempRequests = Vue.util.extend({}, this.requests);
+      tempRequests = Object.values(tempRequests)
+      let finalData = JSON.parse(JSON.stringify(tempRequests));
+      finalData.forEach((request) => {
         if (request.offers.length) {
           request.offers.forEach((offer) => {
             let address = request.propertyAddress,
@@ -207,7 +198,7 @@ export default {
           });
         }
       });
-      console.log(this.offers);
+      return finalData
       // this.offersByAction.forEach(async (offerStatus) => {
       //   let filter = this.offers.filter(
       //     (offer) => {offer.status._id.trim() == offerStatus.id.trim();}
@@ -215,7 +206,6 @@ export default {
       //   offerStatus.offers = filter;
       // });
     },
-
     dynamicFunctionCall(funcionName, propertys, loan) {
       this[funcionName](propertys, loan);
     },
@@ -235,8 +225,16 @@ export default {
   },
 
   async created() {
-    this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
-    this.getRequestsByStatus();
+
+    // let actionsStatuses = [
+    //   "623c41e5d58dd53bd8f3a308",
+    //   "623c4275d58dd53bd8f3a30a", //Action Required
+    //   "623c436e01cfc93560df213f",
+    // ];
+    // await this.getLoansWithAction(actionsStatuses);
+
+    // this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
+    await this.getRequestsByStatus();
     if (!this.requests) {
       let vue = this;
       await getOffersByLoanerRequest(this.$store.currentUser._id).then(
@@ -248,14 +246,17 @@ export default {
         }
       );
     }
-    this.getOffers();
-
+    let finalData = this.getOffers();
+    this.$store.commit("setState", {
+      value: finalData,
+      state: "userRequests",
+    });
     this.loansByAction.forEach((action) => {
-      if(action.loans.length) {
-        this.actionsLength=true
+      if (action.loans.length) {
+        this.actionsLength = true
       }
     });
-    console.log(this.actionsLength);
+
   },
 };
 </script>
@@ -264,6 +265,7 @@ export default {
 .actions-container {
   margin: auto;
 }
+
 .no-action {
   margin: auto;
   text-align: center;
@@ -272,6 +274,7 @@ export default {
   justify-content: center;
   flex-direction: column;
 }
+
 .no-action .new-loan {
   display: flex;
   height: 39px;
@@ -283,15 +286,19 @@ export default {
   margin: auto;
   margin-top: 76px;
 }
+
 .no-action .new-loan p:first-child {
   margin-right: 24px;
 }
+
 .no-action-text {
   font-size: 20px;
 }
+
 .loans-table {
   padding-top: calc(93px + 19px + 28px);
 }
+
 .single-loan {
   margin: auto;
   height: 90px;
@@ -307,6 +314,7 @@ export default {
   cursor: pointer;
   max-width: 1190px;
 }
+
 .loan-status {
   height: 20px;
   width: 151px;
@@ -316,10 +324,12 @@ export default {
   font-size: 14px;
   margin-right: 60px;
 }
+
 .property-address,
 .loan-amount {
   font-size: 12px;
 }
+
 .loan-action button {
   border: var(--custom-blue) 2px solid;
   color: var(--custom-blue);
@@ -328,27 +338,34 @@ export default {
   min-width: 166px;
   box-shadow: 0px 3px 6px #00000029;
 }
+
 .action-title {
   font-size: 20px;
   margin-bottom: 30px;
 }
+
 .single-loan .action-name .name {
   font-size: 16px;
   font-weight: bold;
   width: 239px;
 }
+
 .single-loan .action-name {
   width: 239px;
 }
+
 .single-loan .action-icon {
   width: 60px;
 }
+
 .single-loan .property-details {
   width: 330px;
 }
+
 .single-loan .loan-details {
   width: 284px;
 }
+
 .single-loan .loan-action button {
   width: 196px;
   background-color: var(--custom-blue);
@@ -357,6 +374,7 @@ export default {
   font-weight: normal;
   box-shadow: none;
 }
+
 .missing-info {
   font-size: 12px;
   color: var(--custom-pink);

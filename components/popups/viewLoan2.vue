@@ -5,7 +5,7 @@
             <div class="content">
         <div dir="ltr">
 
-      <div class="close-popup" @click="this.$emit('closePopup')">
+      <div class="close-popup" @click="$emit('closePopup')">
         <img
           :src="require('~/assets/uploads/close_view_popup.svg')"
           alt="close popup"

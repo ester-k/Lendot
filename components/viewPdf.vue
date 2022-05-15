@@ -1,22 +1,19 @@
 <template>
-<div>
-  <!-- <div class="view-pdf-container">  -->
-  <!-- <vue-pdf-embed :source="this.source" /> -->
-  <!-- </div> -->
-</div>
+  <!-- <div  class="view-pdf-container"> -->
+  <div class="view-pdf-popup">
+    <vue-pdf-embed :source="source" />
+    <!-- </div> -->
+  </div>
 </template>
 
 <script>
-// import VuePdfEmbed from "vue-pdf-embed";
-import $ from "jquery";
+// import $ from "jquery";
 export default {
   name: "viewPdf",
-  prop: ["source"],
-  // components: { VuePdfEmbed },
+  props: ["source"],
   methods: {},
   created() {
     document.getElementById("app").classList.add("popup-opened");
-  
   },
 };
 </script>

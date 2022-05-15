@@ -19,6 +19,7 @@ const countMissingDocs = async(offer) => {
     let status = "6269565e8b7b1e5b2c6851ad";
     let avalibaleStatus = "626a2909e444b82e0c459e21";
     let returnOffer;
+
     await getStatusById(avalibaleStatus).then(response => {
         let missingDocs = 0;
         if (offer.status._id == status) {

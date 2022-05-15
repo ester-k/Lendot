@@ -5,32 +5,18 @@
       <div class="account-info">
         <p class="key">Name:</p>
         <p class="value" id="name_field">{{ currentUser.username }}</p>
-        <img
-          class="edit-icon"
-          alt="edit icon"
-          :src="require('~/assets/uploads/edit_icon.svg')"
-          @click="(event) => editProfile(event, 'name')"
-        />
-        <div
-          class="save-change"
-          @click="(event) => updateProfile(event, 'username')"
-        >
+        <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
+          @click="(event) => editProfile(event, 'name')" />
+        <div class="save-change" @click="(event) => updateProfile(event, 'username')">
           Save
         </div>
       </div>
       <div class="account-info">
         <p class="key">Email:</p>
         <p class="value" id="email_field">{{ currentUser.email }}</p>
-        <img
-          class="edit-icon"
-          alt="edit icon"
-          :src="require('~/assets/uploads/edit_icon.svg')"
-          @click="(event) => editProfile(event, 'email')"
-        />
-        <div
-          class="save-change"
-          @click="(event) => updateProfile(event, 'email')"
-        >
+        <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
+          @click="(event) => editProfile(event, 'email')" />
+        <div class="save-change" @click="(event) => updateProfile(event, 'email')">
           Save
         </div>
       </div>
@@ -38,16 +24,9 @@
       <div class="account-info">
         <p class="key">Phone:</p>
         <p class="value" id="phone_field">{{ currentUser.phone }}</p>
-        <img
-          class="edit-icon"
-          alt="edit icon"
-          :src="require('~/assets/uploads/edit_icon.svg')"
-          @click="(event) => editProfile(event, 'phone')"
-        />
-        <div
-          class="save-change"
-          @click="(event) => updateProfile(event, 'phone')"
-        >
+        <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
+          @click="(event) => editProfile(event, 'phone')" />
+        <div class="save-change" @click="(event) => updateProfile(event, 'phone')">
           Save
         </div>
       </div>
@@ -55,47 +34,24 @@
       <div class="account-info">
         <p class="key">Company Name:</p>
         <p class="value" id="company_field">your company name</p>
-        <img
-          class="edit-icon"
-          alt="edit icon"
-          :src="require('~/assets/uploads/edit_icon.svg')"
-          @click="(event) => editProfile(event, 'company')"
-        />
-        <div
-          class="save-change"
-          @click="(event) => updateProfile(event, 'company')"
-        >
+        <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
+          @click="(event) => editProfile(event, 'company')" />
+        <div class="save-change" @click="(event) => updateProfile(event, 'company')">
           Save
         </div>
       </div>
     </section>
     <section class="">
-     
+
 
       <div class="account-info">
         <p class="key">Password:</p>
-        <input
-          type="password"
-          class="value password"
-          id="password_field"
-          :value="currentUser.password"
-        />
-        <img
-          class="show-password"
-          alt="edit icon"
-          :src="require('~/assets/uploads/show_password.svg')"
-          @click="(event) => showPassword(event, 'password')"
-        />
-        <img
-          class="edit-icon"
-          alt="edit icon"
-          :src="require('~/assets/uploads/edit_icon.svg')"
-          @click="(event) => editProfile(event, 'password')"
-        />
-        <div
-          class="save-change"
-          @click="(event) => updateProfile(event, 'password')"
-        >
+        <input type="password" class="value password" id="password_field" :value="currentUser.password" />
+        <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/show_password.svg')"
+          @click="(event) => showPassword(event, 'password')" />
+        <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
+          @click="(event) => editProfile(event, 'password')" />
+        <div class="save-change" @click="(event) => updateProfile(event, 'password')">
           Save
         </div>
       </div>
@@ -148,9 +104,13 @@ export default {
       let input = $(event.target).closest(".account-info").find(".value")[0];
       updatedUser[field] = input.innerText;
       updatedUser._id
-      await updateUser( updatedUser._id,updatedUser).then((res) => {
+      await updateUser(updatedUser._id, updatedUser).then((res) => {
         localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-          this.$store.state.currentUser = updatedUser
+        this.$store.commit("setState", {
+          value: updatedUser,
+          state: "currentUser",
+        });
+
       });
     },
   },
@@ -190,6 +150,7 @@ export default {
   color: var(--custom-blue);
   margin-top: 92px;
 }
+
 .account-container section {
   box-shadow: 3px 3px 11px #00000029;
   border-radius: 10px;
@@ -197,38 +158,46 @@ export default {
   padding: 40px 0 30px 60px;
   margin-bottom: 30px;
 }
+
 .account-container section .title {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 34px;
 }
+
 .account-info {
   display: flex;
 }
+
 .account-info .key {
   font-size: 16px;
   font-weight: 600;
   margin-right: 13px;
 }
+
 .edit-icon {
   margin-left: 10px;
   cursor: pointer;
 }
+
 .show-password {
   cursor: pointer;
   margin-left: 10px;
 }
+
 .account-info .value[contenteditable="true"]:focus-visible {
   border: unset;
   outline: none;
   border-bottom: #707070 1px solid;
 }
+
 .account-info .password {
   height: unset;
   border: none;
   width: max-content;
   padding: 0;
 }
+
 .save-change {
   font-size: 16px;
   margin-left: 18px;
