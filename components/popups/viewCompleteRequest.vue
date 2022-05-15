@@ -3,8 +3,10 @@
     <div class="placeholder"></div>
     <div class="inner-popup">
       <div class="content">
+      
         <div dir="ltr">
           <div class="close-popup" @click="this.$emit('closePopup')">
+
             <img
               :src="require('~/assets/uploads/close_view_popup.svg')"
               alt="close popup"
@@ -166,6 +168,12 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 50px;
+}
+.popup .row.documents-list{
+  justify-content:left;
+}
+.popup .row.documents-list .wrap-document{
+ margin-right:41px ;
 }
 .title {
   margin-bottom: 10px;

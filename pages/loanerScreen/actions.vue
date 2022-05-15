@@ -145,7 +145,7 @@ export default {
   },
   methods: {
     getRequestsByStatus() {
-      let self=this;
+      let self = this;
       let requiredFields = [
         "amount",
         "closeDate",
@@ -158,11 +158,9 @@ export default {
         "purpose",
         "rehab",
       ];
-      this.loans=JSON.parse(localStorage.getItem("loansWithAction"))
+      this.loans = JSON.parse(localStorage.getItem("loansWithAction"))
       if (this.loans) {
         this.loansByAction.forEach((action) => {
-          console.log(self);
-        console.log("this.loansByAction", self.loans);
           self.loans.forEach((loan) => {
             if (loan.status._id == action.id) {
               action.loans.push(loan);
@@ -179,22 +177,12 @@ export default {
         });
       }
     },
-    // getLoansWithAction: async function (actionsStatuses) {
-    //   await getRequestsWithAction(this.currentUser._id, actionsStatuses).then(
-    //     (res) => {
-    //       debugger
-    //       this.loans = res;
-    //     }
-    //   );
-    // },
+
     async getOffers() {
-      let self = this;
+
       let tempRequests = Vue.util.extend({}, this.requests);
       tempRequests = Object.values(tempRequests)
-      console.log(tempRequests);
       let finalData = JSON.parse(JSON.stringify(tempRequests));
-      console.log(finalData);
-
       finalData.forEach((request) => {
         if (request.offers.length) {
           request.offers.forEach((offer) => {
@@ -207,7 +195,6 @@ export default {
             offer.request["_id"] = id;
             let offerCountDocs = countMissingDocs(offer);
             this.offers.push(offerCountDocs);
-            console.log("in for");
           });
         }
       });
@@ -269,7 +256,7 @@ export default {
         this.actionsLength = true
       }
     });
-  
+
   },
 };
 </script>
