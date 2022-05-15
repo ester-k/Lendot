@@ -32,6 +32,8 @@ export default {
       $nuxt.$fire.auth.signOut();
       localStorage.removeItem("currentUser");
       localStorage.removeItem("createRequestData");
+                  localStorage.removeItem("emailVerified");
+
     },
   },
   created() {},

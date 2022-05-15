@@ -10,6 +10,7 @@ export default {
   methods: {
     logout() {
       $nuxt.$fire.auth.signOut();
+      
     },
   },
   created() {
