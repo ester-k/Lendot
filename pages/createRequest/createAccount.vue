@@ -171,6 +171,10 @@ export default {
       });
       this.createUser(newUser);
       localStorage.setItem("currentUser", JSON.stringify(newUser));
+        this.$store.commit("setState", {
+          value: newUser,
+          state: "currentUser",
+        });
       let userForm = JSON.parse(localStorage.getItem("createRequestData"));
       if (!userForm) {
         userForm["steps"] = {};
