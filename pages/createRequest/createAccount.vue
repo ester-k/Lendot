@@ -187,16 +187,15 @@ export default {
     createUser: async function (user) {
       await createUser(user)
         .then((response) => {
-          if (response.hasOwnProperty("code")) {
+          if (!response.hasOwnProperty("code")) {
+            this.$store.commit("setState", {
+              value: 2,
+              state: "createAccountStep",
+            });
+            localStorage.setItem("createAccountStep", 2);
+          } else {
             if (response.code == 11000) {
-              debugger;
               document.getElementById("emailError").classList.add("show");
-            } else {
-              this.$store.commit("setState", {
-                value: 2,
-                state: "createAccountStep",
-              });
-              localStorage.setItem("createAccountStep", 2);
             }
           }
         })
@@ -320,15 +319,16 @@ export default {
   font-size: 16px;
   text-decoration: underline;
 }
-.error-msg{
+.error-msg {
   font-size: 16px;
-  margin-top:18px
+  margin-top: 18px;
 }
-.error-msg a{
-text-decoration: underline;
-color:var(--custom-pink)}
-.next-btn{
-  display:flex;
+.error-msg a {
+  text-decoration: underline;
+  color: var(--custom-pink);
+}
+.next-btn {
+  display: flex;
   justify-content: space-between;
 }
 @media screen and (max-width: 768px) {
