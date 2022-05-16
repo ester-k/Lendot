@@ -10,10 +10,7 @@
       class="lendot-icon mobile"
       :src="require('~/assets/uploads/mobile_logo.png')"
     /></a>
-    <!-- <button class="fill-button"> back</button> -->
-    <div class="blue-header"></div>
-         <!-- <button @click="logout"> Logout </button> -->
-
+    <div class="blue-header"> <button class="fill-button" @click="$router.go(-1)"> back</button></div>
    </div>
 </template>
 
@@ -37,11 +34,21 @@ export default {
   height: 120px;
   background-color: var(--custom-blue);
   width: 100%;
+  height: 120px;
+    background-color: var(--custom-blue);
+    width: 100%;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 .lendot-icon {
   position: absolute;
   top: 0;
   left: 0;
+}
+.fill-button{
+  margin-right: 218px;
 }
 @media screen and (max-width: 768px) {
   .blue-header {
