@@ -59,7 +59,6 @@ export default {
   data() {
     return {
       loans: [],
-      // loanerId: JSON.parse(localStorage.getItem("currentUser"))._id,
     };
   },
   methods: {
@@ -76,7 +75,11 @@ export default {
       return this.$store.state.userRequests;
     },
     loanerId() {
-      return this.$store.state.currentUser._id;
+      console.log(this.$store.state.currentUser);
+      return (
+        this.$store.state.currentUser._id ||
+        JSON.parse(localStorage.getItem("currentUser"))._id
+      );
     },
   },
   async created() {
@@ -90,12 +93,14 @@ export default {
       !this.$store.state.userRequests ||
       !this.$store.state.userRequests.length
     ) {
-      await getOffersByLoanerRequest(this.loanerId).then((res) =>
+      await getOffersByLoanerRequest(this.loanerId).then((res) => {
+        debugger;
+        console.log(res);
         this.$store.commit("setState", {
           value: res,
           state: "userRequests",
-        })
-      );
+        });
+      });
     }
     if (this.loans) {
       localStorage.setItem("loansWithAction", JSON.stringify(this.loans));

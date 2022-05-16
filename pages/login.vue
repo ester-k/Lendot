@@ -72,13 +72,11 @@ export default {
           console.log("error.code", error.code);
           if (error.code == "auth/wrong-password") {
             document.getElementById("emailError").classList.add("show");
-                        document.getElementById("userError").classList.remove("show");
-
+            document.getElementById("userError").classList.remove("show");
           }
           if (error.code == "auth/user-not-found") {
             document.getElementById("userError").classList.add("show");
-                        document.getElementById("emailError").classList.remove("show");
-
+            document.getElementById("emailError").classList.remove("show");
           }
         });
     },

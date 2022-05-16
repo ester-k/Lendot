@@ -28,7 +28,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .blue-header {
   height: 120px;
   background-color: var(--custom-blue);
