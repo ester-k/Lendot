@@ -64,6 +64,7 @@
               </div>
               <div class="wrap-offer-container" :id="'offer' + i + '-view'">
                 <div class="offer-title">
+
                   <div class="loaner-name">
                     {{ offer.lenderId.firstName }} {{ offer.lenderId.lastName }}
                   </div>

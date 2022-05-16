@@ -30,13 +30,22 @@ export default {
   methods: {
     logout() {
       $nuxt.$fire.auth.signOut();
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("createRequestData");
-      localStorage.removeItem("emailVerified");
-
+      localStorage.clear();
     },
   },
-  created() { },
+  created() {
+    if (
+      this.currentUser &&
+      Object.keys(this.currentUser).length === 0 &&
+      Object.getPrototypeOf(this.currentUser) === Object.prototype
+    ) {
+      this.$store.commit("setState", {
+        value: JSON.parse(localStorage.getItem("currentUser")),
+        state: "currentUser",
+      });
+      console.log("not");
+    }
+  },
   computed: {
     currentUser: function () {
       return this.$store.state.currentUser;
@@ -86,10 +95,12 @@ export default {
   z-index: 1;
 }
 
-.edit-profile,.logout {
+.edit-profile,
+.logout {
   line-height: 19px;
 }
-.logout{
-  margin-top:13px;display: block;
+.logout {
+  margin-top: 13px;
+  display: block;
 }
 </style>

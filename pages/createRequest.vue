@@ -155,7 +155,7 @@ export default {
       // },
     },
     created: async function () {
-      if (!localStorage.getItem("createRequestData"))
+      if (!localStorage.getItem("createRequestData")){
         localStorage.setItem(
           "createRequestData",
           JSON.stringify({
@@ -166,7 +166,7 @@ export default {
               aboutProperty: { complete: "false" },
             },
           })
-        );
+        );}
       this.createRequestData = localStorage.getItem("createRequestData");
       this.createRequestStep = this.createRequestData.createRequestStep;
       if (  $nuxt.$route.path!="/createRequest") {
@@ -207,7 +207,7 @@ export default {
             createProperty: { complete: "false" },
             aboutProperty: { complete: "false" },
           },
-          createRequestStep: "aboutProperty",
+          createRequestStep: "aboutLoan",
         };
          localStorage.setItem("createRequestData",JSON.stringify(createRequestData));
       }

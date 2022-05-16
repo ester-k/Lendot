@@ -150,6 +150,10 @@ export default {
               // window.localStorage.removeItem("emailForSignIn");
               let userFromFB = result.user;
               localStorage.setItem("currentUser", JSON.stringify(result.user));
+                this.$store.commit("setState", {
+          value: result.user,
+          state: "currentUser",
+        });
               //save on mongo with isActive=false
               this.updateUser(userFromFB.email, true);
               localStorage.setItem("emailVerified", true);
@@ -192,6 +196,10 @@ export default {
         cUser["username"] = cUser["firstName"] + " " + cUser["lastName"];
         cUser["phone"] = updateUser.phone;
         localStorage.setItem("currentUser", JSON.stringify(cUser));
+          this.$store.commit("setState", {
+          value: cUser,
+          state: "currentUser",
+        });
       });
     },
   },
