@@ -18,6 +18,7 @@
           type="text"
           name="address"
           placeholder="Address"
+          v-model="address"
         />
        
       </div>
@@ -27,6 +28,7 @@
             type="text"
             name="city"
             placeholder="Property City"
+            v-model="city"
           />
          
         </div>
@@ -45,6 +47,7 @@
             type="text"
             name="zip"
             placeholder="Property Zip Code"
+            v-model="zip"
           />
         
         </div>

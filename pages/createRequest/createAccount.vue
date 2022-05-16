@@ -236,7 +236,6 @@ export default {
     },
   },
   created() {
-    // console.log(valid.firstName.$error);
     this.$emit("updateRequestData", {
       key: "createRequestStep",
       value: "createAccount",

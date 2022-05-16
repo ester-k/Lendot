@@ -27,13 +27,13 @@ export const mutations = {
 }
 export const actions = {
     onAuthStateChangedAction(state, { authUser, claims }) {
+        // debugger
         if (!authUser) {
             this.$router.push('/login')
-            console.log("not conect");
-
-        } else {
-            this.$router.push('/loanerScreen')
-            console.log("conect");
         }
+        // else {
+        //     this.$router.push('/loanerScreen')
+        //     console.log("conect");
+        // }
     }
 }
