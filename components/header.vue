@@ -18,11 +18,7 @@
 export default {
   name: "Header",
   methods: {
-    logout() {
-      $nuxt.$fire.auth.signOut();
-      localStorage.clear();
-    },
-  },
+     },
 };
 </script>
 
