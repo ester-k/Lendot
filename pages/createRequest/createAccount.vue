@@ -75,10 +75,11 @@
           <input type="number" :disabled="emailVerified" />
         </div> 
           <!-- credit score -->
-     
-        <button type="submit">next</button>
-                  <p class="error-msg" id="emailError">This email address exists,<NuxtLink to="/login"> click here to log in</NuxtLink></p>
+     <div class="next-btn">
+                         <p class="error-msg" id="emailError">This email address exists,<NuxtLink to="/login"> click here to log in</NuxtLink></p>
 
+        <button type="submit">next</button>
+     </div>
       </form> 
     
     </div>
@@ -319,7 +320,17 @@ export default {
   font-size: 16px;
   text-decoration: underline;
 }
-
+.error-msg{
+  font-size: 16px;
+  margin-top:18px
+}
+.error-msg a{
+text-decoration: underline;
+color:var(--custom-pink)}
+.next-btn{
+  display:flex;
+  justify-content: space-between;
+}
 @media screen and (max-width: 768px) {
   .purchase-cnt input[type="number"] {
     width: 32px;
