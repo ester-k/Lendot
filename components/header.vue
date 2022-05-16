@@ -20,9 +20,7 @@ export default {
   methods: {
     logout() {
       $nuxt.$fire.auth.signOut();
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("createRequestData");
-      localStorage.removeItem("emailVerified");
+      localStorage.clear();
     },
   },
 };
