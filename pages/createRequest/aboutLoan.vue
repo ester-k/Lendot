@@ -19,7 +19,10 @@
         <input
           type="string"
           name="loan amount"
+           v-model="amount"
         />
+                <p>$</p>
+
       </div>
       <h3 class="sub-title">What type of loan are you looking for?</h3>
       <div class="loans-types">
@@ -128,10 +131,10 @@ export default {
         loanType = loanType.getAttribute("data-type");
         // let isFormCorrect = await this.v$.$validate();
         // if (loanType && isFormCorrect) {
-          //save loan property on local storage
-          localStorage.setItem("loanType", loanType);
-          localStorage.setItem("loanAmount", this.amount);
- let activeRoute = document.querySelector(".nuxt-link-exact-active");
+        //save loan property on local storage
+        localStorage.setItem("loanType", loanType);
+        localStorage.setItem("loanAmount", this.amount);
+        let activeRoute = document.querySelector(".nuxt-link-exact-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
         let activeRouteImg = activeRoute.querySelector("img");
         activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
@@ -140,7 +143,7 @@ export default {
           value: "true",
           step: "aboutLoan",
         });
-          this.$router.replace({ path: "/createRequest/createProperty" });
+        this.$router.replace({ path: "/createRequest/createProperty" });
         // }
         //update the request loan type
         if (
@@ -158,7 +161,6 @@ export default {
             await updateRequest(updateLoan).then((updateLoan) => {
               // localStorage.removeItem("requestId");
               // this.$router.replace({ path: "/" });
-              console.log(updateLoan);
             });
           });
         }
@@ -171,8 +173,7 @@ export default {
       }
     },
     verifyEmail: function () {
-      this.$store.commit("setState", {value:3,state:"createAccountStep"});
-      debugger
+      this.$store.commit("setState", { value: 3, state: "createAccountStep" });
       console.log(this.$store.state.createAccountStep);
       this.$router.replace({ path: "/createRequest/createAccount" });
     },

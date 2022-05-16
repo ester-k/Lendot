@@ -81,7 +81,6 @@ export default {
     this.currentLoan=this.loan
     await getOffersByRequest(this.loan._id).then((response) => {
        this.currentLoan.offers = response;
-      console.log( this.currentLoan);
     });
   },
  async mounted() {

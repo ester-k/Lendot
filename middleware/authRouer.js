@@ -1,5 +1,4 @@
 export default function({ route, redirect }) {
-    debugger
     if (route.path != "/login") {
         if (route.path == "/createRequest") {
             let createRequestData = JSON.parse(localStorage.getItem("createRequestData"));

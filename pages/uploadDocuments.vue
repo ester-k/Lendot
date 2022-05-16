@@ -168,7 +168,6 @@ export default {
             let fileCode = fileReader.result;
             //send to S3
             uploadedFile.blob = fileCode;
-            console.log(uploadedFile);
             let formData = new FormData();
             formData.append("fileName", uploadedFile.name);
             formData.append("type", uploadedFile.type);
@@ -187,9 +186,7 @@ export default {
                 console.log(err.response);
                 return false;
               });
-            console.log(this.offer.documents[index]);
             this.offer.documents[index] = res;
-            console.log(this.offer.documents[index]);
           };
         }
         fileReader.readAsDataURL(this.file[0]);

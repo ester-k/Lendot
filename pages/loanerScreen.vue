@@ -75,7 +75,6 @@ export default {
       return this.$store.state.userRequests;
     },
     loanerId() {
-      console.log(this.$store.state.currentUser);
       return (
         this.$store.state.currentUser._id ||
         JSON.parse(localStorage.getItem("currentUser"))._id

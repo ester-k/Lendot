@@ -53,7 +53,7 @@
             </div>
             <div class="loan-prop">
               <p class="key">Rehab / Construction Budget</p>
-              <p class="value">{{ loan.rehub }}$</p>
+              <p class="value">{{ loan.rehab }}$</p>
             </div>
           </div>
         </div>

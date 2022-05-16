@@ -20,7 +20,6 @@ const getRequestListByLoaner = async(loanerId) => {
     return response.data;
 }
 const getOffersByLoanerRequest = async(loanerId) => {
-    console.log("here");
     const response = await axios.get(`${apiTarget}/request/getOffersByLoanerRequest/${loanerId}`);
     return response.data;
 }

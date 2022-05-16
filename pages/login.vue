@@ -61,15 +61,13 @@ export default {
       let self = this;
       await this.$fire.auth
         .signInWithEmailAndPassword(email, password)
-        .then((response) => {
-          self.getLoginUser(email);
-
-          self.$router.replace("/loanerScreen");
+        .then(() => {
+         self.getLoginUser(email);
+         
         })
         .catch((error) => {
           this.errorCode = error.code;
           this.errorMessage = error.message;
-          console.log("error.code", error.code);
           if (error.code == "auth/wrong-password") {
             document.getElementById("emailError").classList.add("show");
             document.getElementById("userError").classList.remove("show");
@@ -88,6 +86,11 @@ export default {
           state: "currentUser",
         });
         localStorage.setItem("currentUser", JSON.stringify(response));
+        this.$store.commit("setState", {
+          value: response,
+          state: "currentUser",
+        });
+         self.$router.replace("/loanerScreen");
       });
     },
   },

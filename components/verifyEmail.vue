@@ -48,13 +48,12 @@ export default {
       this.$fire.auth
         .sendSignInLinkToEmail(email, actionCodeSettings)
         .then((response) => {
-          console.log(response);
           localStorage.setItem("emailForSignIn", email);
           let data = JSON.parse(localStorage.getItem("createRequestData"));
           data.steps["createAccount"].emailSend = "true";
           localStorage.setItem("createRequestData", JSON.stringify(data));
           this.loaclEmailSend = true;
-          this.$store.commit("setAccountStep", {
+          this.$store.commit("setState", {
             value: 3,
             state: "createAccountStep",
           });

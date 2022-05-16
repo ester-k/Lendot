@@ -48,7 +48,7 @@ export default {
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
         '@nuxtjs/axios', '@nuxtjs/auth-next', ['@nuxtjs/recaptcha', {
-            hideBadge: true,
+            hideBadge: false,
             siteKey: '6Le3b5gfAAAAAGwcMbMTR52xBd3UCVw_ICS9t_ez',
             version: 3,
         }],
