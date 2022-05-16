@@ -21,6 +21,7 @@
                   
 
         </div>  <p class="error-msg" id="emailError">Wrong password</p>
+        <p class="error-msg" id="userError">User not found</p>
         <NuxtLink to="/resetPassword" class="forgot-password">Forgot password?</NuxtLink>
 
         <button type="submit" class="">Log In</button>
@@ -68,9 +69,16 @@ export default {
         .catch((error) => {
           this.errorCode = error.code;
           this.errorMessage = error.message;
-          console.log("error.code",error.code);
-           if (error.code == "auth/wrong-password") {
-            document.getElementById("emailError").classList.add("show")
+          console.log("error.code", error.code);
+          if (error.code == "auth/wrong-password") {
+            document.getElementById("emailError").classList.add("show");
+                        document.getElementById("userError").classList.remove("show");
+
+          }
+          if (error.code == "auth/user-not-found") {
+            document.getElementById("userError").classList.add("show");
+                        document.getElementById("emailError").classList.remove("show");
+
           }
         });
     },
@@ -81,7 +89,7 @@ export default {
           value: response,
           state: "currentUser",
         });
-        localStorage.setItem("currentUser", JSON.stringify(response))
+        localStorage.setItem("currentUser", JSON.stringify(response));
       });
     },
   },
