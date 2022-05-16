@@ -34,8 +34,6 @@ export default {
   background-color: var(--custom-blue);
   width: 100%;
   height: 120px;
-  background-color: var(--custom-blue);
-  width: 100%;
   text-align: right;
   display: flex;
   align-items: center;
