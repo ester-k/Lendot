@@ -4,9 +4,11 @@
       <img
       alt="lendot logo"
       class="lendot-icon mobile"
-      :src="require('~/assets/uploads/mobile_logo.png')"
+      :src="require('~/assets/uploads/noname_logo_mobile.svg')"
     /></a>
-    <div class="blue-header"></div>
+    <div class="blue-header">
+      <h1 class="title">{{title}}</h1>
+    </div>
 
    </div>
 </template>
@@ -16,6 +18,7 @@ export default {
   name: "MobileHeader",
   methods: {
   },
+  props:["title"]
 };
 </script>
 

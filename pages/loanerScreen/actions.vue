@@ -256,7 +256,6 @@ export default {
         this.actionsLength = true
       }
     });
-
   },
 };
 </script>

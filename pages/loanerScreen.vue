@@ -1,6 +1,6 @@
 <template>
   <div class="lender-screen">
-    <MobileHeader />
+    <MobileHeader :title="title"/>
     <ProfileSidebar />
     <div class="app-container">
       <div class="lender-menu">
@@ -59,6 +59,7 @@ export default {
   data() {
     return {
       loans: [],
+      title:'',
     };
   },
   methods: {
@@ -119,7 +120,7 @@ export default {
 
 <style>
 .lender-screen {
-  display: flex;
+  display: block;
   height: 100%;
   min-height: 100vh;
   background-color: var(--custom-light-gray);
@@ -203,5 +204,10 @@ export default {
   color: white;
   margin-right: 0;
   text-align: center;
+}
+@media screen and (max-width: 768px) {
+  .lender-menu{
+    display:none;
+  }
 }
 </style>
