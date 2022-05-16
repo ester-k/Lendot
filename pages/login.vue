@@ -62,8 +62,7 @@ export default {
       await this.$fire.auth
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-         self.getLoginUser(email);
-         
+          self.getLoginUser(email);
         })
         .catch((error) => {
           this.errorCode = error.code;
@@ -90,7 +89,7 @@ export default {
           value: response,
           state: "currentUser",
         });
-         self.$router.replace("/loanerScreen");
+        self.$router.replace("/loanerScreen");
       });
     },
   },
@@ -142,7 +141,10 @@ button[type="submit"] {
   text-align: right;
   color: var(--custom-pink);
 }
-
+.login {
+  margin-top: calc((100vh - 120px) / 2);
+  transform: translate(0, -50%);
+}
 @media screen and (max-width: 768px) {
   .login {
     margin: 102px 27px;

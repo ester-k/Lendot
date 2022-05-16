@@ -14,9 +14,9 @@
 
           <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/blue_show_password.svg')"
             @click="(event) => showPassword(event, 1)" />
-          <p class="error-msg" id="emailError">At least 8 characters</p>
 
         </div>
+          <p class="error-msg" id="emailError">At least 8 characters</p>
 
 
         <label> Confirm New Password</label>
@@ -31,8 +31,8 @@
       <div class="form-terms">
         <div class="form-term">
           <img class="term-icon" :src="require('~/assets/uploads/form-term-icon.svg')" />
-         
-        </div> <p>At least 8 characters</p>
+         <p>At least 8 characters</p>
+        </div> 
         <div class="form-term">
           <img class="term-icon" :src="require('~/assets/uploads/form-term-icon.svg')" />
           <p>

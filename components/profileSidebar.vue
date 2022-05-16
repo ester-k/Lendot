@@ -7,7 +7,7 @@
         <p class="full-name">{{ currentUser.username }}</p>
         <p class="user-email">{{ currentUser.email }}</p>
         <button class="border-button edit-profile"
-          @click="this.$router.replace({ path: '/loanerScreen/accountSettings' })">Edit Profile</button>
+          @click="$router.replace({ path: '/loanerScreen/accountSettings' })">Edit Profile</button>
 
         <button @click="logout" class="border-button logout"> Logout </button>
       </div>

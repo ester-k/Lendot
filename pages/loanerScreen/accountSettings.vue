@@ -45,15 +45,17 @@
 
 
       <div class="account-info">
-        <p class="key">Password:</p>
-        <input type="password" class="value password" id="password_field" :value="currentUser.password" />
+        
+                <NuxtLink to="/resetPassword" class="forgot-password key">Reset Password</NuxtLink>
+
+        <!-- <input type="password" class="value password" id="password_field" :value="currentUser.password" />
         <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/show_password.svg')"
           @click="(event) => showPassword(event, 'password')" />
         <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
           @click="(event) => editProfile(event, 'password')" />
         <div class="save-change" @click="(event) => updateProfile(event, 'password')">
           Save
-        </div>
+        </div> -->
       </div>
     </section>
     <!-- <section class="rating"><div class="title">Your Rating</div></section> -->
@@ -204,5 +206,8 @@ export default {
   color: var(--custom-pink);
   display: none;
   cursor: pointer;
+}
+.forgot-password,.forgot-password:hover{
+  color:var(--custom-blue)
 }
 </style>

@@ -93,9 +93,7 @@ export default {
       !this.$store.state.userRequests.length
     ) {
       await getOffersByLoanerRequest(this.loanerId).then((res) => {
-        debugger;
-        console.log(res);
-        this.$store.commit("setState", {
+             this.$store.commit("setState", {
           value: res,
           state: "userRequests",
         });
