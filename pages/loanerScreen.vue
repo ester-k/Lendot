@@ -42,7 +42,7 @@
           </NuxtLink>
         </div>
       </div>
-      <NuxtChild />
+      <NuxtChild @childTitle="setTitle"/>
     </div>
   </div>
 </template>
@@ -70,12 +70,16 @@ export default {
         }
       );
     },
+    setTitle(childTitle){
+      this.title = childTitle
+    }
   },
   computed: {
     requests() {
       return this.$store.state.userRequests;
     },
     loanerId() {
+      console.log(this.$store.state.currentUser);
       return (
         this.$store.state.currentUser._id ||
         JSON.parse(localStorage.getItem("currentUser"))._id
@@ -94,7 +98,8 @@ export default {
       !this.$store.state.userRequests.length
     ) {
       await getOffersByLoanerRequest(this.loanerId).then((res) => {
-             this.$store.commit("setState", {
+        console.log(res);
+        this.$store.commit("setState", {
           value: res,
           state: "userRequests",
         });
