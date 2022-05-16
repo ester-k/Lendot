@@ -42,6 +42,7 @@
           <input
             type="email"
             name="email"
+              :disabled="emailVerified"
             placeholder="youremail@gmail.con"
             v-model="email"
 
@@ -72,7 +73,7 @@
             >How many investment properties have you purchased/refinanced in the
             last two years?</label
           >
-          <input type="number" :disabled="emailVerified" />
+          <input type="number" placeholder="0" :disabled="emailVerified" />
         </div> 
           <!-- credit score -->
      <div class="next-btn">
@@ -92,14 +93,10 @@
   </div>
 </template>
 <script>
-// import { createUser } from "~/services/user-service.js";
-
 // import { User } from ".~/models/user";
-// import VerifyEmail from "./verifyEmail.vue";
 //vuelidate
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength, numeric } from "@vuelidate/validators";
-// import createUser from "~/plugins/service.js";
 import { createUser } from "~/services/user-service";
 
 // import * as validators from 'vuelidate/lib/validators'
@@ -161,7 +158,7 @@ export default {
       //
       newUser.firstName = this.firstName;
       newUser.lastName = this.lastName;
-      newUser.userName = this.firstName + this.lastName;
+      newUser.username = this.firstName + this.lastName;
       newUser.email = this.email;
       newUser.phone = this.phone;
       this.currentUser = newUser;
@@ -171,6 +168,10 @@ export default {
       });
       this.createUser(newUser);
       localStorage.setItem("currentUser", JSON.stringify(newUser));
+      this.$store.commit("setState", {
+        value: newUser,
+        state: "currentUser",
+      });
       let userForm = JSON.parse(localStorage.getItem("createRequestData"));
       if (!userForm) {
         userForm["steps"] = {};
@@ -178,11 +179,6 @@ export default {
       userForm.steps["createAccount"].data = newUser;
       localStorage.setItem("createRequestData", JSON.stringify(userForm));
       this.emailSend = true;
-
-      // }
-      // } else {
-      //   this.$router.replace({ path: "/createRequest/aboutLoan" });
-      // }
     },
     createUser: async function (user) {
       await createUser(user)
@@ -236,6 +232,12 @@ export default {
     },
   },
   created() {
+
+//if user is logged he can't create account
+if($nuxt.$fire.auth.currentUser){
+this.$router.replace("/createRequest")
+}
+
     this.$emit("updateRequestData", {
       key: "createRequestStep",
       value: "createAccount",
