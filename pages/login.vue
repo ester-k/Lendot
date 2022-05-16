@@ -148,6 +148,7 @@ button[type="submit"] {
 @media screen and (max-width: 768px) {
   .login {
     margin: 102px 27px;
+    transform: none;
   }
 
   .register-link {

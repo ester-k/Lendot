@@ -1,6 +1,6 @@
 <template>
   <div class="lender-screen">
-    <MobileHeader />
+    <MobileHeader :title="title"/>
     <ProfileSidebar />
     <div class="app-container">
       <div class="lender-menu">
@@ -42,7 +42,7 @@
           </NuxtLink>
         </div>
       </div>
-      <NuxtChild />
+      <NuxtChild @childTitle="setTitle"/>
     </div>
   </div>
 </template>
@@ -59,6 +59,7 @@ export default {
   data() {
     return {
       loans: [],
+      title:'',
     };
   },
   methods: {
@@ -69,12 +70,16 @@ export default {
         }
       );
     },
+    setTitle(childTitle){
+      this.title = childTitle
+    }
   },
   computed: {
     requests() {
       return this.$store.state.userRequests;
     },
     loanerId() {
+      console.log(this.$store.state.currentUser);
       return (
         this.$store.state.currentUser._id ||
         JSON.parse(localStorage.getItem("currentUser"))._id
@@ -93,7 +98,8 @@ export default {
       !this.$store.state.userRequests.length
     ) {
       await getOffersByLoanerRequest(this.loanerId).then((res) => {
-             this.$store.commit("setState", {
+        console.log(res);
+        this.$store.commit("setState", {
           value: res,
           state: "userRequests",
         });
@@ -116,7 +122,7 @@ export default {
 
 <style>
 .lender-screen {
-  display: flex;
+  display: block;
   height: 100%;
   min-height: 100vh;
   background-color: var(--custom-light-gray);
@@ -200,5 +206,10 @@ export default {
   color: white;
   margin-right: 0;
   text-align: center;
+}
+@media screen and (max-width: 768px) {
+  .lender-menu{
+    display:none;
+  }
 }
 </style>

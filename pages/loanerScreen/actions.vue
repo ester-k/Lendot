@@ -256,7 +256,7 @@ export default {
         this.actionsLength = true
       }
     });
-
+    this.$emit('childTitle', "actions");
   },
 };
 </script>
@@ -378,5 +378,31 @@ export default {
 .missing-info {
   font-size: 12px;
   color: var(--custom-pink);
+}
+
+@media screen and (max-width: 768px) {
+  .no-action {
+    padding: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .no-action .new-loan{
+    margin-top: 14px;
+  }
+
+  .no-action-text {
+    font-size: 13px;
+  }
+
+  .no-action .new-loan {
+    font-size: 13px;
+    }
+
+  .no-action .new-loan p:first-child {
+    margin-right: 5px;
+  }
 }
 </style>
