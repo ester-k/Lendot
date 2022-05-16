@@ -339,4 +339,7 @@ export default {
 .upload-area a {
   color: var(--custom-pink);
 }
+.back-button{
+display: block;
+}
 </style>

@@ -3,7 +3,7 @@
     <Header />
     <div class="main-container ">
       <div class="request-steps">
-       <div
+        <div
           v-if="!$nuxt.$fire.auth.currentUser"
           class="request-step about-you-step"
         >

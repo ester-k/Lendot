@@ -10,7 +10,7 @@
       class="lendot-icon mobile"
       :src="require('~/assets/uploads/mobile_logo.png')"
     /></a>
-    <div class="blue-header"> <button class="fill-button" @click="$router.go(-1)"><img   :src="require('~/assets/uploads/back_icon.svg')"> Back</button></div>
+    <div class="blue-header"> <button class="fill-button back-button" @click="$router.go(-1)"><img   :src="require('~/assets/uploads/back_icon.svg')"> Back</button></div>
    </div>
 </template>
 
@@ -52,6 +52,9 @@ font-weight: 500;;
 }
 .fill-button img{
   margin-right:17px;
+}
+.back-button{
+display: none;
 }
 @media screen and (max-width: 768px) {
   .blue-header {
