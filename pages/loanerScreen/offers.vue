@@ -321,7 +321,6 @@ export default {
       let offer = this.loans[loanIndex].offers[offerIndex];
       offer.status = "decline";
       await updateOfferStatus(offer._id, offer.status).then((res) => {
-        console.log(this.loans[loanIndex]);
         this.loans[loanIndex].offers.splice(offerIndex, 1);
         this.loans[loanIndex].declinedOffers.push(offer);
       });
@@ -387,13 +386,9 @@ export default {
       let localLoan = JSON.parse(localStorage.getItem("requestToOffers"));
       if (localLoan._id == this.$route.query.loan) {
         if (typeof localLoan.loanerId == "string") {
-          console.log("localLoan._id", localLoan._id);
           await getRequestById(localLoan._id).then((response) => {
-            console.log("response", response);
             localLoan = response;
           });
-
-          console.log(localLoan);
         }
         this.loans.push(localLoan);
       } else {

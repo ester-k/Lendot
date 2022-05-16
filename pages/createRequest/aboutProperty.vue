@@ -40,6 +40,7 @@
               type="date"
               name="close date"
               class="date-input"
+              v-model="date"
             />
           </div>
         </div>
@@ -47,12 +48,15 @@
         <div>
           <label class="form-label">Purchase Price</label>
 
-          <div class="wrap-input left-input">
+          <div class="wrap-input left-input input-amount">
             <input
               type="text"
               name="purchase price"
               placeholder="Enter A Number"
+              v-model="price"
             />
+                                     <p>$</p>
+
           </div>
         </div>
       </div>
@@ -61,34 +65,38 @@
         <div class="left-input">
           <label class="form-label"> Rehab/Construction Budget</label>
 
-          <div class="wrap-input">
+          <div class="wrap-input input-amount">
             <input
               type="text"
               name="rehab"
               placeholder="Enter A Number"
+              v-model="rehab"
             />
-         
+                         <p>$</p>
+
           </div>
         </div>
 
         <div>
           <label class="form-label">Estimated After Completion Value:</label>
 
-          <div class="wrap-input left-input">
+          <div class="wrap-input left-input  input-amount">
             <input
               type="text"
               name="estimated"
               placeholder="Enter A Number"
+              v-model="estimated"
             />
-           
+                                    <p>$</p>
+
           </div>
         </div>
       </div>
     
   <!-- <recaptcha /> -->
 
-      <!-- <ReCaptcha /> -->
-      <button type="submit" @click="recaptcha">Send</button>
+      <!-- <ReCaptcha /> @click="recaptcha"-->
+      <button type="submit" >Send</button>
     </form>
   </div>
 </template>
@@ -169,6 +177,14 @@ export default {
       }
     },
     async sendRequest() {
+        try {
+    const token = await this.$recaptcha.execute('login')
+
+    // send token to server alongside your form data
+
+  } catch (error) {
+    console.log('Login error:', error)
+  }
       //get the loan request
       let requestId = localStorage.getItem("requestId");
       // let isFormCorrect = await this.v$.$validate();

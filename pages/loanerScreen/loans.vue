@@ -7,7 +7,7 @@
     <table class="loans-table">
      <tbody>
         <tr class="wrap-loan" v-for="(loan, index) of loans" :key="index">       
-
+<!-- {{loan.status.name}} -->
           <td
             class="loan-status"
             v-if="loan.status"
