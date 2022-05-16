@@ -237,7 +237,7 @@ export default {
     await this.getRequestsByStatus();
     if (!this.requests) {
       let vue = this;
-      await getOffersByLoanerRequest(this.$store.currentUser._id).then(
+      await getOffersByLoanerRequest(this.$store.state.currentUser._id).then(
         (res) => {
           vue.$store.commit("setState", {
             value: res,

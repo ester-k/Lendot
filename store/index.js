@@ -32,7 +32,6 @@ export const actions = {
             console.log("not conect");
 
         } else {
-            debugger
             this.$router.push('/loanerScreen')
             console.log("conect");
         }

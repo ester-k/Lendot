@@ -10,7 +10,7 @@
       class="lendot-icon mobile"
       :src="require('~/assets/uploads/mobile_logo.png')"
     /></a>
-    <div class="blue-header"> <button class="fill-button" @click="$router.go(-1)"> back</button></div>
+    <div class="blue-header"> <button class="fill-button" @click="$router.go(-1)"><img   :src="require('~/assets/uploads/back_icon.svg')"> Back</button></div>
    </div>
 </template>
 
@@ -22,8 +22,7 @@ export default {
       $nuxt.$fire.auth.signOut();
       localStorage.removeItem("currentUser");
       localStorage.removeItem("createRequestData");
-            localStorage.removeItem("emailVerified");
-
+      localStorage.removeItem("emailVerified");
     },
   },
 };
@@ -35,20 +34,26 @@ export default {
   background-color: var(--custom-blue);
   width: 100%;
   height: 120px;
-    background-color: var(--custom-blue);
-    width: 100%;
-    text-align: right;
-    display: flex;
-    align-items: center;
-    justify-content: right;
+  background-color: var(--custom-blue);
+  width: 100%;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: right;
 }
 .lendot-icon {
   position: absolute;
   top: 0;
   left: 0;
 }
-.fill-button{
+.fill-button {
   margin-right: 218px;
+  width: 118px;
+height: 31px;
+font-weight: 500;;
+}
+.fill-button img{
+  margin-right:17px;
 }
 @media screen and (max-width: 768px) {
   .blue-header {

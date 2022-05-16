@@ -156,8 +156,6 @@ export default {
       // },
     },
     created: async function () {
-      console.log("hrer!");
-      // await this.confirmSignIn(this.url);
       if (!localStorage.getItem("createRequestData"))
         localStorage.setItem(
           "createRequestData",

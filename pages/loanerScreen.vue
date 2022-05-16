@@ -48,7 +48,10 @@
 </template>
 
 <script>
-import { getRequestsWithAction, getOffersByLoanerRequest } from "~/services/request-service.js";
+import {
+  getRequestsWithAction,
+  getOffersByLoanerRequest,
+} from "~/services/request-service.js";
 import ProfileSidebar from "~/components/profileSidebar.vue";
 export default {
   name: "loanerScreen",
@@ -56,7 +59,7 @@ export default {
   data() {
     return {
       loans: [],
-      loanerId: JSON.parse(localStorage.getItem("currentUser"))._id,
+      // loanerId: JSON.parse(localStorage.getItem("currentUser"))._id,
     };
   },
   methods: {
@@ -72,6 +75,9 @@ export default {
     requests() {
       return this.$store.state.userRequests;
     },
+    loanerId() {
+      return this.$store.state.currentUser._id;
+    },
   },
   async created() {
     let actionsStatuses = [
@@ -80,7 +86,10 @@ export default {
       "623c436e01cfc93560df213f",
     ];
     await this.getLoansWithAction(actionsStatuses);
-    if (!this.$store.state.userRequests || !this.$store.state.userRequests.length) {
+    if (
+      !this.$store.state.userRequests ||
+      !this.$store.state.userRequests.length
+    ) {
       await getOffersByLoanerRequest(this.loanerId).then((res) =>
         this.$store.commit("setState", {
           value: res,
@@ -89,17 +98,16 @@ export default {
       );
     }
     if (this.loans) {
-      localStorage.setItem("loansWithAction", JSON.stringify(this.loans));  
-      if($nuxt.$route.path!="/loanerScreen/actions")
-      this.$router.replace({
-        path: "/loanerScreen/actions",
-      });
+      localStorage.setItem("loansWithAction", JSON.stringify(this.loans));
+      if ($nuxt.$route.path != "/loanerScreen/actions")
+        this.$router.replace({
+          path: "/loanerScreen/actions",
+        });
     } else {
       this.$router.replace({
         path: "/loanerScreen/loans",
       });
     }
-
   },
 };
 </script>
