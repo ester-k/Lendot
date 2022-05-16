@@ -209,9 +209,7 @@ export default {
         if (loan) loan.click(event);
       }
     },
-    changeCredit(data) {
-      this.credit = data;
-    },
+   
     verifyEmail: function () {
       this.$store.commit("setState",  {value:3,state:"createAccountStep"});
       this.$router.replace({ path: "/createRequest/createAccount" });

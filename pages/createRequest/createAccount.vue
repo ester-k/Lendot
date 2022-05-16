@@ -77,6 +77,8 @@
           <!-- credit score -->
      
         <button type="submit">next</button>
+                  <p class="error-msg" id="emailError">This email address exists,<NuxtLink to="/login"> click here to log in</NuxtLink></p>
+
       </form> 
     
     </div>
@@ -96,7 +98,9 @@
 //vuelidate
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength, numeric } from "@vuelidate/validators";
-import createUser from "~/plugins/service.js";
+// import createUser from "~/plugins/service.js";
+import { createUser } from "~/services/user-service";
+
 // import * as validators from 'vuelidate/lib/validators'
 
 export default {
@@ -114,8 +118,10 @@ export default {
       phone: "",
       emailSend: false,
       url: window.location.href,
+      defaultSelect: "-Select-",
+
       currentUser: localStorage.getItem("currentUser"),
-        creditScores: [
+      creditScores: [
         { value: "Under 550" },
         { value: "551-600" },
         { value: "601-650" },
@@ -147,7 +153,6 @@ export default {
     //   };
     // },
     createUserOnDB: async function () {
-    
       // if (!this.currentUser) {
       // if (this.checkValidForm()) {
       // let newUser = new User();
@@ -166,32 +171,37 @@ export default {
       this.createUser(newUser);
       localStorage.setItem("currentUser", JSON.stringify(newUser));
       let userForm = JSON.parse(localStorage.getItem("createRequestData"));
-      if(!userForm){
-         userForm["steps"]={}
+      if (!userForm) {
+        userForm["steps"] = {};
       }
       userForm.steps["createAccount"].data = newUser;
       localStorage.setItem("createRequestData", JSON.stringify(userForm));
       this.emailSend = true;
-      this.$store.commit("setState", {
-        value: 2,
-        state: "createAccountStep",
-      });
-      localStorage.setItem("createAccountStep", 2);
+
       // }
       // } else {
       //   this.$router.replace({ path: "/createRequest/aboutLoan" });
       // }
     },
     createUser: async function (user) {
-      const ip = await this.$axios.post(
-        "http://localhost:5000/user/createUser",
-        user
-      );
-      console.log(ip);
-      //  const { data } = createUser({newUser: user})
-      //  debugger
-      //  console.log(data);
-      //  createUser(user).then((newUser) => {});
+      await createUser(user)
+        .then((response) => {
+          if (response.hasOwnProperty("code")) {
+            if (response.code == 11000) {
+              debugger;
+              document.getElementById("emailError").classList.add("show");
+            } else {
+              this.$store.commit("setState", {
+                value: 2,
+                state: "createAccountStep",
+              });
+              localStorage.setItem("createAccountStep", 2);
+            }
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
     checkValidForm: async function () {
       let isFormCorrect = true;
@@ -209,6 +219,9 @@ export default {
 
         return true;
       } else return false;
+    },
+    changeCredit(data) {
+      this.credit = data;
     },
     showCheckedLoan() {
       let loanType = localStorage.getItem("loanType");
@@ -275,7 +288,7 @@ export default {
 <style>
 .purchase-cnt {
   align-items: center;
-    margin-bottom: 61px;
+  margin-bottom: 61px;
 }
 .purchase-cnt input[type="number"] {
   width: 60px;
