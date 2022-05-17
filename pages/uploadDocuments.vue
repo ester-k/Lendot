@@ -92,7 +92,7 @@ import $ from "jquery";
 export default {
   name: "UploadDocuments",
   components: { Header },
-  data() {
+  asyncData() {
     return {
       offer: "",
       file: [],
@@ -154,6 +154,7 @@ export default {
         .trigger("click");
     },
     uploadDoc: function (event, index) {
+      let self = this;
       if (index == undefined) index = this.index;
       if (event) this.file[0] = event.target.files[0];
       if (this.file[0]) {
@@ -173,7 +174,7 @@ export default {
             formData.append("type", uploadedFile.type);
             formData.append("name", this.offer.documents[index].name);
             formData.append("blob", uploadedFile.blob);
-            let self = this;
+
             const axios = require("axios");
             let res = await axios
               .post(`http://localhost:5000/uploadDoc`, formData, {
@@ -186,7 +187,8 @@ export default {
                 console.log(err.response);
                 return false;
               });
-            this.offer.documents[index] = res;
+            self.offer = res;
+            console.log("add", self.offer);
           };
         }
         fileReader.readAsDataURL(this.file[0]);
@@ -207,7 +209,7 @@ export default {
       document.getElementById("actions" + index).classList.add("show");
       this.currentFile = fileIndex;
     },
-    async removeFile(docIndex) {
+    async removeFile(docIndex, fileIndex) {
       let file = this.offer.documents[docIndex].loanerDocs[this.currentFile];
       let params = {
         offerId: this.offer._id,
@@ -217,7 +219,8 @@ export default {
       };
       let self = this;
       await removeFileDB(params).then((response) => {
-        self.offer.documents = response.documents;
+        self.offer = response;
+        console.log("remove", self.offer);
       });
     },
     openDragArea: function (index) {
@@ -265,6 +268,7 @@ export default {
   width: 890px;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .wrap-document.existing-doc .name {
   font-weight: bold;
@@ -336,7 +340,7 @@ export default {
 .upload-area a {
   color: var(--custom-pink);
 }
-.back-button{
-display: block;
+.back-button {
+  display: block;
 }
 </style>
