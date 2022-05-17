@@ -72,6 +72,7 @@ export default {
 </script>
 
 <style>
+@media screen and (max-width: 768px) {
 .mobile-sidebar-menue {
     height: 100%;
     width: 332px;
@@ -154,5 +155,5 @@ button.fill-button.contact-us {
     font-weight: normal;
     line-height: 29px;
 }
-
+}
 </style>
