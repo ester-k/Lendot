@@ -34,6 +34,7 @@ const getOffersByStatusByLoan = async(loanId, status) => {
 
 const updateOfferStatus = async(offerId, status) => {
     let body = { "offerId": offerId, "status": status }
+    console.log(body.status);
     const response = await axios.post(`${apiTarget}/offer/updateOfferStatus`, body);
     return response.data;
 }

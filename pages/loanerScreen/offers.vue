@@ -359,10 +359,10 @@ export default {
     },
     async acceptDeclinedOffer(event, loanIndex, offerIndex) {
       let currentOffer = this.loans[loanIndex].declinedOffers[offerIndex];
-      currentOffer.status = "new";
+      currentOffer.status = "626a2fca4e14cc66cee9ff19";
       //remove from declined list
       this.loans[loanIndex].declinedOffers.splice(offerIndex, 1);
-      await updateOfferStatus(currentOffer._id, currentOffer.status._id).then(
+      await updateOfferStatus(currentOffer._id, currentOffer.status).then(
         (res) => {
           this.loans[loanIndex].offers.push(currentOffer);
         }
