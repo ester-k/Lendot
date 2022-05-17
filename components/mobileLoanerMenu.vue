@@ -7,25 +7,12 @@
             alt="close menu"
           />
         </div>
-        <div class="menu-item">
-          <NuxtLink to="/loanerScreen/actions">
-            <p  :class="{'active' : title.toLowerCase() == 'Actions'.toLowerCase() ? true : false }">Actions</p>
-          </NuxtLink>
-        </div>
-        <div class="menu-item">
-          <NuxtLink to="/loanerScreen/loans">
-            <p :class="{'active' : title.toLowerCase() == 'Loans'.toLowerCase() ? true : false }">Loans</p>
-          </NuxtLink>
-        </div>
-        <div class="menu-item">
-          <NuxtLink to="/loanerScreen/offers">
-            <p :class="{'active' : title.toLowerCase() == 'Offers'.toLowerCase() ? true : false }">Offers</p>
-          </NuxtLink>
-        </div>
-        <div class="menu-item">
-          <NuxtLink to="/loanerScreen/accountSettings">
-            <p :class="{'active' : title.toLowerCase() == 'Account Settings'.toLowerCase() ? true : false }">Account Settings</p>
-          </NuxtLink>
+        <div  v-for="menueItem in menue">
+          <div class="menu-item">
+            <NuxtLink :to="'/loanerScreen/' + menueItem">
+              <p  :class="{'active' : title.toLowerCase() == menueItem.toLowerCase() ? true : false }">{{menueItem}}</p>
+            </NuxtLink>
+          </div>
         </div>
         <button class="fill-button contact-us">Need Help?</button>
         <div class="new-loan">
@@ -57,6 +44,7 @@ export default {
   data() {
     return {
       isActive:'',
+      menue: ["Actions","Loans","Offers","Account Settings"]
     };
   },
   methods: {
