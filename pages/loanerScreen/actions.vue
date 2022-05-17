@@ -181,6 +181,7 @@ export default {
       }
     },
     async getOffers() {
+
       let finalData = this.loans;
       let offers = [];
       let index = 0;
@@ -188,6 +189,7 @@ export default {
         if (request.offers.length) {
           for await (let offer of request.offers) {
                       let address = request.propertyAddress,
+
               type = request.propertyType,
               id = request._id;
             offer["request"] = {};
