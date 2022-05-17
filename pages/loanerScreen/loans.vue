@@ -125,7 +125,7 @@ export default {
   },
   created() {
     this.getLoans();
-    this.$emit('title', "loans");
+    this.$emit('childTitle', "loans");
   },
 };
 </script>
