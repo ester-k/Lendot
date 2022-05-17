@@ -19,7 +19,7 @@
     <a
      v-if="createAccountStep == 2"
       class="continue-request"
-      @click="this.$router.replace({ path: '/createRequest/aboutLoan' })"
+      @click="$router.replace({ path: '/createRequest/aboutLoan' })"
     >
       continue process and verify later.
     </a>

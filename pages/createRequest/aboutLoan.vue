@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <div class="verify-link" v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+    <div class="verify-link" v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyNow">Verify Now</button></div>
 
     <div class="about-loan-container">
 
@@ -172,9 +172,9 @@ export default {
           .getAttribute("active-src");
       }
     },
-    verifyEmail: function () {
-      this.$store.commit("setState", { value: 3, state: "createAccountStep" });
-      console.log(this.$store.state.createAccountStep);
+    verifyNow: function () {
+      
+      // this.$store.commit("setState", { value: 2, state: "createAccountStep" });
       this.$router.replace({ path: "/createRequest/createAccount" });
     },
   },

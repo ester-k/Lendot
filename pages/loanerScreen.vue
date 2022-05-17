@@ -42,7 +42,7 @@
           </NuxtLink>
         </div>
       </div>
-      <NuxtChild @childTitle="setTitle"/>
+      <NuxtChild @childTitle="setTitle" @haveActions="setHaveActions"/>
     </div>
   </div>
 </template>
@@ -53,33 +53,106 @@ import {
   getOffersByLoanerRequest,
 } from "~/services/request-service.js";
 import ProfileSidebar from "~/components/profileSidebar.vue";
+import { countMissingDocs } from "~/services/documents-service";
+
 export default {
   name: "loanerScreen",
   components: { ProfileSidebar },
   data() {
     return {
       loans: [],
-      title:'',
+      title: "",
+      haveActions: true,
+       loansByAction: [
+        { id: "623c41e5d58dd53bd8f3a308", loans: [] }, //Request in Progress
+       
+      ],
+      // getOffersByStatus
+      offersByAction: [
+        { id: "6269565e8b7b1e5b2c6851ad", offers: [] }, //missing details
+        { id: "626a2909e444b82e0c459e21 ", offers: [] }, //accept offer
+      ],
+      actionsLength:false
     };
   },
   methods: {
-    getLoansWithAction: async function (actionsStatuses) {
-      await getRequestsWithAction(this.loanerId, actionsStatuses).then(
-        (res) => {
-          this.loans = res;
-        }
-      );
+    setTitle(childTitle) {
+      this.title = childTitle;
     },
-    setTitle(childTitle){
-      this.title = childTitle
-    }
+    setHaveActions(haveActions) {
+      this.haveActions = haveActions;
+    },
+    getRequestsByStatus() {
+      let self = this;
+      let requiredFields = [
+        "amount",
+        "closeDate",
+        "credit",
+        "estimated",
+        "loanType",
+        "price",
+        "propertyAddress",
+        "propertyType",
+        "purpose",
+        "rehab",
+      ];
+      if (this.loans) {
+        self.loansByAction.forEach((action) => {
+          self.loans.forEach((loan) => {
+            if (loan.status._id == action.id) {
+              action.loans.push(loan);
+            }
+
+            let missingField = 0;
+            requiredFields.forEach((field) => {
+              if (loan[field] == "" || loan[field] == undefined) {
+                missingField++;
+              }
+            });
+            loan["missindDetails"] = missingField;
+          });
+        });
+      }
+    },
+    async getOffers() {
+      let finalData = this.loans;
+      let offers = [];
+      let index = 0;
+      for await (let request of finalData) {
+        if (request.offers.length) {
+          for await (let offer of request.offers) {
+            let address = request.propertyAddress,
+              type = request.propertyType,
+              id = request._id;
+            offer["request"] = {};
+            offer.request["propertyAddress"] = address;
+            offer.request["propertyType"] = type;
+            offer.request["_id"] = id;
+            let offerCountDocs = await countMissingDocs(offer);
+            offers.push(offerCountDocs);
+            index++;
+          }
+        }
+      }
+
+      let returnOffers = new Array();
+      for (let i = 0; i < index; i++) {
+        returnOffers[i] = offers[i];
+      }
+      this.offersByAction.forEach((offerStatus) => {
+        returnOffers.forEach((offer) => {
+          if (offer.status._id.trim() == offerStatus.id.trim()) {
+            offerStatus.offers.push(offer);
+          }
+        });
+      });
+    },
   },
   computed: {
     requests() {
       return this.$store.state.userRequests;
     },
     loanerId() {
-      console.log(this.$store.state.currentUser);
       return (
         this.$store.state.currentUser._id ||
         JSON.parse(localStorage.getItem("currentUser"))._id
@@ -87,34 +160,38 @@ export default {
     },
   },
   async created() {
-    let actionsStatuses = [
-      "623c41e5d58dd53bd8f3a308",
-      "623c439001cfc93560df2140", //offers in progress
-      "623c436e01cfc93560df213f",
-    ];
-    await this.getLoansWithAction(actionsStatuses);
-    if (
-      !this.$store.state.userRequests ||
-      !this.$store.state.userRequests.length
-    ) {
-      await getOffersByLoanerRequest(this.loanerId).then((res) => {
-        console.log(res);
-        this.$store.commit("setState", {
-          value: res,
-          state: "userRequests",
-        });
-      });
-    }
+    console.log(this.loanerId);
+    await getOffersByLoanerRequest(this.loanerId).then((res) => {
+      this.loans = res;
+      localStorage.setItem("userLoans", JSON.stringify(res));
+    });
+    await this.getRequestsByStatus();
+    await this.getOffers();
+    await this.loansByAction.forEach((action) => {
+      if (action.loans.length) {
+        this.actionsLength = true;
+      }
+    });
+    await this.offersByAction.forEach((action) => {
+      if (action.offers.length) {
+        this.actionsLength = true;
+      }
+    });
+
+localStorage.setItem("offersByAction", JSON.stringify(this.offersByAction));
+localStorage.setItem("loansByAction", JSON.stringify(this.loansByAction));
+
     if (this.loans) {
-      localStorage.setItem("loansWithAction", JSON.stringify(this.loans));
-      if ($nuxt.$route.path != "/loanerScreen/actions")
-        this.$router.replace({
-          path: "/loanerScreen/actions",
-        });
-    } else {
-      this.$router.replace({
-        path: "/loanerScreen/loans",
-      });
+      if ($nuxt.$route.path == "/loanerScreen") {
+        if (!this.actionsLength) {
+          this.$router.replace({
+            path: "/loanerScreen/loans",
+          });
+        } else
+          this.$router.replace({
+            path: "/loanerScreen/actions",
+          });
+      }
     }
   },
 };
@@ -208,12 +285,11 @@ export default {
   text-align: center;
 }
 @media screen and (max-width: 768px) {
-  .lender-menu{
-    display:none;
+  .lender-menu {
+    display: none;
   }
   .lender-screen {
-  display: block;
- 
-}
+    display: block;
+  }
 }
 </style>
