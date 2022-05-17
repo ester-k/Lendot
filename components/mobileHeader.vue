@@ -8,21 +8,21 @@
     /></a>
     <div class="blue-header">
       <h1 class="title">{{title}}</h1>
-      <div class="menue-right">
+      <div class="menu-right">
         <NuxtLink to="/createRequest">
           <div class="plus">
-            <img :src="require('~/assets/uploads/plus_loan.svg')" />
+            <img :src="require('~/assets/uploads/plus_loan_mobile.svg')" />
           </div>
         </NuxtLink>
         <div class="open-popup" @click="showMobileMenu = true">
           <img
-            :src="require('~/assets/uploads/close_view_popup.svg')"
-            alt="open menue"
+            :src="require('~/assets/uploads/open_menu_mobile.svg')"
+            alt="open menu"
           />
         </div>
       </div>
     </div>
-    <mobileLoanerMenu v-show="showMobileMenu" @closeMobileMenu="showMobileMenu=false" />
+    <mobileLoanerMenu v-show="showMobileMenu" @closeMobileMenu="showMobileMenu=false" :title="title" />
   </div>  
 </template>
 
@@ -68,14 +68,19 @@ export default {
     margin-left: 84px;
     font-weight: normal;
   }
-  .close-popup {
-    margin-right: 26px;
-    margin-left: 18px;
-  }
 
-  .menue-right {
+  .menu-right {
     display: flex;
     align-items: center;
+  }
+
+  .menu-right .open-popup {
+    margin: 0 26px 0 18px;
+    display: flex;
+  }
+
+  .menu-right .plus {
+    display: flex;
   }
 }
 </style>
