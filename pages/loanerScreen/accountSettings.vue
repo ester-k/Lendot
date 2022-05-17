@@ -8,7 +8,7 @@
         <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
           @click="(event) => editProfile(event, 'name')" />
         <div class="save-change" @click="(event) => updateProfile(event, 'username')">
-          Save
+          Update
         </div>
       </div>
       <div class="account-info">
@@ -17,7 +17,7 @@
         <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
           @click="(event) => editProfile(event, 'email')" />
         <div class="save-change" @click="(event) => updateProfile(event, 'email')">
-          Save
+          Update
         </div>
       </div>
 
@@ -27,7 +27,7 @@
         <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
           @click="(event) => editProfile(event, 'phone')" />
         <div class="save-change" @click="(event) => updateProfile(event, 'phone')">
-          Save
+          Update
         </div>
       </div>
 
@@ -37,7 +37,7 @@
         <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
           @click="(event) => editProfile(event, 'company')" />
         <div class="save-change" @click="(event) => updateProfile(event, 'company')">
-          Save
+          Update
         </div>
       </div>
     </section>
@@ -48,14 +48,7 @@
         
                 <NuxtLink to="/resetPassword" class="forgot-password key">Reset Password</NuxtLink>
 
-        <!-- <input type="password" class="value password" id="password_field" :value="currentUser.password" />
-        <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/show_password.svg')"
-          @click="(event) => showPassword(event, 'password')" />
-        <img class="edit-icon" alt="edit icon" :src="require('~/assets/uploads/edit_icon.svg')"
-          @click="(event) => editProfile(event, 'password')" />
-        <div class="save-change" @click="(event) => updateProfile(event, 'password')">
-          Save
-        </div> -->
+        
       </div>
     </section>
     <!-- <section class="rating"><div class="title">Your Rating</div></section> -->
@@ -105,14 +98,27 @@ export default {
       updatedUser = JSON.parse(localStorage.getItem("currentUser"));
       let input = $(event.target).closest(".account-info").find(".value")[0];
       updatedUser[field] = input.innerText;
-      updatedUser._id
+      updatedUser._id;
       await updateUser(updatedUser._id, updatedUser).then((res) => {
         localStorage.setItem("currentUser", JSON.stringify(updatedUser));
         this.$store.commit("setState", {
           value: updatedUser,
           state: "currentUser",
         });
-
+        let text = $(event.target)
+          .closest(".account-info")
+          .find(".save-change")[0];
+        let img = document.createElement("img");
+        img.src = require("~/assets/uploads/update_success.gif");
+        text.innerHTML = "";
+        text.appendChild(img);
+        setTimeout(removeV, 1000);
+        function removeV() {
+          text.innerHTML = "Update";
+          document
+            .querySelectorAll(".save-change")
+            .forEach((node) => (node.style.display = "none"));
+        }
       });
     },
   },
@@ -129,6 +135,7 @@ export default {
         if (
           !(
             event.target.classList.contains("value") &&
+             event.target.classList.contains(".save-change")&&
             $(event.target)
               .closest(".account-info")
               .find(".value[contenteditable=true]")[0] == event.target
@@ -137,8 +144,16 @@ export default {
           let activeField = document.querySelector(
             ".account-info .value[contenteditable=true]"
           );
+          if( document
+              .querySelectorAll(".save-change"))
+           document
+              .querySelectorAll(".save-change")
+              .forEach((node) => (node.style.display = "none"));
           if (activeField) {
             activeField.setAttribute("contenteditable", false);
+            document
+              .querySelectorAll(".save-change")
+              .forEach((node) => (node.style.display = "none"));
           }
         }
       }
@@ -208,7 +223,11 @@ export default {
   display: none;
   cursor: pointer;
 }
-.forgot-password,.forgot-password:hover{
-  color:var(--custom-blue)
+.save-change img {
+  height: 16px;
+}
+.forgot-password,
+.forgot-password:hover {
+  color: var(--custom-blue);
 }
 </style>

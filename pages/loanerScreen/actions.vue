@@ -8,7 +8,7 @@
         </button></a>
     </div>
     <div v-else>
-      <div class="" v-for="(action, aIndex) of loansByAction" :key="aIndex">
+      <div class="action-section" v-for="(action, aIndex) of loansByAction" :key="aIndex">
         <div v-if="action.loans.length">
           <h3 class="action-title">{{ action.loans[0].status.name }}</h3>
 
@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="" v-for="(action, oIndex) of offersByAction" :key="oIndex">
+      <div class="action-section" v-for="(action, oIndex) of offersByAction" :key="oIndex">
         <div v-if="action.offers.length">
           <h3 class="action-title">{{ action.offers[0].status.name }}</h3>
 
@@ -114,9 +114,9 @@ import { getOffersByStatus } from "~/services/offer-service";
 import {
   getOffersByLoanerRequest,
   getRequestsWithAction,
+  getRequestListByLoaner,
 } from "~/services/request-service";
 import { countMissingDocs } from "~/services/documents-service";
-import Vue from "vue";
 
 export default {
   name: "Actions",
@@ -124,8 +124,6 @@ export default {
     return {
       loansByAction: [
         { id: "623c41e5d58dd53bd8f3a308", loans: [] }, //Request in Progress
-        // { id: "623c4275d58dd53bd8f3a30a", loans: [] }, //action require
-        // { id: "623c436e01cfc93560df213f", loans: [] },
       ],
       // getOffersByStatus
       offersByAction: [
@@ -161,7 +159,7 @@ export default {
         "purpose",
         "rehab",
       ];
-      this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
+      this.loans = JSON.parse(localStorage.getItem("userLoans"));
       if (this.loans) {
         self.loansByAction.forEach((action) => {
           self.loans.forEach((loan) => {
@@ -181,13 +179,12 @@ export default {
       }
     },
     async getOffers() {
-      let tempRequests = Vue.util.extend({}, this.requests);
-      tempRequests = Object.values(tempRequests);
-      let finalData = this.loans; //JSON.parse(JSON.stringify(tempRequests));
-      let self=this;
-      finalData.forEach((request) => {
+      let finalData = this.loans;
+      let offers = [];
+      let index = 0;
+      for await (let request of finalData) {
         if (request.offers.length) {
-          request.offers.forEach(async (offer) => {
+          for await (let offer of request.offers) {
             let address = request.propertyAddress,
               type = request.propertyType,
               id = request._id;
@@ -195,18 +192,23 @@ export default {
             offer.request["propertyAddress"] = address;
             offer.request["propertyType"] = type;
             offer.request["_id"] = id;
-            let offerCountDocs =await countMissingDocs(offer);
-            self.offers.push(offerCountDocs);
-          });
+            let offerCountDocs = await countMissingDocs(offer);
+            offers.push(offerCountDocs);
+            index++;
+          }
         }
-      });
-      console.log("offers",this.offers);
-      // return finalData;
-      this.offersByAction.forEach(async (offerStatus) => {
-        let filter = this.offers.filter(
-          (offer) => {offer.status._id.trim() == offerStatus.id.trim();}
-        );
-        offerStatus.offers = filter;
+      }
+
+      let returnOffers = new Array();
+      for (let i = 0; i < index; i++) {
+        returnOffers[i] = offers[i];
+      }
+      this.offersByAction.forEach((offerStatus) => {
+        returnOffers.forEach((offer) => {
+          if (offer.status._id.trim() == offerStatus.id.trim()) {
+            offerStatus.offers.push(offer);
+          }
+        });
       });
     },
     dynamicFunctionCall(funcionName, propertys, loan) {
@@ -228,43 +230,19 @@ export default {
   },
 
   async created() {
-    let actionsStatuses = [
-      "623c41e5d58dd53bd8f3a308",
-      "623c4275d58dd53bd8f3a30a", //Action Required
-      "623c436e01cfc93560df213f",
-    ];
-    await getRequestsWithAction(
-      this.$store.state.currentUser._id,
-      actionsStatuses
-    ).then((res) => {
-      this.loans = res;
-    });
-    await this.getRequestsByStatus();
-
-    // this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
-    // await this.getRequestsByStatus();
-    // if (!this.requests) {
-    //   let vue = this;
-    // await getOffersByLoanerRequest(this.$store.state.currentUser._id).then(
-    //   (res) => {
-    //     console.log("res",res);
-    //     // vue.$store.commit("setState", {
-    //     //   value: res,
-    //     //   state: "userRequests",
-    //     // });
-    //   }
-    // );
-    // }
-    let finalData = this.getOffers();
-    // this.$store.commit("setState", {
-    //   value: finalData,
-    //   state: "userRequests",
-    // });
-    this.loansByAction.forEach((action) => {
+    this.offersByAction = JSON.parse(localStorage.getItem("offersByAction"));
+    this.loansByAction = JSON.parse(localStorage.getItem("loansByAction"));
+    await this.loansByAction.forEach((action) => {
       if (action.loans.length) {
         this.actionsLength = true;
       }
     });
+    await this.offersByAction.forEach((action) => {
+      if (action.offers.length) {
+        this.actionsLength = true;
+      }
+    });
+
     this.$emit("childTitle", "actions");
   },
 };
@@ -283,7 +261,9 @@ export default {
   justify-content: center;
   flex-direction: column;
 }
-
+.action-section {
+  margin-bottom: 90px;
+}
 .no-action .new-loan {
   display: flex;
   height: 39px;
@@ -351,6 +331,7 @@ export default {
 .action-title {
   font-size: 20px;
   margin-bottom: 30px;
+  font-weight: 400;
 }
 
 .single-loan .action-name .name {

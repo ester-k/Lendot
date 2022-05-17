@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyNow">Verify Now</button></div>
 
     <img
       class="len-title about-you-title desktop"
@@ -177,40 +177,44 @@ export default {
       }
     },
     async sendRequest() {
-        try {
-    const token = await this.$recaptcha.execute('login')
+      try {
+        const token = await this.$recaptcha.execute("login");
 
-    // send token to server alongside your form data
-
-  } catch (error) {
-    console.log('Login error:', error)
-  }
+        // send token to server alongside your form data
+      } catch (error) {
+        console.log("Login error:", error);
+      }
       //get the loan request
       let requestId = localStorage.getItem("requestId");
       // let isFormCorrect = await this.v$.$validate();
       // if (isFormCorrect) {
-        let updateLoan = {};
-        updateLoan.purpose = this.loanPurpose;
-        updateLoan.closeDate = this.date;
-        updateLoan.price = this.price;
-        updateLoan.rehab = this.rehab;
-        updateLoan.estimated = this.estimated;
-        updateLoan.credit = this.credit;
-        await getRequestById(requestId).then(async (loanReq) => {
-          //update the loan property
-          // let updateLoan = new LoanRequest();
-          updateLoan._id = loanReq._id;
-          updateLoan.status = "623c434201cfc93560df213e"; //wating for offers
-          await updateRequest(updateLoan).then((updateLoan) => {
+      let updateLoan = {};
+      updateLoan.purpose = this.loanPurpose;
+      updateLoan.closeDate = this.date;
+      updateLoan.price = this.price;
+      updateLoan.rehab = this.rehab;
+      updateLoan.estimated = this.estimated;
+      updateLoan.credit = this.credit;
+      await getRequestById(requestId).then(async (loanReq) => {
+        //update the loan property
+        // let updateLoan = new LoanRequest();
+        updateLoan._id = loanReq._id;
+        updateLoan.status = "623c434201cfc93560df213e"; //wating for offers
+        await updateRequest(updateLoan).then((updateLoan) => {
+          // this.$store.state.createAccountStep = 1;
+          if ($nuxt.$fire.auth.currentUser) {
+            this.$router.replace({ path: "/loanerScreen" });
             localStorage.removeItem("requestId");
             localStorage.removeItem("loanType");
             localStorage.removeItem("createProperty");
             localStorage.removeItem("createRequestData");
             localStorage.setItem("finishAuthProcess", "true");
-            // this.$store.state.createAccountStep = 1;
-            this.$router.replace({ path: "/loanerScreen" });
-          });
+            document.querySelector(".verify-link").classList.remove("error");
+          } else {
+            document.querySelector(".verify-link").classList.add("error");
+          }
         });
+      });
       // }
     },
 
@@ -225,9 +229,9 @@ export default {
         if (loan) loan.click(event);
       }
     },
-   
-    verifyEmail: function () {
-      this.$store.commit("setState",  {value:3,state:"createAccountStep"});
+
+    verifyNow: function () {
+      // this.$store.commit("setState",  {value:2,state:"createAccountStep"});
       this.$router.replace({ path: "/createRequest/createAccount" });
     },
   },

@@ -27,13 +27,13 @@
           <div class="tbody">
             <div v-for="(offer, i) of loan.offers" :key="i">
               <div
-                v-if="offer.status != 'decline'"
+                v-if="offer.status._id !=declineStatus"
                 class="wrap-offer tr"
                 @click="(event) => openOffer(event, index, i)"
                 :id="'offer' + i"
               >
                 <div class="loaner-name td">
-                  {{ offer.lenderId.firstName }} {{ offer.lenderId.lastName }}
+                 {{ offer.lenderId.username }}
                 </div>
                 <div class="td" v-if="offer.rate">
                   {{ offer.rate.toLocaleString() }}%
@@ -49,7 +49,7 @@
                   <button
                     class="accept-action fill-button"
                     id="acceptOffer"
-                    @click="acceptOffer"
+                   
                   >
                     Accept
                   </button>
@@ -66,7 +66,7 @@
                 <div class="offer-title">
 
                   <div class="loaner-name">
-                    {{ offer.lenderId.firstName }} {{ offer.lenderId.lastName }}
+                    {{ offer.lenderId.username }}
                   </div>
                   <button class="fill-button selectOffer" @click="selectOffer">
                     Select
@@ -126,7 +126,7 @@
                     class="pdf-embed"
                     :source="offer.terms"
                     :height="704"
-                    :width="auto"
+                   
                   />
                   <div
                     :id="'offer-view-' + i"
@@ -187,7 +187,6 @@
                   <button
                     class="accept-action fill-button"
                     id="acceptDeclinedOffer"
-                    @click="acceptOffer"
                   >
                     Recover
                   </button>
@@ -196,7 +195,7 @@
               <div class="wrap-offer-container" :id="'offer' + j + '-view'">
                 <div class="offer-title">
                   <div class="loaner-name">
-                    {{ offer.lenderId.firstName }} {{ offer.lenderId.lastName }}
+                    {{ offer.lenderId.username }}
                   </div>
                   <button class="fill-button selectOffer">Select</button>
                 </div>
@@ -269,9 +268,7 @@ import {
 // import VuePdfEmbed from "vue-pdf-embed";
 import viewPdf from "~/components/viewPdf.vue";
 
-import {
-  updateOfferStatus
-} from "~/services/offer-service.js";
+import { updateOfferStatus } from "~/services/offer-service.js";
 import { getOffersByLoanerRequest } from "~/services/request-service";
 
 import $ from "jquery";
@@ -288,6 +285,7 @@ export default {
       source: "",
       openViewPdf: false,
       noOffers: false,
+      declineStatus: "626a2fde4e14cc66cee9ff1a",
     };
   },
   components: {
@@ -308,10 +306,10 @@ export default {
       for (let loan of loans) {
         if (loan.offers.length) {
           loan.declinedOffers = loan.offers.filter(
-            (offer) => offer.status == "decline"
+            (offer) => offer.status._id == this.declineStatus
           );
           loan.offers = loan.offers.filter(
-            (offer) => offer.status != "decline"
+            (offer) => offer.status._id != this.declineStatus
           );
         }
       }
@@ -321,7 +319,7 @@ export default {
     declineOffer: async function (loanIndex, offerIndex) {
       let offer = this.loans[loanIndex].offers[offerIndex];
       offer.status = "decline";
-      await updateOfferStatus(offer._id, offer.status).then((res) => {
+      await updateOfferStatus(offer._id, offer.status._id).then((res) => {
         this.loans[loanIndex].offers.splice(offerIndex, 1);
         this.loans[loanIndex].declinedOffers.push(offer);
       });
@@ -361,7 +359,7 @@ export default {
     },
     async acceptDeclinedOffer(event, loanIndex, offerIndex) {
       let currentOffer = this.loans[loanIndex].declinedOffers[offerIndex];
-      currentOffer.status = "new";
+      currentOffer.status = "626a2fca4e14cc66cee9ff19";
       //remove from declined list
       this.loans[loanIndex].declinedOffers.splice(offerIndex, 1);
       await updateOfferStatus(currentOffer._id, currentOffer.status).then(
@@ -428,9 +426,11 @@ export default {
 
       if (wrapOffer) {
         if (!wrapOffer.classList.contains("hide")) {
-          document
-            .querySelector(".wrap-offer-container.open")
-            .classList.remove("open");
+          if (document.querySelector(".wrap-offer-container.open"))
+            document
+              .querySelector(".wrap-offer-container.open")
+              .classList.remove("open");
+              if( document.querySelector(".wrap-offer.hide"))
           document.querySelector(".wrap-offer.hide").classList.remove("hide");
         }
       } else {
@@ -478,7 +478,7 @@ export default {
   display: table-row-group;
 }
 .tr.wrap-offer {
-  margin:auto;
+  margin: auto;
   box-shadow: 0px 3px 6px #00000029;
   background-color: white;
   height: 60px;
@@ -488,9 +488,7 @@ export default {
   cursor: pointer;
   display: grid;
   grid-template-columns: auto auto auto auto auto auto;
-      max-width: 1190px;
-
-
+  max-width: 1190px;
 }
 .tr.wrap-offer.hide {
   display: none;

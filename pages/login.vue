@@ -62,7 +62,6 @@ export default {
       await this.$fire.auth
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          console.log("here");
           self.getLoginUser(email);
         })
         .catch((error) => {
@@ -80,18 +79,23 @@ export default {
     },
     async getLoginUser(email) {
       let self = this;
-     await getUserByEmail(email).then((response) => {
+      await getUserByEmail(email).then((response) => {
         self.$store.commit("setState", {
           value: response,
           state: "currentUser",
         });
         localStorage.setItem("currentUser", JSON.stringify(response));
-        this.$store.commit("setState", {
+        self.$store.commit("setState", {
           value: response,
           state: "currentUser",
         });
-        console.log(this.$store.state.currentUser);
-        self.$router.replace("/loanerScreen");
+        if (localStorage.getItem("createRequestData")) {
+          let createRequestStep =
+            JSON.parse(localStorage.getItem("createRequestData")).createRequestStep;
+          self.$router.replace({
+            path: "/createRequest/" + createRequestStep,
+          });
+        } else {self.$router.replace("/loanerScreen");}
       });
     },
   },
