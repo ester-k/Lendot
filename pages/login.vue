@@ -10,12 +10,12 @@
       <form @submit.prevent="login">
         <label class="form-label">Email Address</label>
         <div class="wrap-input">
-          <input type="text" name="email" v-model="email" placeholder="Yourmail@Gmail.com"/>
+          <input type="text" name="email" v-model="email" placeholder="Yourmail@gmail.com" autocomplete="on"/>
         </div>
 
         <label class="form-label"> Password</label>
         <div class="wrap-input wrap-password">
-          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" placeholder="Password" />
+          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" placeholder="Password" autocomplete="on"/>
           <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/blue_show_password.svg')"
             @click="(event) => showPassword(event, 1)" />
                   
@@ -62,6 +62,7 @@ export default {
       await this.$fire.auth
         .signInWithEmailAndPassword(email, password)
         .then(() => {
+          console.log("here");
           self.getLoginUser(email);
         })
         .catch((error) => {
@@ -79,7 +80,7 @@ export default {
     },
     async getLoginUser(email) {
       let self = this;
-      getUserByEmail(email).then((response) => {
+     await getUserByEmail(email).then((response) => {
         self.$store.commit("setState", {
           value: response,
           state: "currentUser",
@@ -89,6 +90,7 @@ export default {
           value: response,
           state: "currentUser",
         });
+        console.log(this.$store.state.currentUser);
         self.$router.replace("/loanerScreen");
       });
     },

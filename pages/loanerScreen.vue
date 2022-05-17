@@ -89,7 +89,7 @@ export default {
   async created() {
     let actionsStatuses = [
       "623c41e5d58dd53bd8f3a308",
-      "623c4275d58dd53bd8f3a30a", //Action Required
+      "623c439001cfc93560df2140", //offers in progress
       "623c436e01cfc93560df213f",
     ];
     await this.getLoansWithAction(actionsStatuses);
@@ -122,7 +122,7 @@ export default {
 
 <style>
 .lender-screen {
-  display: block;
+  display: flex;
   height: 100%;
   min-height: 100vh;
   background-color: var(--custom-light-gray);
@@ -211,5 +211,9 @@ export default {
   .lender-menu{
     display:none;
   }
+  .lender-screen {
+  display: block;
+ 
+}
 }
 </style>

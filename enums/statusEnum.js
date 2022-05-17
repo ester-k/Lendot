@@ -1,4 +1,7 @@
 const LoanStatusEnum = Object.freeze({
+    //loan
+    "Offers In Progress": { controller: "View Actions", action: { func: "navigateAction", prop: { route: "/loanerScreen/actions" } }, bgcolor: "#FDE8EE", color: "#EC255A" },
+
     "Request in Progress": { controller: "Complete Request", action: { func: "navigateAction", prop: { route: "/createRequest" } }, bgcolor: "#F58FAB", color: "white", icon: "complete_req.svg" },
     "Waiting For Offers": { controller: "View Loan", action: { func: "openPopup", prop: { popup: "openViewLoan" } }, bgcolor: "#FDE8EE", color: "#EC255A" },
     // "Action Required": { controller: "Upload Documents", action: { func: "navigateAction", prop: { route: "/uploadDocuments" } }, bgcolor: "#EC255A", color: "white", icon: "upload_doc.svg" },
