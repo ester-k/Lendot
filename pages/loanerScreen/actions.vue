@@ -8,7 +8,7 @@
         </button></a>
     </div>
     <div v-else>
-      <div class="" v-for="(action, aIndex) of loansByAction" :key="aIndex">
+      <div class="action-section" v-for="(action, aIndex) of loansByAction" :key="aIndex">
         <div v-if="action.loans.length">
           <h3 class="action-title">{{ action.loans[0].status.name }}</h3>
 
@@ -56,9 +56,9 @@
           </div>
         </div>
       </div>
-      <div class="" v-for="(action, oIndex) of offersByAction" :key="oIndex">
+      <div class="action-section" v-for="(action, oIndex) of offersByAction" :key="oIndex">
         <div v-if="action.offers.length">
-          <h3 class="action-title">{{ action.offers[0].status.name }}</h3>
+          <h3 class="action-title">{{ action.offers[0].status.name }},{{action.offers[0].status._id}}</h3>
 
           <div class="single-loan" v-for="(offer, singleIndex) of action.offers" :key="singleIndex" @click="
             dynamicFunctionCall(
@@ -114,9 +114,9 @@ import { getOffersByStatus } from "~/services/offer-service";
 import {
   getOffersByLoanerRequest,
   getRequestsWithAction,
+  getRequestListByLoaner,
 } from "~/services/request-service";
 import { countMissingDocs } from "~/services/documents-service";
-import Vue from "vue";
 
 export default {
   name: "Actions",
@@ -161,7 +161,7 @@ export default {
         "purpose",
         "rehab",
       ];
-      this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
+      // this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
       if (this.loans) {
         self.loansByAction.forEach((action) => {
           self.loans.forEach((loan) => {
@@ -181,32 +181,38 @@ export default {
       }
     },
     async getOffers() {
-      let tempRequests = Vue.util.extend({}, this.requests);
-      tempRequests = Object.values(tempRequests);
-      let finalData = this.loans; //JSON.parse(JSON.stringify(tempRequests));
-      let self=this;
-      finalData.forEach((request) => {
+
+      let finalData = this.loans;
+      let offers = [];
+      let index = 0;
+      for await (let request of finalData) {
         if (request.offers.length) {
-          request.offers.forEach(async (offer) => {
-            let address = request.propertyAddress,
+          for await (let offer of request.offers) {
+                      let address = request.propertyAddress,
+
               type = request.propertyType,
               id = request._id;
             offer["request"] = {};
             offer.request["propertyAddress"] = address;
             offer.request["propertyType"] = type;
             offer.request["_id"] = id;
-            let offerCountDocs =await countMissingDocs(offer);
-            self.offers.push(offerCountDocs);
-          });
+            let offerCountDocs = await countMissingDocs(offer);
+            offers.push(offerCountDocs);
+            index++;
+          }
         }
-      });
-      console.log("offers",this.offers);
-      // return finalData;
-      this.offersByAction.forEach(async (offerStatus) => {
-        let filter = this.offers.filter(
-          (offer) => {offer.status._id.trim() == offerStatus.id.trim();}
-        );
-        offerStatus.offers = filter;
+      }
+
+      let returnOffers = new Array();
+      for (let i = 0; i < index; i++) {
+        returnOffers[i] = offers[i];
+      }
+          this.offersByAction.forEach((offerStatus) => {
+        returnOffers.forEach((offer) => {
+          if (offer.status._id.trim() == offerStatus.id.trim()) {
+            offerStatus.offers.push(offer);
+          }
+        });
       });
     },
     dynamicFunctionCall(funcionName, propertys, loan) {
@@ -229,16 +235,20 @@ export default {
 
   async created() {
     let actionsStatuses = [
-      "623c41e5d58dd53bd8f3a308",
+      "623c41e5d58dd53bd8f3a308", //Request in Progress
       "623c4275d58dd53bd8f3a30a", //Action Required
-      "623c436e01cfc93560df213f",
+      "623c436e01cfc93560df213f", //Offers Available
     ];
-    await getRequestsWithAction(
-      this.$store.state.currentUser._id,
-      actionsStatuses
-    ).then((res) => {
-      this.loans = res;
-    });
+
+    // 623c434201cfc93560df213e
+    // 623c41e5d58dd53bd8f3a308
+    // 623c439001cfc93560df2140
+
+    await getOffersByLoanerRequest(this.$store.state.currentUser._id).then(
+      (res) => {
+        this.loans = res;
+      }
+    );
     await this.getRequestsByStatus();
 
     // this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
@@ -255,7 +265,15 @@ export default {
     //   }
     // );
     // }
-    let finalData = this.getOffers();
+    await this.getOffers();
+    //  filter offers by status;
+    // this.offersByAction.forEach(async (offerStatus) => {
+    //   let filter = this.offers.filter((offer) => {
+    //     offer.status._id.trim() == offerStatus.id.trim();
+    //   });
+    //   offerStatus.offers = filter;
+    // });
+
     // this.$store.commit("setState", {
     //   value: finalData,
     //   state: "userRequests",
@@ -283,7 +301,9 @@ export default {
   justify-content: center;
   flex-direction: column;
 }
-
+.action-section {
+  margin-bottom: 90px;
+}
 .no-action .new-loan {
   display: flex;
   height: 39px;
@@ -351,6 +371,7 @@ export default {
 .action-title {
   font-size: 20px;
   margin-bottom: 30px;
+  font-weight: 400;
 }
 
 .single-loan .action-name .name {
