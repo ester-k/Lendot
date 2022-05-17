@@ -1,30 +1,30 @@
 <template>
-  <div class="mobile-sidebar-menue">
+  <div class="mobile-sidebar-menu">
     <div class="mobile-menu">
-        <div class="close-menue" @click="closeMobileMenu">
+        <div class="close-menu" @click="closeMobileMenu">
           <img
-            :src="require('~/assets/uploads/close_view_popup.svg')"
-            alt="close menue"
+            :src="require('~/assets/uploads/close_menu_mobile.svg')"
+            alt="close menu"
           />
         </div>
         <div class="menu-item">
           <NuxtLink to="/loanerScreen/actions">
-            <p class="">Actions</p>
+            <p  :class="{'active' : title.toLowerCase() == 'Actions'.toLowerCase() ? true : false }">Actions</p>
           </NuxtLink>
         </div>
         <div class="menu-item">
           <NuxtLink to="/loanerScreen/loans">
-            <p class="">Loans</p>
+            <p :class="{'active' : title.toLowerCase() == 'Loans'.toLowerCase() ? true : false }">Loans</p>
           </NuxtLink>
         </div>
         <div class="menu-item">
           <NuxtLink to="/loanerScreen/offers">
-            <p class="">Offers</p>
+            <p :class="{'active' : title.toLowerCase() == 'Offers'.toLowerCase() ? true : false }">Offers</p>
           </NuxtLink>
         </div>
         <div class="menu-item">
           <NuxtLink to="/loanerScreen/accountSettings">
-            <p class="">Account Settings</p>
+            <p :class="{'active' : title.toLowerCase() == 'Account Settings'.toLowerCase() ? true : false }">Account Settings</p>
           </NuxtLink>
         </div>
         <button class="fill-button contact-us">Need Help?</button>
@@ -55,105 +55,113 @@ import { User } from "~/models/user";
 export default {
   name: "mobileLoanerMenu",
   data() {
-    return {};
+    return {
+      isActive:'',
+    };
   },
   methods: {
     closeMobileMenu () {
       this.$emit('closeMobileMenu')
     }
   },
-  created() { },
+  created() { 
+
+  },
   computed: {
     currentUser: function () {
       return this.$store.state.currentUser;
     },
   },
+  props:["title"],
 };
 </script>
 
 <style>
 @media screen and (max-width: 768px) {
-.mobile-sidebar-menue {
-    height: 100%;
-    width: 332px;
-    background-color: var(--custom-light-gray);
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 10;
-    box-shadow: 0px 3px 6px #00000029;
-}
+  .mobile-sidebar-menu {
+      height: 100%;
+      width: 332px;
+      background-color: var(--custom-light-gray);
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 10;
+      box-shadow: 0px 3px 6px #00000029;
+  }
 
-.mobile-menu{
-    display:flex;
-    flex-direction:column;
-    padding: 0 31px;
-}
+  .mobile-menu{
+      display:flex;
+      flex-direction:column;
+      padding: 0 31px;
+  }
 
-.close-menue img {
-    width: 10.5px;height: 10.5px;
-}
+  .close-menu {
+      text-align: right;
+      margin: 21px 0 62px;
+  }
 
-.close-menue {
-    text-align: right;
-    margin: 21px 0 62px;
-}
+  button.fill-button.contact-us {
+      border: 2px solid var(--custom-pink);
+      background-color: transparent;
+      color: var(--custom-pink);
+      font-size: 14px;
+      line-height: 14px;
+      margin-top: 10px;
+  }
 
-button.fill-button.contact-us {
-    border: 2px solid var(--custom-pink);
-    background-color: transparent;
-    color: var(--custom-pink);
-    font-size: 14px;
-    line-height: 14px;
-    margin-top: 10px;
-}
-
-.mobile-menu .user-details {
-  margin: 0;
-  color: var(--custom-blue);
-  font-size: 15px;
-}
-
-.user-details .full-name{
-  font-weight: bold;
-}
-
-.mobile-menu .user-details .user-email {
-    margin-bottom: 0;
-}
-
-.edit-profile{
-    line-height: 19px;
-    border-color: var(--custom-blue);
-    color: var(--custom-blue);
-    margin-top: 20px
-}
-
-.menu-item a {
+  .mobile-menu .user-details {
+    margin: 0;
     color: var(--custom-blue);
     font-size: 15px;
-}
+  }
 
-.menu-item {
-    margin-bottom: 20px;
-}
+  .mobile-menu .user-details .full-name{
+    font-weight: bold;
+    margin-bottom: 0;
+  }
 
-.new-loan {
-    margin: 30px 0;
-    border-top: 1px solid rgba(22, 24, 83, 0.16);
-    border-bottom: 1px solid rgba(22, 24, 83, 0.16);
-    padding: 30px 0;
-}
+  .mobile-menu .user-details .user-email {
+      margin-bottom: 0;
+  }
 
-.new-loan-button .new-loan-link {
-    flex-grow: 1;
-    height: 29px;
-}
+  .edit-profile{
+      line-height: 19px;
+      border-color: var(--custom-blue);
+      color: var(--custom-blue);
+      margin-top: 20px
+  }
 
-.new-loan-button .new-loan-link p {
-    font-size: 12px;
-    font-weight: normal;
-    line-height: 29px;
-}
+  .menu-item a {
+      color: var(--custom-blue);
+      font-size: 15px;
+  }
+
+  .menu-item {
+      margin-bottom: 20px;
+  }
+
+  .new-loan {
+      margin: 30px 0;
+      border-top: 1px solid rgba(22, 24, 83, 0.16);
+      border-bottom: 1px solid rgba(22, 24, 83, 0.16);
+      padding: 30px 0;
+  }
+
+  .new-loan-button .new-loan-link {
+      flex-grow: 1;
+      height: 29px;
+  }
+
+  .new-loan-button .new-loan-link p {
+      font-size: 12px;
+      font-weight: normal;
+      line-height: 29px;
+  }
+  .menu-item p.active {
+    color: var(--custom-pink);
+    font-weight: 600;
+    border-bottom: 2px solid var(--custom-pink);
+    width: fit-content;
+  }
 }
 </style>

@@ -186,10 +186,8 @@ export default {
       let finalData = this.loans; //JSON.parse(JSON.stringify(tempRequests));
       let self=this;
       finalData.forEach((request) => {
-        debugger
         if (request.offers.length) {
           request.offers.forEach(async (offer) => {
-            debugger
             let address = request.propertyAddress,
               type = request.propertyType,
               id = request._id;
