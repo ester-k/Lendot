@@ -143,6 +143,7 @@ export default {
         }
       }
     });
+    this.$emit("childTitle", "account settings");
   },
 };
 </script>

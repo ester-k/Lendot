@@ -111,9 +111,12 @@
 <script>
 import LoanStatusEnum from "~/enums/statusEnum";
 import { getOffersByStatus } from "~/services/offer-service";
-import { getOffersByLoanerRequest, getRequestsWithAction } from "~/services/request-service";
+import {
+  getOffersByLoanerRequest,
+  getRequestsWithAction,
+} from "~/services/request-service";
 import { countMissingDocs } from "~/services/documents-service";
-import Vue from 'vue'
+import Vue from "vue";
 
 export default {
   name: "Actions",
@@ -158,9 +161,9 @@ export default {
         "purpose",
         "rehab",
       ];
-      this.loans = JSON.parse(localStorage.getItem("loansWithAction"))
+      this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
       if (this.loans) {
-        this.loansByAction.forEach((action) => {
+        self.loansByAction.forEach((action) => {
           self.loans.forEach((loan) => {
             if (loan.status._id == action.id) {
               action.loans.push(loan);
@@ -177,15 +180,14 @@ export default {
         });
       }
     },
-
     async getOffers() {
-
       let tempRequests = Vue.util.extend({}, this.requests);
-      tempRequests = Object.values(tempRequests)
-      let finalData = JSON.parse(JSON.stringify(tempRequests));
+      tempRequests = Object.values(tempRequests);
+      let finalData = this.loans; //JSON.parse(JSON.stringify(tempRequests));
+      let self=this;
       finalData.forEach((request) => {
         if (request.offers.length) {
-          request.offers.forEach((offer) => {
+          request.offers.forEach(async (offer) => {
             let address = request.propertyAddress,
               type = request.propertyType,
               id = request._id;
@@ -193,18 +195,19 @@ export default {
             offer.request["propertyAddress"] = address;
             offer.request["propertyType"] = type;
             offer.request["_id"] = id;
-            let offerCountDocs = countMissingDocs(offer);
-            this.offers.push(offerCountDocs);
+            let offerCountDocs =await countMissingDocs(offer);
+            self.offers.push(offerCountDocs);
           });
         }
       });
-      return finalData
-      // this.offersByAction.forEach(async (offerStatus) => {
-      //   let filter = this.offers.filter(
-      //     (offer) => {offer.status._id.trim() == offerStatus.id.trim();}
-      //   );
-      //   offerStatus.offers = filter;
-      // });
+      console.log("offers",this.offers);
+      // return finalData;
+      this.offersByAction.forEach(async (offerStatus) => {
+        let filter = this.offers.filter(
+          (offer) => {offer.status._id.trim() == offerStatus.id.trim();}
+        );
+        offerStatus.offers = filter;
+      });
     },
     dynamicFunctionCall(funcionName, propertys, loan) {
       this[funcionName](propertys, loan);
@@ -225,38 +228,44 @@ export default {
   },
 
   async created() {
-
-    // let actionsStatuses = [
-    //   "623c41e5d58dd53bd8f3a308",
-    //   "623c4275d58dd53bd8f3a30a", //Action Required
-    //   "623c436e01cfc93560df213f",
-    // ];
-    // await this.getLoansWithAction(actionsStatuses);
+    let actionsStatuses = [
+      "623c41e5d58dd53bd8f3a308",
+      "623c4275d58dd53bd8f3a30a", //Action Required
+      "623c436e01cfc93560df213f",
+    ];
+    await getRequestsWithAction(
+      this.$store.state.currentUser._id,
+      actionsStatuses
+    ).then((res) => {
+      this.loans = res;
+    });
+    await this.getRequestsByStatus();
 
     // this.loans = JSON.parse(localStorage.getItem("loansWithAction"));
-    await this.getRequestsByStatus();
-    if (!this.requests) {
-      let vue = this;
-      await getOffersByLoanerRequest(this.$store.state.currentUser._id).then(
-        (res) => {
-          vue.$store.commit("setState", {
-            value: res,
-            state: "userRequests",
-          });
-        }
-      );
-    }
+    // await this.getRequestsByStatus();
+    // if (!this.requests) {
+    //   let vue = this;
+    // await getOffersByLoanerRequest(this.$store.state.currentUser._id).then(
+    //   (res) => {
+    //     console.log("res",res);
+    //     // vue.$store.commit("setState", {
+    //     //   value: res,
+    //     //   state: "userRequests",
+    //     // });
+    //   }
+    // );
+    // }
     let finalData = this.getOffers();
-    this.$store.commit("setState", {
-      value: finalData,
-      state: "userRequests",
-    });
+    // this.$store.commit("setState", {
+    //   value: finalData,
+    //   state: "userRequests",
+    // });
     this.loansByAction.forEach((action) => {
       if (action.loans.length) {
-        this.actionsLength = true
+        this.actionsLength = true;
       }
     });
-
+    this.$emit("childTitle", "actions");
   },
 };
 </script>
@@ -378,5 +387,31 @@ export default {
 .missing-info {
   font-size: 12px;
   color: var(--custom-pink);
+}
+
+@media screen and (max-width: 768px) {
+  .no-action {
+    padding: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .no-action .new-loan {
+    margin-top: 14px;
+  }
+
+  .no-action-text {
+    font-size: 13px;
+  }
+
+  .no-action .new-loan {
+    font-size: 13px;
+  }
+
+  .no-action .new-loan p:first-child {
+    margin-right: 5px;
+  }
 }
 </style>

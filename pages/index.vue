@@ -37,8 +37,7 @@ export default {
     },
   },
   created() {
-    
-    
+       
     // TODO: get this popup function out of here
     $(document).on("click", function (event) {
       if (event.target.classList.contains("popup-opened")) {

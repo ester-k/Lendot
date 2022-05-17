@@ -1,21 +1,42 @@
  <template>
  <div class="header mobile">
-      <a href="">
+    <a href="">
       <img
       alt="lendot logo"
       class="lendot-icon mobile"
-      :src="require('~/assets/uploads/mobile_logo.png')"
+      :src="require('~/assets/uploads/noname_logo_mobile.svg')"
     /></a>
-    <div class="blue-header"></div>
-
-   </div>
+    <div class="blue-header">
+      <h1 class="title">{{title}}</h1>
+      <div class="menu-right">
+        <NuxtLink to="/createRequest">
+          <div class="plus">
+            <img :src="require('~/assets/uploads/plus_loan_mobile.svg')" />
+          </div>
+        </NuxtLink>
+        <div class="open-popup" @click="showMobileMenu = true">
+          <img
+            :src="require('~/assets/uploads/open_menu_mobile.svg')"
+            alt="open menu"
+          />
+        </div>
+      </div>
+    </div>
+    <mobileLoanerMenu v-show="showMobileMenu" @closeMobileMenu="showMobileMenu=false" :title="title" />
+  </div>  
 </template>
 
 <script>
 export default {
   name: "MobileHeader",
+  data () {
+    return {
+      showMobileMenu: false
+    }
+  },
   methods: {
   },
+  props:["title"]
 };
 </script>
 
@@ -32,9 +53,34 @@ export default {
 }
 @media screen and (max-width: 768px) {
   .blue-header {
-    height: 65px;
     background-color: var(--custom-blue);
     width: 100%;
+    height: 50px;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h1.title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 15px;
+    margin-left: 84px;
+    font-weight: normal;
+  }
+
+  .menu-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .menu-right .open-popup {
+    margin: 0 26px 0 18px;
+    display: flex;
+  }
+
+  .menu-right .plus {
+    display: flex;
   }
 }
 </style>

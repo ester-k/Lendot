@@ -1,6 +1,6 @@
 <template>
   <div class="lender-screen">
-    <MobileHeader />
+    <MobileHeader :title="title"/>
     <ProfileSidebar />
     <div class="app-container">
       <div class="lender-menu">
@@ -42,7 +42,7 @@
           </NuxtLink>
         </div>
       </div>
-      <NuxtChild />
+      <NuxtChild @childTitle="setTitle"/>
     </div>
   </div>
 </template>
@@ -59,6 +59,7 @@ export default {
   data() {
     return {
       loans: [],
+      title:'',
     };
   },
   methods: {
@@ -69,12 +70,16 @@ export default {
         }
       );
     },
+    setTitle(childTitle){
+      this.title = childTitle
+    }
   },
   computed: {
     requests() {
       return this.$store.state.userRequests;
     },
     loanerId() {
+      console.log(this.$store.state.currentUser);
       return (
         this.$store.state.currentUser._id ||
         JSON.parse(localStorage.getItem("currentUser"))._id
@@ -84,7 +89,7 @@ export default {
   async created() {
     let actionsStatuses = [
       "623c41e5d58dd53bd8f3a308",
-      "623c4275d58dd53bd8f3a30a", //Action Required
+      "623c439001cfc93560df2140", //offers in progress
       "623c436e01cfc93560df213f",
     ];
     await this.getLoansWithAction(actionsStatuses);
@@ -93,7 +98,8 @@ export default {
       !this.$store.state.userRequests.length
     ) {
       await getOffersByLoanerRequest(this.loanerId).then((res) => {
-             this.$store.commit("setState", {
+        console.log(res);
+        this.$store.commit("setState", {
           value: res,
           state: "userRequests",
         });
@@ -200,5 +206,14 @@ export default {
   color: white;
   margin-right: 0;
   text-align: center;
+}
+@media screen and (max-width: 768px) {
+  .lender-menu{
+    display:none;
+  }
+  .lender-screen {
+  display: block;
+ 
+}
 }
 </style>
