@@ -14,7 +14,7 @@
             </NuxtLink>
           </div>
         </div>
-        <button class="fill-button contact-us">Need Help?</button>
+        <button class="border-button contact-us" @click="openChat">Need Help?</button>
         <div class="new-loan">
           <NuxtLink to="/createRequest" @click="closeMobileMenu">
             <div class="new-loan-button">
@@ -56,6 +56,12 @@ export default {
       $nuxt.$fire.auth.signOut();
       localStorage.clear();
     },
+    openChat(){
+      this.$emit('closeMobileMenu')
+      var iframe = document.querySelector("iframe[title='chat widget']");
+      var button = iframe.contentDocument.querySelector("button");
+      button.click();
+    }
   },
   created() { 
 
@@ -99,11 +105,8 @@ export default {
     margin: 21px 0 62px;
   }
 
-  button.fill-button.contact-us {
-    border: 2px solid var(--custom-pink);
-    background-color: transparent;
+  button.contact-us {
     color: var(--custom-pink);
-    font-size: 14px;
     line-height: 14px;
     margin-top: 10px;
   }

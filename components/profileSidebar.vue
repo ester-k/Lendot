@@ -14,7 +14,7 @@
       <div class="help-area">
         <p class="help-title">Need Help?</p>
 
-        <button class="fill-button contact-us">Contact Us</button>
+        <button class="fill-button contact-us" @click="openChat">Contact Us</button>
       </div>
     </div>
   </div>
@@ -32,6 +32,11 @@ export default {
       $nuxt.$fire.auth.signOut();
       localStorage.clear();
     },
+    openChat(){
+      var iframe = document.querySelector("iframe[title='chat widget']");
+      var button = iframe.contentDocument.querySelector("button");
+      button.click();
+    }
   },
   created() {
     if (

@@ -25,9 +25,7 @@
           </NuxtLink>
         </div>
         <div class="border-button">
-          <NuxtLink to="/contact">
-            <p>Need Help?</p>
-          </NuxtLink>
+          <p class="pointer" @click="openChat">Need Help?</p>
         </div>
         <div class="new-loan">
           <NuxtLink to="/createRequest">
@@ -147,6 +145,11 @@ export default {
         });
       });
     },
+    openChat(){
+      var iframe = document.querySelector("iframe[title='chat widget']");
+      var button = iframe.contentDocument.querySelector("button");
+      button.click();
+    }
   },
   mounted(){
     let tawkToScript = document.createElement('script')
@@ -163,7 +166,6 @@ export default {
       Tawk_API.onLoad = function(){
           setTimeout(function(){ 
             var iframe = document.querySelector("iframe[title='chat widget']");
-            console.log("iframe", iframe);
             const new_style_element = document.createElement("style");
             new_style_element.textContent = "span.tawk-badge.tawk-flex.tawk-flex-center.tawk-flex-middle.tawk-min-badge {background-color: #EC255A;inset: 0 auto auto  0 !important;}"
             iframe.contentDocument.head.appendChild(new_style_element); 
