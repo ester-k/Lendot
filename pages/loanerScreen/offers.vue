@@ -443,6 +443,7 @@ export default {
           document.querySelector(".wrap-offer.hide").classList.remove("hide");
       }
     });
+    this.$emit("childTitle", "offers");
   },
 };
 </script>
