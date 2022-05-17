@@ -116,7 +116,9 @@ export default {
                   value: updatedUser,
                   state: "currentUser",
                 });
-                let currentStep = JSON.parse(
+                let currentStep = null;
+                if(localStorage.getItem("createRequestData"))
+                  currentStep=JSON.parse(
                 JSON.parse( localStorage.getItem("createRequestData")) 
                 );
                 if (
