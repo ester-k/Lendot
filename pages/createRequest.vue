@@ -155,7 +155,7 @@ export default {
       // },
     },
     created: async function () {
-      if (!localStorage.getItem("createRequestData")){
+      if (!localStorage.getItem("createRequestData")) {
         localStorage.setItem(
           "createRequestData",
           JSON.stringify({
@@ -166,10 +166,11 @@ export default {
               aboutProperty: { complete: "false" },
             },
           })
-        );}
+        );
+      }
       this.createRequestData = localStorage.getItem("createRequestData");
       this.createRequestStep = this.createRequestData.createRequestStep;
-      if (  $nuxt.$route.path!="/createRequest") {
+      if ($nuxt.$route.path != "/createRequest") {
         if (this.createRequestStep) {
           this.$router.replace({
             path: "/createRequest/" + this.createRequestStep,
@@ -180,9 +181,9 @@ export default {
           //     path: "/createRequest/createAccount",
           //   });
           // } else
-            this.$router.replace({
-              path: "/createRequest/aboutLoan",
-            });
+          this.$router.replace({
+            path: "/createRequest/aboutLoan",
+          });
         }
       }
     },
@@ -198,8 +199,7 @@ export default {
       let createRequestData = JSON.parse(
         localStorage.getItem("createRequestData")
       );
-      if (!createRequestData) 
-   {
+      if (!createRequestData) {
         createRequestData = {
           steps: {
             createAccount: { complete: "false", emailSend: "false" },
@@ -209,7 +209,10 @@ export default {
           },
           createRequestStep: "aboutLoan",
         };
-         localStorage.setItem("createRequestData",JSON.stringify(createRequestData));
+        localStorage.setItem(
+          "createRequestData",
+          JSON.stringify(createRequestData)
+        );
       }
       return createRequestData;
     },
@@ -259,6 +262,12 @@ export default {
 .verify-link {
   display: flex;
   margin-top: 17px;
+}
+.verify-link.error {
+  background-color: #ec255a1a;
+  padding: 3px 5px 3px 10px;
+  width: max-content;
+  border-radius: 17px;
 }
 .verify-link p {
   margin-right: 10px;

@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyNow">Verify Now</button></div>
 
     <img
       class="len-title about-you-title desktop"
@@ -231,8 +231,8 @@ export default {
     changeType(data) {
       this.type = data;
     },
-    verifyEmail: function () {
-      this.$store.commit("setState", { value: 3, state: "createAccountStep" });
+    verifyNow: function () {
+      // this.$store.commit("setState", { value: 2, state: "createAccountStep" });
       this.$router.replace({ path: "/createRequest/createAccount" });
     },
   },

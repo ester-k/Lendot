@@ -58,7 +58,7 @@
       </div>
       <div class="action-section" v-for="(action, oIndex) of offersByAction" :key="oIndex">
         <div v-if="action.offers.length">
-          <h3 class="action-title">{{ action.offers[0].status.name }},{{action.offers[0].status._id}}</h3>
+          <h3 class="action-title">{{ action.offers[0].status.name }}</h3>
 
           <div class="single-loan" v-for="(offer, singleIndex) of action.offers" :key="singleIndex" @click="
             dynamicFunctionCall(

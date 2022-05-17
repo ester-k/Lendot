@@ -102,39 +102,45 @@ export default {
         let updatedUser = JSON.parse(localStorage.getItem("currentUser")) || {};
         updatedUser["password"] = this.password;
         const auth = this.$fire.auth;
-        await auth.currentUser
-          .updatePassword(this.password)
-          .then(async () => {
-            console.log("It works!");
-            await updateUser(updatedUser._id, updatedUser).then((res) => {
-              localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-               this.$store.commit("setState", {
-          value: updatedUser,
-          state: "currentUser",
-        });
-              let currentStep = JSON.parse(
-                localStorage.getItem("createRequestData")
-              );
-              if (
-                !currentStep ||
-                currentStep.createRequestStep == "createAccount"
-              ) {
-                                window.location.href="/createRequest/aboutLoan";
+        if (auth.currentUser){
+          await auth.currentUser
+            .updatePassword(this.password)
+            .then(async () => {
+              console.log("It works!");
+              await updateUser(updatedUser._id, updatedUser).then((res) => {
+                localStorage.setItem(
+                  "currentUser",
+                  JSON.stringify(updatedUser)
+                );
+                this.$store.commit("setState", {
+                  value: updatedUser,
+                  state: "currentUser",
+                });
+                let currentStep = JSON.parse(
+                JSON.parse( localStorage.getItem("createRequestData")) 
+                );
+                if (
+                  !currentStep ||
+                  currentStep.createRequestStep == "createAccount"
+                ) {
+                  window.location.href = "/createRequest/aboutLoan";
 
-                // this.$router.replace({
-                //   path: "/createRequest/aboutLoan",
-                // });
-              } else {
-                window.location.href="/createRequest/" + currentStep.createRequestStep;
-                // this.$router.replace({
-                //   path: "/createRequest/" + currentStep.createRequestStep,
-                // });
-              }
+                  // this.$router.replace({
+                  //   path: "/createRequest/aboutLoan",
+                  // });
+                } else {
+                  window.location.href =
+                    "/createRequest/" + currentStep.createRequestStep;
+                  // this.$router.replace({
+                  //   path: "/createRequest/" + currentStep.createRequestStep,
+                  // });
+                }
+              });
+            })
+            .catch((error) => {
+              console.log("error: " + error);
             });
-          })
-          .catch((error) => {
-            console.log("error: " + error);
-          });
+            }
       }
     },
     confirmSignIn: async function () {
@@ -150,10 +156,10 @@ export default {
               // window.localStorage.removeItem("emailForSignIn");
               let userFromFB = result.user;
               localStorage.setItem("currentUser", JSON.stringify(result.user));
-                this.$store.commit("setState", {
-          value: result.user,
-          state: "currentUser",
-        });
+              this.$store.commit("setState", {
+                value: result.user,
+                state: "currentUser",
+              });
               //save on mongo with isActive=false
               this.updateUser(userFromFB.email, true);
               localStorage.setItem("emailVerified", true);
@@ -196,7 +202,7 @@ export default {
         cUser["username"] = cUser["firstName"] + " " + cUser["lastName"];
         cUser["phone"] = updateUser.phone;
         localStorage.setItem("currentUser", JSON.stringify(cUser));
-          this.$store.commit("setState", {
+        this.$store.commit("setState", {
           value: cUser,
           state: "currentUser",
         });
