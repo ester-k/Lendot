@@ -162,7 +162,8 @@ export default {
     },
   },
   async created() {
-    console.log(this.loanerId);
+ this.$popup.closePopup()
+     console.log(this.loanerId);
      if (!localStorage.getItem("currentUser")) {
         this.$router.replace({path:"/login"});
       } 
