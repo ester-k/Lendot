@@ -1,9 +1,3 @@
-// export default (context, inject) => {
-//     const closePopup = (msg) => console.log(`Hello ${msg}!`)
-//         // Inject $hello(msg) in Vue, context and store.
-//     inject('hello', closePopup)
-// }
-
 const popup = {
     name: 'popup',
     closePopup() {
@@ -13,10 +7,7 @@ const popup = {
                 document.getElementById("app").classList.remove("popup-opened");
                 return;
             }
-            // if (event.target.classList.contains("popup")) {
-            //     event.target.style.display = "none";
-            //     return;
-            // }
+
         });
     }
 }
