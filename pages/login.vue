@@ -22,7 +22,7 @@
 
         </div>  <p class="error-msg" id="emailError">Wrong password</p>
         <p class="error-msg" id="userError">User not found</p>
-        <NuxtLink to="/resetPassword" class="forgot-password">Forgot password?</NuxtLink>
+        <NuxtLink to="/recetPassword" class="forgot-password">Forgot password?</NuxtLink>
 
         <button type="submit" class="">Log In</button>
       </form>
