@@ -1,7 +1,7 @@
 <template>
-  <div class="popup">
+  <div class="popup" @click.self="$emit('closePopup')">
     <div class="placeholder"></div>
-    <div class="inner-popup">
+    <div class="inner-popup" >
       <div class="content">
         <div dir="ltr">
           <div class="close-popup" @click="$emit('closePopup')">

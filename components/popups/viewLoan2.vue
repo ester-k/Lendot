@@ -1,5 +1,5 @@
 <template>
-  <div class="popup">
+  <div class="popup" @click.self="$emit('closePopup')">
     <div class="placeholder"></div>
     <div class="inner-popup">
             <div class="content">

@@ -1,5 +1,5 @@
 <template>
-  <div class="popup">
+  <div class="popup" @click.self="$emit('closePopup')">
     <div class="placeholder"></div>
     <div class="inner-popup">
       <div class="content">
@@ -76,10 +76,10 @@
           <h3 class="title">Uploaded Documents</h3>
           <div >
             <div  v-for="(document, index) of loan.selectedOffer.documents" :key="index" class="row documents-list">
+            
             <div
               class="wrap-document"
              v-for="(doc, index) of document.loanerDocs" :key="index"
-           
               onmouseover="this.classList.add('hover')"
               onmouseleave="this.classList.remove('hover')"
               @click="

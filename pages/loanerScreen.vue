@@ -61,16 +61,15 @@ export default {
       loans: [],
       title: "",
       haveActions: true,
-       loansByAction: [
+      loansByAction: [
         { id: "623c41e5d58dd53bd8f3a308", loans: [] }, //Request in Progress
-       
       ],
       // getOffersByStatus
       offersByAction: [
         { id: "6269565e8b7b1e5b2c6851ad", offers: [] }, //missing details
         { id: "626a2909e444b82e0c459e21 ", offers: [] }, //accept offer
       ],
-      actionsLength:false
+      actionsLength: false,
     };
   },
   methods: {
@@ -180,14 +179,21 @@ export default {
       return this.$store.state.userRequests;
     },
     loanerId() {
-      return (
-        this.$store.state.currentUser._id ||
-        JSON.parse(localStorage.getItem("currentUser"))._id
-      );
+      if (!localStorage.getItem("currentUser")) {
+        this.$router.replace({path:"/login"});
+      } else
+        return (
+          this.$store.state.currentUser._id ||
+          JSON.parse(localStorage.getItem("currentUser"))._id
+        );
     },
   },
   async created() {
-    console.log(this.loanerId);
+ this.$popup.closePopup()
+     console.log(this.loanerId);
+     if (!localStorage.getItem("currentUser")) {
+        this.$router.replace({path:"/login"});
+      } 
     await getOffersByLoanerRequest(this.loanerId).then((res) => {
       this.loans = res;
       localStorage.setItem("userLoans", JSON.stringify(res));
@@ -205,8 +211,8 @@ export default {
       }
     });
 
-localStorage.setItem("offersByAction", JSON.stringify(this.offersByAction));
-localStorage.setItem("loansByAction", JSON.stringify(this.loansByAction));
+    localStorage.setItem("offersByAction", JSON.stringify(this.offersByAction));
+    localStorage.setItem("loansByAction", JSON.stringify(this.loansByAction));
 
     if (this.loans) {
       if ($nuxt.$route.path == "/loanerScreen") {

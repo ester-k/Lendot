@@ -108,6 +108,7 @@ export default {
             .then(async () => {
               console.log("It works!");
               await updateUser(updatedUser._id, updatedUser).then((res) => {
+                console.log("res",res);
                 localStorage.setItem(
                   "currentUser",
                   JSON.stringify(updatedUser)
@@ -118,9 +119,9 @@ export default {
                 });
                 let currentStep = null;
                 if(localStorage.getItem("createRequestData"))
-                  currentStep=JSON.parse(
+                  currentStep=
                 JSON.parse( localStorage.getItem("createRequestData")) 
-                );
+               
                 if (
                   !currentStep ||
                   currentStep.createRequestStep == "createAccount"

@@ -103,11 +103,11 @@
                     <div
                       class="view"
                       @click="
-                        this.source = offer.terms;
-                        this.openViewPdf = true;
+                       openViewPdf = true;
+                       source = offer.terms
                       "
                     >
-                      <img
+                     <img
                         alt="view icon"
                         :src="require('~/assets/uploads/view_icon.svg')"
                       />View
@@ -251,11 +251,9 @@
     </div>
     <!-- <div v-if="noOffers">no offers avalibale</div> -->
     <viewPdf
-      class="view-pdf-popup"
       v-if="openViewPdf"
-      :source="this.source"
-      :height="704"
-      :width="500"
+      :source="source"
+      
     />
   </div>
 </template>
@@ -313,7 +311,6 @@ export default {
           );
         }
       }
-
       return loans;
     },
     declineOffer: async function (loanIndex, offerIndex) {
@@ -430,8 +427,8 @@ export default {
             document
               .querySelector(".wrap-offer-container.open")
               .classList.remove("open");
-              if( document.querySelector(".wrap-offer.hide"))
-          document.querySelector(".wrap-offer.hide").classList.remove("hide");
+          if (document.querySelector(".wrap-offer.hide"))
+            document.querySelector(".wrap-offer.hide").classList.remove("hide");
         }
       } else {
         if (document.querySelector(".wrap-offer-container.open")) {

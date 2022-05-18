@@ -42,14 +42,9 @@
       </div>
     </section>
     <section class="">
-
-
       <div class="account-info">
-        
-                <NuxtLink to="/resetPassword" class="forgot-password key">Reset Password</NuxtLink>
-
-        
-      </div>
+                        <NuxtLink to="/recetPassword" class="forgot-password key">Reset Password</NuxtLink>
+              </div>
     </section>
     <!-- <section class="rating"><div class="title">Your Rating</div></section> -->
   </div>
@@ -75,6 +70,7 @@ export default {
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
+      $(".save-change").css("display", "none");
       $(event.target)
         .closest(".account-info")
         .find(".save-change")
@@ -94,32 +90,65 @@ export default {
       password.setAttribute("type", type);
     },
     updateProfile: async function (event, field) {
+      const self = this;
       let updatedUser = new User();
       updatedUser = JSON.parse(localStorage.getItem("currentUser"));
       let input = $(event.target).closest(".account-info").find(".value")[0];
       updatedUser[field] = input.innerText;
       updatedUser._id;
-      await updateUser(updatedUser._id, updatedUser).then((res) => {
-        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-        this.$store.commit("setState", {
-          value: updatedUser,
-          state: "currentUser",
+      if (field == "email") {
+        const auth = this.$fire.auth;
+        await auth.currentUser
+          .updateEmail(input.innerText)
+          .then(() => {
+            updateUserDB(updatedUser);
+          })
+          .catch((error) => {
+            if (error.code == "auth/requires-recent-login") {
+              auth.currentUser.reauthenticate(AuthCredential);
+              console.log("recet login failed: ");
+              const credential = EmailAuthProvider.credentialWithLink(
+                self.currentUser.email,
+                window.location.href
+              );
+
+              // Re-authenticate the user with this credential.
+              reauthenticateWithCredential(auth.currentUser, credential)
+                .then((usercred) => {
+                  console.log("usercred", usercred);
+                  updateUserDB(updatedUser);
+                })
+                .catch((error) => {
+                  console.log("error recet", error);
+                });
+            }
+          });
+      } else {
+        updateUserDB(updatedUser);
+      }
+      async function updateUserDB(updatedUser) {
+        await updateUser(updatedUser._id, updatedUser).then((res) => {
+          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+          self.$store.commit("setState", {
+            value: updatedUser,
+            state: "currentUser",
+          });
+          let text = $(event.target)
+            .closest(".account-info")
+            .find(".save-change")[0];
+          let img = document.createElement("img");
+          img.src = require("~/assets/uploads/update_success.gif");
+          text.innerHTML = "";
+          text.appendChild(img);
+          setTimeout(removeV, 1000);
+          function removeV() {
+            text.innerHTML = "Update";
+            document
+              .querySelectorAll(".save-change")
+              .forEach((node) => (node.style.display = "none"));
+          }
         });
-        let text = $(event.target)
-          .closest(".account-info")
-          .find(".save-change")[0];
-        let img = document.createElement("img");
-        img.src = require("~/assets/uploads/update_success.gif");
-        text.innerHTML = "";
-        text.appendChild(img);
-        setTimeout(removeV, 1000);
-        function removeV() {
-          text.innerHTML = "Update";
-          document
-            .querySelectorAll(".save-change")
-            .forEach((node) => (node.style.display = "none"));
-        }
-      });
+      }
     },
   },
   computed: {
@@ -130,23 +159,27 @@ export default {
   created() {
     // exit from edit state on click outside the row
     $(document).on("click", function (event) {
-      //if the click is not on the edit icon or on the active field
+      //if the click is not on the edit icon or on the active field or on save button
       if (!event.target.classList.contains("edit-icon")) {
         if (
           !(
-            event.target.classList.contains("value") &&
-             event.target.classList.contains(".save-change")&&
-            $(event.target)
-              .closest(".account-info")
-              .find(".value[contenteditable=true]")[0] == event.target
+            event.target.classList.contains("value") ||
+            event.target.classList.contains("save-change")
           )
         ) {
+          // !(
+          //  ( event.target.classList.contains("value") ||
+          //    event.target.classList.contains("save-change"))
+          //  &&
+          // $(event.target)
+          //   .closest(".account-info")
+          //   .find(".value[contenteditable=true]")[0] == event.target
+          // )
           let activeField = document.querySelector(
             ".account-info .value[contenteditable=true]"
           );
-          if( document
-              .querySelectorAll(".save-change"))
-           document
+          if (document.querySelectorAll(".save-change"))
+            document
               .querySelectorAll(".save-change")
               .forEach((node) => (node.style.display = "none"));
           if (activeField) {

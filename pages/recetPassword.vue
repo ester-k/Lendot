@@ -10,7 +10,7 @@
         <input type="text" name="email" class="email" v-model="email" placeholder="yourmail@gmail.com" />
         <p class="error-msg" id="emailError"> We do not recognize this email. Recommend trying to sign up</p>
       </div>
-      <button type="submit" @click="resetPassword">Reset Password</button>
+      <button type="submit" @click="recetPassword">Reset Password</button>
       <NuxtLink to="/login" class="link"> back to log in </NuxtLink>
     </div>
   </div>
@@ -20,7 +20,7 @@
 import Header from "~/components/header.vue";
 import { getUserByEmail } from "~/services/user-service.js";
 export default {
-  name: "resetPassword",
+  name: "recetPassword",
   components: { Header },
 
   asyncData() {
@@ -30,7 +30,7 @@ export default {
   },
   methods: {
 
-    resetPassword() {
+    recetPassword() {
       let auth = this.$fire.auth;
       let actionCodeSettings = {
         url: window.location.origin + "/login",

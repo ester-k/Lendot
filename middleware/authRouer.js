@@ -12,7 +12,7 @@ export default function({ route, redirect }) {
                 return redirect("/createRequest/aboutLoan")
             }
         }
-        if (route.path.indexOf("createRequest") != -1 || route.path == "/createPassword" || route.path == "/resetPassword") {
+        if (route.path.indexOf("createRequest") != -1 || route.path == "/createPassword" || route.path == "/recetPassword") {
             return route
         }
         if (!$nuxt.$fire.auth.currentUser)

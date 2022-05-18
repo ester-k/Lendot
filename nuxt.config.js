@@ -35,9 +35,11 @@ export default {
 
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: ['~/assets/main.css', '~/assets/mainMobile.css'],
-
+    script: [{
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js'
+    }],
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['~/plugins/service.js', '~/plugins/Vuelidate.js', '~/plugins/vue-pdf-embed.js'],
+    plugins: ['~/plugins/service.js', '~/plugins/Vuelidate.js', '~/plugins/vue-pdf-embed.js', '~/plugins/popups.js'],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -96,6 +98,7 @@ export default {
     router: {
         middleware: ['authRouer']
     },
+
     // auth: {
     //     strategies: {
     //         local: {
