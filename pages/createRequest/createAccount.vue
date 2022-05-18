@@ -9,7 +9,7 @@
         class="len-title about-you-title mobile"
         :src="require('~/assets/uploads/about_you_title_mobile.svg')"
       />
-     
+      {{a}}
   <form @submit.prevent="createUserOnDB">
         <label class="form-label"> Name</label>
         <div class="flex-input">
@@ -19,10 +19,15 @@
               type="text"
               name="first name"
               placeholder="First Name"
-              v-model="firstName"
-
+              v-model="form.firstName"
             />
-          
+             <div
+            class="input-errors"
+            v-for="(error,i) of errors.firstName"
+            :key="i"
+          >
+            <div class="error-msg">{{ error}}</div>
+          </div>
           </div>
           <div class="wrap-input">
             <input
@@ -30,24 +35,36 @@
               type="text"
               name="last name"
               placeholder="Last Name"
-              v-model="lastName"
+              v-model="form.lastName"
 
             />
-           
+              <div
+            class="input-errors"
+            v-for="(error,i) of errors.lastName"
+            :key="i"
+          >
+            <div class="error-msg">{{ error}}</div>
+          </div>
           </div>
         </div>
 
         <label class="form-label"> Email Address</label>
         <div class="wrap-input">
+          <!-- type="email" -->
           <input
-            type="email"
             name="email"
               :disabled="emailVerified"
             placeholder="youremail@gmail.con"
-            v-model="email"
+            v-model="form.email"
 
           />
-          
+           <div
+            class="input-errors"
+            v-for="(error,i) of errors.email"
+            :key="i"
+          >
+            <div class="error-msg">{{ error}}</div>
+          </div>
         </div>
         <label class="form-label"> Phone Number</label>
         <div class="wrap-input">
@@ -56,8 +73,15 @@
             type="text"
             name="phone"
             placeholder="+9999-9999-9999"
-            v-model="phone"
+            v-model="form.phone"
           />
+           <div
+            class="input-errors"
+            v-for="(error,i) of errors.phone"
+            :key="i"
+          >
+            <div class="error-msg">{{ error}}</div>
+          </div>
         </div>
          <label class="form-label"> Credit Score</label>
       <div class="wrap-input">
@@ -77,8 +101,7 @@
         </div> 
           <!-- credit score -->
      <div class="next-btn">
-                         <p class="error-msg" id="emailError">This email address exists,<NuxtLink to="/login"> click here to log in</NuxtLink></p>
-
+        <p class="error-msg" id="emailError">This email address exists,<NuxtLink to="/login"> click here to log in</NuxtLink></p>
         <button type="submit">next</button>
      </div>
       </form> 
@@ -108,16 +131,19 @@ export default {
   setup() {
     // return { v$: useVuelidate() };
   },
-  asyncData() {
+  data() {
     return {
-      email: "",
-      firstName: "",
-      lastName: "",
-      phone: "",
-      emailSend: false,
-      url: window.location.href,
+      form: {
+        email: "",
+        firstName: "",
+        lastName: "",
+        phone: "",
+      },
+      errors: {},
+      a: "",
       defaultSelect: "-Select-",
-
+      url: window.location.href,
+      emailSend: false,
       currentUser: localStorage.getItem("currentUser"),
       creditScores: [
         { value: "Under 550" },
@@ -151,34 +177,37 @@ export default {
     //   };
     // },
     createUserOnDB: async function () {
+      let isFormCorrect = this.checkValidForm();
       // if (!this.currentUser) {
-      // if (this.checkValidForm()) {
-      // let newUser = new User();
-      let newUser = {};
-      //
-      newUser.firstName = this.firstName;
-      newUser.lastName = this.lastName;
-      newUser.username = this.firstName + this.lastName;
-      newUser.email = this.email;
-      newUser.phone = this.phone;
-      this.currentUser = newUser;
-      this.$store.commit("setState", {
-        value: newUser,
-        state: "currentUser",
-      });
-      this.createUser(newUser);
-      localStorage.setItem("currentUser", JSON.stringify(newUser));
-      this.$store.commit("setState", {
-        value: newUser,
-        state: "currentUser",
-      });
-      let userForm = JSON.parse(localStorage.getItem("createRequestData"));
-      if (!userForm) {
-        userForm["steps"] = {};
+      if (isFormCorrect) {
+        // let newUser = new User();
+        let newUser = {};
+        //
+        newUser.firstName = this.form.firstName;
+        newUser.lastName = this.form.lastName;
+        newUser.username = this.firstName + this.form.lastName;
+        newUser.email = this.form.email;
+        newUser.phone = this.form.phone;
+        console.log(newUser);
+        this.currentUser = newUser;
+        this.$store.commit("setState", {
+          value: newUser,
+          state: "currentUser",
+        });
+        this.createUser(newUser);
+        localStorage.setItem("currentUser", JSON.stringify(newUser));
+        this.$store.commit("setState", {
+          value: newUser,
+          state: "currentUser",
+        });
+        let userForm = JSON.parse(localStorage.getItem("createRequestData"));
+        if (!userForm) {
+          userForm["steps"] = {};
+        }
+        userForm.steps["createAccount"].data = newUser;
+        localStorage.setItem("createRequestData", JSON.stringify(userForm));
+        this.emailSend = true;
       }
-      userForm.steps["createAccount"].data = newUser;
-      localStorage.setItem("createRequestData", JSON.stringify(userForm));
-      this.emailSend = true;
     },
     createUser: async function (user) {
       await createUser(user)
@@ -199,9 +228,18 @@ export default {
           console.log("err", err);
         });
     },
-    checkValidForm: async function () {
-      let isFormCorrect = true;
-      if (isFormCorrect) {
+    checkValidForm: function () {
+      this.a = this.a + " ";
+      let errors = this.errors;
+     errors= this.$Validator.checkForm(this.form)
+
+      this.errors = errors;
+      console.log(this.errors);
+      if (
+        this.errors &&
+        Object.keys(this.errors).length === 0 &&
+        Object.getPrototypeOf(this.errors) === Object.prototype
+      ) {
         //change the icon
         let activeRoute = document.querySelector(".nuxt-link-exact-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
@@ -214,7 +252,10 @@ export default {
         // });
 
         return true;
-      } else return false;
+      } else {
+        console.log("in correct", this.errors);
+        return false;
+      }
     },
     changeCredit(data) {
       this.credit = data;
@@ -232,11 +273,10 @@ export default {
     },
   },
   created() {
-
-//if user is logged he can't create account
-if($nuxt.$fire.auth.currentUser){
-this.$router.replace("/createRequest")
-}
+    //if user is logged he can't create account
+    if ($nuxt.$fire.auth.currentUser) {
+      this.$router.replace("/createRequest");
+    }
 
     this.$emit("updateRequestData", {
       key: "createRequestStep",
@@ -321,8 +361,10 @@ this.$router.replace("/createRequest")
   text-decoration: underline;
 }
 .error-msg {
+  display: block;
   font-size: 16px;
   margin-top: 18px;
+  margin-bottom: 0;
 }
 .error-msg a {
   text-decoration: underline;
