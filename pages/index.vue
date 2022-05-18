@@ -9,10 +9,8 @@ export default {
   methods: {
     
   },
-  created() {
-       
-    // TODO: get this popup function out of here
-   
+  created() {     
+
   },
 };
 </script>
