@@ -42,14 +42,9 @@
       </div>
     </section>
     <section class="">
-
-
       <div class="account-info">
-        
-                <NuxtLink to="/resetPassword" class="forgot-password key">Reset Password</NuxtLink>
-
-        
-      </div>
+                        <NuxtLink to="/resetPassword" class="forgot-password key">Reset Password</NuxtLink>
+              </div>
     </section>
     <!-- <section class="rating"><div class="title">Your Rating</div></section> -->
   </div>
@@ -75,6 +70,7 @@ export default {
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
+        $(".save-change").css("display", "none");
       $(event.target)
         .closest(".account-info")
         .find(".save-change")
@@ -130,23 +126,27 @@ export default {
   created() {
     // exit from edit state on click outside the row
     $(document).on("click", function (event) {
-      //if the click is not on the edit icon or on the active field
+      //if the click is not on the edit icon or on the active field or on save button
       if (!event.target.classList.contains("edit-icon")) {
         if (
           !(
-            event.target.classList.contains("value") &&
-             event.target.classList.contains(".save-change")&&
-            $(event.target)
-              .closest(".account-info")
-              .find(".value[contenteditable=true]")[0] == event.target
+            event.target.classList.contains("value") ||
+            event.target.classList.contains("save-change")
           )
         ) {
+          // !(
+          //  ( event.target.classList.contains("value") ||
+          //    event.target.classList.contains("save-change"))
+          //  &&
+          // $(event.target)
+          //   .closest(".account-info")
+          //   .find(".value[contenteditable=true]")[0] == event.target
+          // )
           let activeField = document.querySelector(
             ".account-info .value[contenteditable=true]"
           );
-          if( document
-              .querySelectorAll(".save-change"))
-           document
+          if (document.querySelectorAll(".save-change"))
+            document
               .querySelectorAll(".save-change")
               .forEach((node) => (node.style.display = "none"));
           if (activeField) {

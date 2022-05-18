@@ -232,11 +232,13 @@ export default {
   async created() {
     this.offersByAction = JSON.parse(localStorage.getItem("offersByAction"));
     this.loansByAction = JSON.parse(localStorage.getItem("loansByAction"));
+    if( this.loansByAction)
     await this.loansByAction.forEach((action) => {
       if (action.loans.length) {
         this.actionsLength = true;
       }
     });
+    if( this.offersByAction)
     await this.offersByAction.forEach((action) => {
       if (action.offers.length) {
         this.actionsLength = true;
