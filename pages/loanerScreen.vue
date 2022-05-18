@@ -25,9 +25,7 @@
           </NuxtLink>
         </div>
         <div class="border-button">
-          <NuxtLink to="/contact">
-            <p>Need Help?</p>
-          </NuxtLink>
+          <p class="pointer" @click="openChat">Need Help?</p>
         </div>
         <div class="new-loan">
           <NuxtLink to="/createRequest">
@@ -146,6 +144,35 @@ export default {
         });
       });
     },
+    openChat(){
+      var iframe = document.querySelector("iframe[title='chat widget']");
+      var button = iframe.contentDocument.querySelector("button");
+      button.click();
+    }
+  },
+  mounted(){
+    let tawkToScript = document.createElement('script')
+    let inlineCode = document.createTextNode(`
+      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+      (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/628254e8b0d10b6f3e726d8c/1g36hnbnr';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+      })();
+      Tawk_API.onLoad = function(){
+          setTimeout(function(){ 
+            var iframe = document.querySelector("iframe[title='chat widget']");
+            const new_style_element = document.createElement("style");
+            new_style_element.textContent = "span.tawk-badge.tawk-flex.tawk-flex-center.tawk-flex-middle.tawk-min-badge {background-color: #EC255A;inset: 0 auto auto  0 !important;}"
+            iframe.contentDocument.head.appendChild(new_style_element); 
+          },2000);
+      };
+    `);
+    tawkToScript.appendChild(inlineCode); 
+    document.head.appendChild(tawkToScript);
   },
   computed: {
     requests() {

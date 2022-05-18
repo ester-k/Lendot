@@ -9,14 +9,14 @@
         </div>
         <div  v-for="menueItem in menue">
           <div class="menu-item">
-            <NuxtLink :to="'/loanerScreen/' + menueItem">
+            <NuxtLink :to="'/loanerScreen/' + menueItem.toLowerCase().split(' ').join('')" @click="closeMobileMenu">
               <p  :class="{'active' : title.toLowerCase() == menueItem.toLowerCase() ? true : false }">{{menueItem}}</p>
             </NuxtLink>
           </div>
         </div>
-        <button class="fill-button contact-us">Need Help?</button>
+        <button class="border-button contact-us" @click="openChat">Need Help?</button>
         <div class="new-loan">
-          <NuxtLink to="/createRequest">
+          <NuxtLink to="/createRequest" @click="closeMobileMenu">
             <div class="new-loan-button">
               <div class="plus">
                 <img :src="require('~/assets/uploads/plus_loan.svg')" />
@@ -32,6 +32,7 @@
             <p class="user-email">{{ currentUser.email }}</p>
             <button class="border-button edit-profile"
             @click="$router.replace({ path: '/loanerScreen/accountSettings' })">Edit Profile</button>
+            <button @click="logout" class="border-button logout"> Logout </button>
         </div>
     </div>
   </div>
@@ -50,6 +51,16 @@ export default {
   methods: {
     closeMobileMenu () {
       this.$emit('closeMobileMenu')
+    },
+    logout() {
+      $nuxt.$fire.auth.signOut();
+      localStorage.clear();
+    },
+    openChat(){
+      this.$emit('closeMobileMenu')
+      var iframe = document.querySelector("iframe[title='chat widget']");
+      var button = iframe.contentDocument.querySelector("button");
+      button.click();
     }
   },
   created() { 
@@ -61,40 +72,43 @@ export default {
     },
   },
   props:["title"],
+  watch: {
+    '$route' () {
+      this.$emit('closeMobileMenu')
+    }
+  },
 };
 </script>
 
 <style>
 @media screen and (max-width: 768px) {
   .mobile-sidebar-menu {
-      height: 100%;
-      width: 332px;
-      background-color: var(--custom-light-gray);
-      position: fixed;
-      top: 0;
-      right: 0;
-      z-index: 10;
-      box-shadow: 0px 3px 6px #00000029;
+    height: 100%;
+    width: 93%;
+    max-width: 332px;
+    background-color: var(--custom-light-gray);
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    box-shadow: 0px 3px 6px #00000029;
   }
 
   .mobile-menu{
-      display:flex;
-      flex-direction:column;
-      padding: 0 31px;
+    display:flex;
+    flex-direction:column;
+    padding: 0 31px;
   }
 
   .close-menu {
-      text-align: right;
-      margin: 21px 0 62px;
+    text-align: right;
+    margin: 21px 0 62px;
   }
 
-  button.fill-button.contact-us {
-      border: 2px solid var(--custom-pink);
-      background-color: transparent;
-      color: var(--custom-pink);
-      font-size: 14px;
-      line-height: 14px;
-      margin-top: 10px;
+  button.contact-us {
+    color: var(--custom-pink);
+    line-height: 14px;
+    margin-top: 10px;
   }
 
   .mobile-menu .user-details {
@@ -109,41 +123,46 @@ export default {
   }
 
   .mobile-menu .user-details .user-email {
-      margin-bottom: 0;
+    margin-bottom: 0;
   }
 
-  .edit-profile{
-      line-height: 19px;
-      border-color: var(--custom-blue);
-      color: var(--custom-blue);
-      margin-top: 20px
+  .edit-profile, .logout{
+    line-height: 19px;
+    border-color: var(--custom-blue);
+    color: var(--custom-blue);
+    margin-top: 20px;
+    display:block;
+  }
+
+  .mobile-menu .logout{
+    margin-top: 10px;
   }
 
   .menu-item a {
-      color: var(--custom-blue);
-      font-size: 15px;
+    color: var(--custom-blue);
+    font-size: 15px;
   }
 
   .menu-item {
-      margin-bottom: 20px;
+    margin-bottom: 20px;
   }
 
-  .new-loan {
-      margin: 30px 0;
-      border-top: 1px solid rgba(22, 24, 83, 0.16);
-      border-bottom: 1px solid rgba(22, 24, 83, 0.16);
-      padding: 30px 0;
+  .mobile-menu .new-loan {
+    margin: 30px 0;
+    border-top: 1px solid rgba(22, 24, 83, 0.16);
+    border-bottom: 1px solid rgba(22, 24, 83, 0.16);
+    padding: 30px 0;
   }
 
   .new-loan-button .new-loan-link {
-      flex-grow: 1;
-      height: 29px;
+    flex-grow: 1;
+    height: 29px;
   }
 
   .new-loan-button .new-loan-link p {
-      font-size: 12px;
-      font-weight: normal;
-      line-height: 29px;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 29px;
   }
   .menu-item p.active {
     color: var(--custom-pink);
