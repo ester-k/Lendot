@@ -361,7 +361,6 @@ export default {
   text-decoration: underline;
 }
 .error-msg {
-  display: block;
   font-size: 16px;
   margin-top: 18px;
   margin-bottom: 0;

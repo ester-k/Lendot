@@ -6,7 +6,7 @@
       :key="index"
       :id="'wrap-loan' + index"
     >
-      <div v-if="loan.offers.length && loan.declinedOffers">
+      <div v-if="loan.offers.length && loan.declinedOffers" class="loan-section">
         <div class="loan-address">
           {{ loan.propertyAddress.state }}, {{ loan.propertyAddress.city }},
           {{ loan.propertyAddress.address }}
@@ -63,7 +63,7 @@
                 </div>
               </div>
               <div class="wrap-offer-container" :id="'offer' + i + '-view'">
-                <div class="offer-title">
+                <div class="offer-title desktop">
 
                   <div class="loaner-name">
                     {{ offer.lenderId.username }}
@@ -72,7 +72,7 @@
                     Select
                   </button>
                 </div>
-                <div class="offer-header">
+                <div class="offer-header desktop">
                   <div>
                     <p>Annual Interest Rate</p>
                     <p v-if="offer.rate">{{ offer.rate.toLocaleString() }}%</p>
@@ -98,6 +98,24 @@
                     <p>{{ offer.closingTimeline }} Days</p>
                   </div>
                 </div>
+                <div class="wrap-offer tr mobile">
+                  <div class="loaner-name td">
+                  {{ offer.lenderId.username }}
+                  </div>
+                  <div class="td" v-if="offer.rate">
+                    {{ offer.rate.toLocaleString() }}%
+                  </div>
+                  <div class="td" v-if="offer.upfrontFee">
+                    {{ offer.upfrontFee.toLocaleString() }}
+                  </div>
+                  <div class="td" v-if="offer.underwritingFee">
+                    {{ offer.underwritingFee.toLocaleString() }}
+                  </div>
+                  <div class="td">{{ offer.closingTimeline }}</div>
+                  <div class="td actions">
+                    <button class="fill-button selectOffer">Select</button>
+                  </div>
+                </div>     
                 <div class="offerIframe" v-if="offer.terms">
                   <div class="title">
                     <div
@@ -166,10 +184,10 @@
               :key="j"
             >
               <div
-                class="wrap-offer tr"
-                @click="(event) => acceptDeclinedOffer(event, index, j)"
-                :id="'offer' + j"
-              >
+                  class="wrap-offer tr"
+                  @click="(event) => acceptDeclinedOffer(event, index, j)"
+                  :id="'offer' + j"
+                >
                 <div class="loaner-name td">{{ offer.lenderId.username }}</div>
                 <div class="td" v-if="offer.rate">
                   {{ offer.rate.toLocaleString() }}%
@@ -193,13 +211,13 @@
                 </div>
               </div>
               <div class="wrap-offer-container" :id="'offer' + j + '-view'">
-                <div class="offer-title">
+                <div class="offer-title desktop">
                   <div class="loaner-name">
                     {{ offer.lenderId.username }}
                   </div>
                   <button class="fill-button selectOffer">Select</button>
                 </div>
-                <div class="offer-header">
+                <div class="offer-header desktop">
                   <div>
                     <p>Annual Interest Rate</p>
                     <p>{{ offer.rate.toLocaleString() }}%</p>
@@ -221,6 +239,24 @@
                     <p>{{ offer.closingTimeline.toLocaleString() }} Days</p>
                   </div>
                 </div>
+                <div class="wrap-offer tr mobile">
+                  <div class="loaner-name td">
+                  {{ offer.lenderId.username }}
+                  </div>
+                  <div class="td" v-if="offer.rate">
+                    {{ offer.rate.toLocaleString() }}%
+                  </div>
+                  <div class="td" v-if="offer.upfrontFee">
+                    {{ offer.upfrontFee.toLocaleString() }}
+                  </div>
+                  <div class="td" v-if="offer.underwritingFee">
+                    {{ offer.underwritingFee.toLocaleString() }}
+                  </div>
+                  <div class="td">{{ offer.closingTimeline }}</div>
+                  <div class="td actions">
+                    <button class="fill-button selectOffer">Select</button>
+                  </div>
+                </div>                
                 <div class="offerIframe">
                   <div class="title">
                     <div
@@ -487,8 +523,11 @@ export default {
   grid-template-columns: auto auto auto auto auto auto;
   max-width: 1190px;
 }
-.tr.wrap-offer.hide {
+.tr.wrap-offer.hide, .tr.wrap-offer.mobile {
   display: none;
+}
+.offer-title.desktop, .offer-header.desktop{
+  display:flex;
 }
 .td {
   padding: 21px 16px;
@@ -629,5 +668,137 @@ export default {
   height: 100%;
   width: 50%;
   margin: auto;
+}
+@media screen and (max-width: 768px) {
+  .tr.wrap-offer{
+    grid-template-columns: auto auto;
+    height: auto;
+    padding: 17px 30px 24px 17px;
+  }
+  
+  .tr.wrap-offer.mobile{
+    display:grid;
+  }
+
+  .offer-title.desktop, .offer-header.desktop{
+    display:none;
+  }
+
+  .loaner-name.td, .actions.td {
+    grid-column: 1 / -1;
+    color: var(--custom-pink);
+    font-size: 11px;
+  }
+  
+  .thead {
+    display: none;
+  }
+
+  .td:nth-of-type(1):before { content: "Lender's Name"; }
+  .td:nth-of-type(2):before { content: "Annual Interest Rate"; }
+  .td:nth-of-type(3):before { content: "Upfront Fees"; }
+  .td:nth-of-type(4):before { content: "Underwriting Fee"; }
+  .td:nth-of-type(5):before { content: "Closing Timeline"; }
+  .td:before{
+    font-size: 11px;
+    color: var(--custom-blue);
+    font-weight: bold;
+  }
+
+  .td {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    padding-bottom: 16px;
+  }
+  
+  .td.actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding-bottom: 0;
+  }
+
+  .offers-container {
+    padding: 0 27px 36px;
+  }
+
+  .accept-action, .decline-action {
+    width: 121px;
+    height: 25px;
+  }
+
+  .loan-address {
+    margin-top: 0;
+    order: 2;
+    font-size: 13px;
+    font-weight: normal;
+  }
+
+  .decline-action{
+    margin-left: 14px;
+  }
+
+  .loan-price{
+    margin-top: 48px;
+    font-size: 15px;
+    font-weight: bold;
+    order: 1;
+  }
+
+  .loan-section{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .offers-table{
+    order: 3;
+  }
+
+  .declined-offers{
+    order: 4;
+  }
+
+  .declined-title {
+    font-weight: 500;
+  }
+
+  .wrap-declined-offer .accept-action{
+    width: 100%;
+  }
+
+  .wrap-offer-container.open .tr.wrap-offer {
+    padding: 0;
+    box-shadow: none;
+    margin-top: 0;
+  }
+
+  .wrap-offer-container.open .td.actions {
+    justify-content: flex-end;
+  }
+
+  .wrap-offer-container.open {
+    max-height: none;
+    height: auto;
+    padding: 17px 30px 24px 17px;
+  }
+
+  .offerIframe {
+    font-size: 11px;
+  }
+
+  .offerIframe .title img {
+    max-width: 10.5px;
+    max-height: 7.2px;
+  }
+
+  .pdf-embed {
+    border-top: none;
+    max-width: calc(100vw - 30px - 17px - 27px * 2);
+  }
+
+  .wrap-offer-container .offerIframe{
+    height: auto;
+  }
 }
 </style>

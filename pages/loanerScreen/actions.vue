@@ -8,7 +8,7 @@
         </button></a>
     </div>
     <div v-else>
-      <div class="action-section" v-for="(action, aIndex) of loansByAction" :key="aIndex">
+      <div class="action-section loansByAction" v-for="(action, aIndex) of loansByAction" :key="aIndex">
         <div v-if="action.loans.length">
           <h3 class="action-title">{{ action.loans[0].status.name }}</h3>
 
@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="action-section" v-for="(action, oIndex) of offersByAction" :key="oIndex">
+      <div class="action-section offersByAction" v-for="(action, oIndex) of offersByAction" :key="oIndex">
         <div v-if="action.offers.length">
           <h3 class="action-title">{{ action.offers[0].status.name }}</h3>
 
@@ -395,6 +395,55 @@ export default {
 
   .no-action .new-loan p:first-child {
     margin-right: 5px;
+  }
+
+  .single-loan {
+    flex-wrap: wrap;
+    height: auto;
+    align-items: flex-start;
+    padding: 16px 18px 22px;
+  }
+
+  .actions-container {
+    padding: 43px 26px 25px;
+  }
+
+  .action-title {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .single-loan .property-details, .single-loan .loan-action, .single-loan .loan-details{
+    width: 100%;
+    margin-left: 37px;
+  }
+
+  .single-loan .action-name p ,.single-loan .action-name .name {
+    width: fit-content;
+  }
+
+  .action-icon img {
+    width: 16px;
+    height: 17px;
+  }
+  
+  .single-loan .action-icon {
+    margin-right: 21px;
+    margin-top: 5px;
+    width: fit-content;
+  }
+  
+  .single-loan .action-name {
+    margin-bottom: 13px;
+    width: fit-content;
+  }
+  
+  .loansByAction .loan-details, .offersByAction .property-address, .offersByAction .loan-amount {
+    display: none;
+  }
+  
+  .single-loan .loan-action {
+    margin-top: 12px;
   }
 }
 </style>

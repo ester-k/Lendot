@@ -196,4 +196,53 @@ display: flex;
   font-size: 18px;
   font-weight: bold;
 }
+
+@media screen and (max-width: 768px) {
+
+  .wrap-loan {
+    flex-direction: column;
+    height: auto;
+    padding: 20px 18px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .sort-list, .loan-amount {
+    display: none;
+  }
+
+  .lender-name + .loan-amount {
+    display: block;
+  }
+
+  .loans-table {
+    padding: 43px 27px;
+  }
+
+  .loan-status {
+    height: 23px;
+    width: 100%;
+    font-size: 11px;
+    margin: 0;
+  }
+
+  .property-details, .loan-details {
+    width: 100%;
+  }
+
+  .property-type, .lender-name {
+    font-size: 13px;
+    margin-top: 10px;
+  }
+
+  .loan-action button {
+    font-size: 13px;
+    width: 148px;
+    height: 28px;
+    padding: 0;
+    margin-top: 14px;
+  }
+  
+}
+
 </style>
