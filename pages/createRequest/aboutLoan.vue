@@ -5,13 +5,8 @@
     <div class="about-loan-container">
 
       <img
-        class="len-title about-you-title desktop"
+        class="len-title about-you-title about-loan-title"
         :src="require('~/assets/uploads/about_loan_title.svg')"
-        alt="about the loan title"
-      />
-         <img
-        class="len-title about-you-title mobile"
-        :src="require('~/assets/uploads/about_loan_title_mobile.svg')"
         alt="about the loan title"
       />
       <label class="form-label"> Loan Amount</label>
@@ -297,6 +292,9 @@ export default {
   }
   .sub-title {
     font-size: 13px;
+  }
+  .about-loan-title {
+    width: 170px;
   }
 }
 </style>

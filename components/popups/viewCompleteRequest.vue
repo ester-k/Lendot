@@ -10,10 +10,16 @@
             <img
               :src="require('~/assets/uploads/close_view_popup.svg')"
               alt="close popup"
+              class="desktop"
+            />
+            <img
+              :src="require('~/assets/uploads/close_menu_mobile.svg')"
+              alt="close popup"
+              class="mobile"
             />
           </div>
 
-          <h3 class="title">Property Details</h3>
+          <h3 class="title" :class="{'open' : showMobile['propertyDetals'] }" @click="showMobile['propertyDetals'] = !showMobile['propertyDetals'];">Property Details</h3>
           <div class="row">
             <div class="loan-prop">
               <!-- <p class="key">Address</p> -->
@@ -44,7 +50,7 @@
               <p class="value">{{ loan.rehub }}$</p>
             </div>
           </div>
-          <h3 class="title">Offer Details</h3>
+          <h3 class="title" :class="{'open' : showMobile['offerDetails'] }" @click="showMobile['offerDetails'] = !showMobile['offerDetails'];">Offer Details</h3>
           <div class="row">
             <div class="loan-prop">
               <p class="key">Lender's Name</p>
@@ -73,7 +79,7 @@
               <p class="value">{{ loan.selectedOffer.rehub }}$</p>
             </div>
           </div>
-          <h3 class="title">Uploaded Documents</h3>
+          <h3 class="title" :class="{'open' : showMobile['uploadedDocuments'] }" @click="showMobile['uploadedDocuments'] = !showMobile['uploadedDocuments'];">Uploaded Documents</h3>
           <div >
             <div  v-for="(document, index) of loan.selectedOffer.documents" :key="index" class="row documents-list">
             
@@ -102,7 +108,7 @@
             </div>
           </div>
           </div>
-          <h3 class="title">The Process</h3>
+          <h3 class="title" :class="{'open' : showMobile['theProcess'] }" @click="showMobile['theProcess'] = !showMobile['theProcess'];">The Process</h3>
           <div class="row">
             <div class="loan-prop">
               <p class="key">Submit The Request</p>
@@ -141,6 +147,12 @@ export default {
     return {
       source: "",
       openViewPdf: false,
+      showMobile: {
+        "propertyDetals":true,
+        "offerDetails":true,
+        "uploadedDocuments":false,
+        "theProcess":false
+        }
     };
   },
   methods: {
@@ -206,8 +218,7 @@ export default {
   margin-bottom: 11px;
 }
 .wrap-document.hover {
-  background-color: var(--custom-pink);
-  border-color: var(--custom-pink);
+  background-color: var(--custom-blue);
   color: white;
 }
 .wrap-document.hover .wrap-content {
@@ -218,5 +229,49 @@ export default {
 }
 .wrap-document.hover .view {
   display: block;
+}
+
+@media screen and (max-width: 768px) {
+  .popup .row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 0;
+    margin-bottom: 25px;
+    grid-row-gap: 10px;
+  }
+  
+  .wrap-document img {
+    margin-bottom: 0;
+  }
+
+  .popup .row.documents-list .wrap-document {
+    margin-right: 10px;
+  }
+
+  .popup h3.title.open+div {
+    display: block;
+  }
+
+  .popup h3.title+div {
+    display: none;
+  }
+
+  .popup h3.title.open+div.row {
+    display: flex;
+  }
+
+  .popup .title:after {
+    content: url("../../assets/uploads/mobile_popup_open_tab.svg");
+    margin-left: 6px;
+    position: absolute;
+    transform: rotate(-90deg);
+    top: 1px;
+  }
+
+
+  .popup .title.open:after {
+    top: -3px;
+    transform: none;
+  }
 }
 </style>

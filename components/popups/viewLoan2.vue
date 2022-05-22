@@ -9,6 +9,12 @@
         <img
           :src="require('~/assets/uploads/close_view_popup.svg')"
           alt="close popup"
+          class="desktop"
+        />
+        <img
+          :src="require('~/assets/uploads/close_menu_mobile.svg')"
+          alt="close popup"
+          class="mobile"
         />
       </div>
 
@@ -117,4 +123,5 @@ export default {
 .offers-table tr td:first-child{
   color: var(--custom-pink)
 }
+
 </style>

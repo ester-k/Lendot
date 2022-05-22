@@ -8,6 +8,12 @@
             <img
               :src="require('~/assets/uploads/close_view_popup.svg')"
               alt="close popup"
+              class="desktop"
+            />
+            <img
+              :src="require('~/assets/uploads/close_menu_mobile.svg')"
+              alt="close popup"
+              class="mobile"
             />
           </div>
           <h3 class="title">Loan Details</h3>
@@ -71,5 +77,15 @@ export default {
 @import "./popupStyle.css";
 .inner-popup {
   padding-bottom: 70px;
+}
+
+@media screen and (max-width: 768px) {
+  .popup .row {
+    grid-template-columns: 100%;
+    grid-row-gap: 10px;
+  }
+  .popup .horizonal-hr {
+    margin: 48px 0;
+  }
 }
 </style>

@@ -294,5 +294,23 @@ export default {
   .request-steps {
     top: -22.1px;
   }
+
+  .main-content {
+    margin-top: 50px;
+  }
+
+  .next-btn {
+    padding-bottom: 71px;
+  }
+
+  label.form-label {
+    margin-bottom: 0;
+  }
+
+  .verify-link {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+  }
 }
 </style>
