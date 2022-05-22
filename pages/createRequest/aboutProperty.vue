@@ -307,7 +307,10 @@ export default {
     display: block;
   }
   button[type="submit"] {
-    margin-top: 32px;
+    margin-top: 35px;
+  }
+  .main-container form {
+    padding-bottom: 71px;
   }
 }
 </style>

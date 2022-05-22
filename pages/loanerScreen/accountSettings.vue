@@ -263,4 +263,43 @@ export default {
 .forgot-password:hover {
   color: var(--custom-blue);
 }
+
+@media screen and (max-width: 768px) {
+  .account-container section {
+    padding: 20px;
+    margin: 0 25px 10px;
+  }
+
+  .account-container section .title {
+    margin-bottom: 22px;
+    font-size: 15px;
+  }
+
+  .account-info .key, .save-change  {
+    font-size: 13px;
+  }
+
+  .account-info {
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+
+  .account-info:last-child {
+    margin-bottom: 0;
+  }
+
+  .edit-icon {
+    margin-left: auto;
+    width: 13.3px;
+  }
+
+  .account-container {
+    margin-top: 45px;
+    padding-top: 0;
+  }
+
+  .account-info .value {
+    word-break: break-word;
+  }
+}
 </style>

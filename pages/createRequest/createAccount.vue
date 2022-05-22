@@ -379,5 +379,9 @@ export default {
     padding: 0;
     height: 28px;
   }
+  
+  .purchase-cnt {
+    margin-bottom: 0;
+  }
 }
 </style>

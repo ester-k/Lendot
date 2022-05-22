@@ -289,7 +289,13 @@
     <viewPdf
       v-if="openViewPdf"
       :source="source"
-      
+      class="desktop"
+    />
+    <viewPdfMobile
+      v-if="openViewPdf"
+      :source="source"
+      class="mobile"
+      @closePdfPopup="openViewPdf=false"
     />
   </div>
 </template>
@@ -437,7 +443,7 @@ export default {
     $(document).on("click", function (event) {
       if (
         !event.target.closest(".view-pdf-popup") &&
-        !event.target.closest(".view")
+        !event.target.closest(".view") && !event.target.closest(".pdf-popup-mobile")
       ) {
         vue.openViewPdf = false;
       } else {
