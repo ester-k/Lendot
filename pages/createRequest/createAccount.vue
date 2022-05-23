@@ -26,7 +26,7 @@
             v-for="(error,i) of errors.firstName"
             :key="i"
           >
-            <div class="error-msg">{{ error}}</div>
+            <div class="input-error-msg">{{ error}}</div>
           </div>
           </div>
           <div class="wrap-input">
@@ -43,7 +43,7 @@
             v-for="(error,i) of errors.lastName"
             :key="i"
           >
-            <div class="error-msg">{{ error}}</div>
+            <div class="input-error-msg">{{ error}}</div>
           </div>
           </div>
         </div>
@@ -63,7 +63,7 @@
             v-for="(error,i) of errors.email"
             :key="i"
           >
-            <div class="error-msg">{{ error}}</div>
+            <div class="input-error-msg">{{ error}}</div>
           </div>
         </div>
         <label class="form-label"> Phone Number</label>
@@ -80,17 +80,24 @@
             v-for="(error,i) of errors.phone"
             :key="i"
           >
-            <div class="error-msg">{{ error}}</div>
+            <div class="input-error-msg">{{ error}}</div>
           </div>
         </div>
          <label class="form-label"> Credit Score</label>
-      <div class="wrap-input">
+      <!-- credit score -->  <div class="wrap-input">
         <Select
           class="lendot-select"
           :options="creditScores"
           :default="defaultSelect"
           v-on:input="changeCredit"
         />
+          <div
+            class="input-errors"
+            v-for="(error,i) of errors.credit"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
       </div>
         <div class="flex purchase-cnt">
           <label class="form-label"
@@ -99,7 +106,7 @@
           >
           <input type="number" placeholder="0" :disabled="emailVerified" />
         </div> 
-          <!-- credit score -->
+        
      <div class="next-btn">
         <p class="error-msg" id="emailError">This email address exists,<NuxtLink to="/login"> click here to log in</NuxtLink></p>
         <button type="submit">next</button>
@@ -117,20 +124,12 @@
 </template>
 <script>
 // import { User } from ".~/models/user";
-//vuelidate
-import useVuelidate from "@vuelidate/core";
-import { required, email, minLength, numeric } from "@vuelidate/validators";
 import { createUser } from "~/services/user-service";
-
-// import * as validators from 'vuelidate/lib/validators'
 
 export default {
   name: "CreateAccount",
   // components: { VerifyEmail },
 
-  setup() {
-    // return { v$: useVuelidate() };
-  },
   data() {
     return {
       form: {
@@ -138,6 +137,7 @@ export default {
         firstName: "",
         lastName: "",
         phone: "",
+        credit: "",
       },
       errors: {},
       a: "",
@@ -156,45 +156,30 @@ export default {
       ],
     };
   },
-  // validations() {
-  //   return {
-  //     firstName: { required }, // Matches this.firstName
-  //     lastName: { required }, // Matches this.lastName
-  //     email: { required, email }, // Matches this.contact.email
-  //     phone: { required, minLength: minLength(9), numeric }, // Matches this.contact.phone
-  //   };
-  // },
+
   watch: {
     $route(to, from) {
       this.$nextTick(this.showCheckedLoan);
     },
   },
   methods: {
-    // status(validation) {
-    //   return {
-    //     error: validation.$error,
-    //     dirty: validation.$dirty,
-    //   };
-    // },
     createUserOnDB: async function () {
       let isFormCorrect = this.checkValidForm();
-      // if (!this.currentUser) {
       if (isFormCorrect) {
         // let newUser = new User();
         let newUser = {};
-        //
         newUser.firstName = this.form.firstName;
         newUser.lastName = this.form.lastName;
         newUser.username = this.firstName + this.form.lastName;
         newUser.email = this.form.email;
         newUser.phone = this.form.phone;
-        console.log(newUser);
+        newUser.creditScore = this.form.credit;
         this.currentUser = newUser;
         this.$store.commit("setState", {
           value: newUser,
           state: "currentUser",
         });
-        this.createUser(newUser);
+       await this.createUser(newUser);
         localStorage.setItem("currentUser", JSON.stringify(newUser));
         this.$store.commit("setState", {
           value: newUser,
@@ -212,6 +197,7 @@ export default {
     createUser: async function (user) {
       await createUser(user)
         .then((response) => {
+          console.log("response",response);
           if (!response.hasOwnProperty("code")) {
             this.$store.commit("setState", {
               value: 2,
@@ -231,7 +217,7 @@ export default {
     checkValidForm: function () {
       this.a = this.a + " ";
       let errors = this.errors;
-     errors= this.$Validator.checkForm(this.form)
+      errors = this.$Validator.checkForm(this.form);
 
       this.errors = errors;
       console.log(this.errors);
@@ -258,7 +244,7 @@ export default {
       }
     },
     changeCredit(data) {
-      this.credit = data;
+      this.form.credit = data;
     },
     showCheckedLoan() {
       let loanType = localStorage.getItem("loanType");
@@ -360,11 +346,7 @@ export default {
   font-size: 16px;
   text-decoration: underline;
 }
-.error-msg {
-  font-size: 16px;
-  margin-top: 18px;
-  margin-bottom: 0;
-}
+
 .error-msg a {
   text-decoration: underline;
   color: var(--custom-pink);
@@ -379,7 +361,7 @@ export default {
     padding: 0;
     height: 28px;
   }
-  
+
   .purchase-cnt {
     margin-bottom: 0;
   }

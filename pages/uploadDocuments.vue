@@ -252,12 +252,19 @@ export default {
   },
 };
 </script>
-
+<style >
+.blue-header .back-button {
+    display: block;
+}
+</style>
 <style scoped>
 .upload-docs-container {
   max-width: 1200px;
   margin: auto;
   margin-top: 94px;
+}
+.back-button {
+    display: block;
 }
 .title {
   font-size: 29px;
@@ -268,6 +275,7 @@ export default {
   font-size: 18px;
   font-weight: 500;
 }
+
 .wrap-document {
   border: 1px solid var(--custom-blue);
   border-radius: 11px;

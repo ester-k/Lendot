@@ -10,15 +10,26 @@
         alt="about the loan title"
       />
       <label class="form-label"> Loan Amount</label>
-      <div class="wrap-input loan-amount">
+      <div class="wrap-input ">
+                                <div class="input-amount">
+
         <input
           type="string"
-          name="loan amount"
-           v-model="amount"
+          name="amount"
+           v-model="form.amount"
+              data-valid="num"
         />
                 <p>$</p>
 
       </div>
+       <div
+            class="input-errors"
+            v-for="(error,i) of errors.amount"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
+          </div>
       <h3 class="sub-title">What type of loan are you looking for?</h3>
       <div class="loans-types">
         <div
@@ -56,18 +67,14 @@ import { getRequestById, updateRequest } from "~/services/request-service";
 
 export default {
   name: "aboutLoan",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  validations() {
-    return {
-      amount: { required, numeric },
-    };
-  },
+
   data() {
     return {
       show: true,
-      amount: "",
+      form: {
+        amount: "",
+      },
+      errors: {},
       loans: [
         {
           name: "Fix & Flip",
@@ -124,22 +131,28 @@ export default {
       if (event.isTrusted) {
         let loanType = $(event.srcElement).closest(".loan-type")[0];
         loanType = loanType.getAttribute("data-type");
-        // let isFormCorrect = await this.v$.$validate();
-        // if (loanType && isFormCorrect) {
-        //save loan property on local storage
-        localStorage.setItem("loanType", loanType);
-        localStorage.setItem("loanAmount", this.amount);
-        let activeRoute = document.querySelector(".nuxt-link-exact-active");
-        activeRoute.querySelector(".step-button").classList.add("complete");
-        let activeRouteImg = activeRoute.querySelector("img");
-        activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
-        this.$emit("updateRequestData", {
-          key: "steps",
-          value: "true",
-          step: "aboutLoan",
-        });
-        this.$router.replace({ path: "/createRequest/createProperty" });
-        // }
+        let errors = this.$Validator.checkForm(this.form);
+        this.errors = errors;
+        let isFormCorrect =
+          this.errors &&
+          Object.keys(this.errors).length === 0 &&
+          Object.getPrototypeOf(this.errors) === Object.prototype;
+          console.log("isFormCorrect: " + isFormCorrect);
+        if (isFormCorrect) {
+          //save loan property on local storage
+          localStorage.setItem("loanType", loanType);
+          localStorage.setItem("loanAmount", this.form.amount);
+          let activeRoute = document.querySelector(".nuxt-link-exact-active");
+          activeRoute.querySelector(".step-button").classList.add("complete");
+          let activeRouteImg = activeRoute.querySelector("img");
+          activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
+          this.$emit("updateRequestData", {
+            key: "steps",
+            value: "true",
+            step: "aboutLoan",
+          });
+          this.$router.replace({ path: "/createRequest/createProperty" });
+        }
         //update the request loan type
         if (
           localStorage.getItem("requestId") != "undefined" &&
@@ -152,10 +165,10 @@ export default {
             let updateLoan = {};
             updateLoan = loanReq;
             updateLoan.loanType = loanType;
-            updateLoan.amount = this.amount;
+            updateLoan.amount = this.form.amount;
             await updateRequest(updateLoan).then((updateLoan) => {
               // localStorage.removeItem("requestId");
-              // this.$router.replace({ path: "/" });
+           
             });
           });
         }
@@ -168,7 +181,6 @@ export default {
       }
     },
     verifyNow: function () {
-      
       // this.$store.commit("setState", { value: 2, state: "createAccountStep" });
       this.$router.replace({ path: "/createRequest/createAccount" });
     },
@@ -182,7 +194,7 @@ export default {
       this.loanType = localStorage.getItem("loanType");
     }
     if (localStorage.getItem("loanAmount") != undefined) {
-      this.amount = localStorage.getItem("loanAmount");
+      this.form.amount = localStorage.getItem("loanAmount");
     }
     document.addEventListener("DOMContentLoaded", function (event) {
       //sign the selected loan

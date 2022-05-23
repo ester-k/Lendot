@@ -4,10 +4,10 @@ const Validator = {
         let errors = {};
         for (let field in form) {
             console.log(`${field}: ${form[field]}`);
-            if (form[field] == "") {
+            if (form[field] == "" || form[field] == "-Select-") {
                 if (!errors[field]) errors[field] = [];
-                if (!errors[field].includes(field + " is required."))
-                    errors[field].push(field + " is required.");
+                if (!errors[field].includes("Required Field"))
+                    errors[field].push("Required Field");
             } else {
                 if (field == "email") {
                     if (!validEmail(form[field])) {
@@ -24,12 +24,22 @@ const Validator = {
                     }
                 }
                 if (field == "zip") {
-                    if (!validatePhoneNumber(form[field])) {
+                    if (!validateZip(form[field])) {
                         if (!errors[field]) errors[field] = [];
                         if (!errors[field].includes("Invalid Phone"))
-                            errors[field].push("Invalid Phone");
+                            errors[field].push("Invalid Zip Code");
                     }
                 }
+                let input = document.querySelector('input[name=' + field + ']');
+                if (input) {
+                    if (input.getAttribute("data-valid") == "num")
+                        if (!validateNumber(form[field])) {
+                            if (!errors[field]) errors[field] = [];
+                            if (!errors[field].includes("Invalid Number"))
+                                errors[field].push("Invalid Number");
+                        }
+                }
+
             }
         }
 
@@ -41,15 +51,19 @@ const Validator = {
 
         function validatePhoneNumber(input_str) {
             var re = /^\d{10}$/;
-
             return re.test(input_str);
         }
 
         function validateZip(input_str) {
             var re = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-
             return re.test(input_str);
         }
+
+        function validateNumber(input_str) {
+            var re = (/\d+/g);
+            return re.test(input_str);
+        }
+
 
         return errors;
     }
