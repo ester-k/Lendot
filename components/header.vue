@@ -1,6 +1,6 @@
  <template>
  <div class="header">
-      <a href="">  <img
+      <a href="/loanerScreen">  <img
       alt="lendot logo"
       class="lendot-icon desktop"
       :src="require('~/assets/uploads/logo.svg')"

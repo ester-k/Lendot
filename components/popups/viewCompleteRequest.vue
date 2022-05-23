@@ -81,9 +81,9 @@
           </div>
           <h3 class="title" :class="{'open' : showMobile['uploadedDocuments'] }" @click="showMobile['uploadedDocuments'] = !showMobile['uploadedDocuments'];">Uploaded Documents</h3>
           <div >
-            <div  v-for="(document, index) of loan.selectedOffer.documents" :key="index" class="row documents-list">
-            
-            <div
+            <div  v-for="(document, index) of loan.selectedOffer.documents" :key="index" class="row documents-list" :class="{'empty-row':!document.loanerDocs.length}">
+               
+                        <div
               class="wrap-document"
              v-for="(doc, index) of document.loanerDocs" :key="index"
               onmouseover="this.classList.add('hover')"
@@ -150,20 +150,20 @@ import $ from "jquery";
 export default {
   name: "viewCompleteRequest",
   props: ["loan"],
-  components: { 
+  components: {
     viewPdf,
-    viewPdfMobile
-   },
+    viewPdfMobile,
+  },
   data() {
     return {
       source: "",
       openViewPdf: false,
       showMobile: {
-        "propertyDetals":true,
-        "offerDetails":true,
-        "uploadedDocuments":false,
-        "theProcess":false
-        }
+        propertyDetals: true,
+        offerDetails: true,
+        uploadedDocuments: false,
+        theProcess: false,
+      },
     };
   },
   methods: {
@@ -177,7 +177,7 @@ export default {
     $(document).on("click", function (event) {
       if (
         !event.target.closest(".vue-pdf-embed") &&
-        !event.target.closest(".wrap-document") && 
+        !event.target.closest(".wrap-document") &&
         !event.target.closest(".pdf-popup-mobile")
       ) {
         vue.openViewPdf = false;
@@ -190,16 +190,19 @@ export default {
 </script>
 <style scoped>
 @import "./popupStyle.css";
+.popup .row.empty-row{
+   margin-bottom: 0px;
+}
 .popup .row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 50px;
+ margin-bottom: 50px;
 }
-.popup .row.documents-list{
-  justify-content:left;
+.popup .row.documents-list {
+  justify-content: left;
 }
-.popup .row.documents-list .wrap-document{
- margin-right:41px ;
+.popup .row.documents-list .wrap-document {
+  margin-right: 41px;
 }
 .title {
   margin-bottom: 10px;
@@ -244,6 +247,9 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
+  .popup .row.empty-row{
+   margin-bottom: 0px;
+}
   .popup .row {
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -251,7 +257,7 @@ export default {
     margin-bottom: 25px;
     grid-row-gap: 10px;
   }
-  
+
   .wrap-document img {
     margin-bottom: 0;
   }
@@ -260,15 +266,15 @@ export default {
     margin-right: 10px;
   }
 
-  .popup h3.title.open+div {
+  .popup h3.title.open + div {
     display: block;
   }
 
-  .popup h3.title+div {
+  .popup h3.title + div {
     display: none;
   }
 
-  .popup h3.title.open+div.row {
+  .popup h3.title.open + div.row {
     display: flex;
   }
 
@@ -279,7 +285,6 @@ export default {
     transform: rotate(-90deg);
     top: 1px;
   }
-
 
   .popup .title.open:after {
     top: -3px;
