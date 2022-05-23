@@ -19,6 +19,7 @@
         <div class="save-change" @click="(event) => updateProfile(event, 'email')">
           Update
         </div>
+         <div class="input-error-msg">Invalid Email</div>
       </div>
 
       <div class="account-info">
@@ -97,57 +98,78 @@ export default {
       updatedUser[field] = input.innerText;
       updatedUser._id;
       if (field == "email") {
-        const auth = this.$fire.auth;
-        await auth.currentUser
-          .updateEmail(input.innerText)
-          .then(() => {
-            updateUserDB(updatedUser);
-          })
-          .catch((error) => {
-            if (error.code == "auth/requires-recent-login") {
-              auth.currentUser.reauthenticate(AuthCredential);
-              console.log("recet login failed: ");
-              const credential = EmailAuthProvider.credentialWithLink(
-                self.currentUser.email,
-                window.location.href
-              );
+        if (validEmail(input.innerText)) {
+          const auth = this.$fire.auth;
+          await auth.currentUser
+            .updateEmail(input.innerText)
+            .then(() => {
+              updateUserDB(updatedUser);
+            })
+            .catch((error) => {
+              if (error.code == "auth/requires-recent-login") {
+                auth.currentUser.reauthenticate(AuthCredential);
+                console.log("recet login failed: ");
+                const credential = EmailAuthProvider.credentialWithLink(
+                  self.currentUser.email,
+                  window.location.href
+                );
 
-              // Re-authenticate the user with this credential.
-              reauthenticateWithCredential(auth.currentUser, credential)
-                .then((usercred) => {
-                  console.log("usercred", usercred);
-                  updateUserDB(updatedUser);
-                })
-                .catch((error) => {
-                  console.log("error recet", error);
-                });
+                // Re-authenticate the user with this credential.
+                reauthenticateWithCredential(auth.currentUser, credential)
+                  .then((usercred) => {
+                    console.log("usercred", usercred);
+                    updateUserDB(updatedUser);
+                  })
+                  .catch((error) => {
+                    console.log("error recet", error);
+                  });
+              }
+            });
+        } else {
+          let error = $(input)
+            .closest(".account-info")
+            .find(".input-error-msg")[0];
+          if (error) {
+            error.style.display = "block";
+            setTimeout(removeV, 1000);
+            function removeV() {
+              document
+                .querySelectorAll(".input-error-msg")
+                .forEach((node) => (node.style.display = "none"));
+              input.innerText = self.currentUser[field];
             }
-          });
+          }
+        }
       } else {
         updateUserDB(updatedUser);
-      }
-      async function updateUserDB(updatedUser) {
-        await updateUser(updatedUser._id, updatedUser).then((res) => {
-          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-          self.$store.commit("setState", {
-            value: updatedUser,
-            state: "currentUser",
+       
+      } async function updateUserDB(updatedUser) {
+          await updateUser(updatedUser._id, updatedUser).then((res) => {
+            localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+            self.$store.commit("setState", {
+              value: updatedUser,
+              state: "currentUser",
+            });
+            let text = $(event.target)
+              .closest(".account-info")
+              .find(".save-change")[0];
+            let img = document.createElement("img");
+            img.src = require("~/assets/uploads/update_success.gif");
+            text.innerHTML = "";
+            text.appendChild(img);
+            setTimeout(removeV, 1000);
+            function removeV() {
+              text.innerHTML = "Update";
+              document
+                .querySelectorAll(".save-change")
+                .forEach((node) => (node.style.display = "none"));
+            }
           });
-          let text = $(event.target)
-            .closest(".account-info")
-            .find(".save-change")[0];
-          let img = document.createElement("img");
-          img.src = require("~/assets/uploads/update_success.gif");
-          text.innerHTML = "";
-          text.appendChild(img);
-          setTimeout(removeV, 1000);
-          function removeV() {
-            text.innerHTML = "Update";
-            document
-              .querySelectorAll(".save-change")
-              .forEach((node) => (node.style.display = "none"));
-          }
-        });
+        }
+      function validEmail(email) {
+        var re =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
       }
     },
   },
@@ -219,7 +241,10 @@ export default {
 .account-info {
   display: flex;
 }
-
+.input-error-msg {
+  display: none;
+  margin-left: 10px;
+}
 .account-info .key {
   font-size: 16px;
   font-weight: 600;
@@ -275,7 +300,8 @@ export default {
     font-size: 15px;
   }
 
-  .account-info .key, .save-change  {
+  .account-info .key,
+  .save-change {
     font-size: 13px;
   }
 
