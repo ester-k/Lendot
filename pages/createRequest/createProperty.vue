@@ -18,9 +18,15 @@
           type="text"
           name="address"
           placeholder="Address"
-          v-model="address"
+          v-model="form.address"
         />
-       
+         <div
+            class="input-errors"
+            v-for="(error,i) of errors.address"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
       </div>
       <div class="flex-input">
         <div class="wrap-input left-input">
@@ -28,9 +34,15 @@
             type="text"
             name="city"
             placeholder="Property City"
-            v-model="city"
+            v-model="form.city"
           />
-         
+           <div
+            class="input-errors"
+            v-for="(error,i) of errors.city"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
         <!-- state -->
         <div class="wrap-input left-input">
@@ -40,6 +52,13 @@
             :default="stateDefaultSelect"
             v-on:input="changeState"
           />
+            <div
+            class="input-errors"
+            v-for="(error,i) of errors.state"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
         <!-- zip -->
         <div class="wrap-input">
@@ -47,9 +66,15 @@
             type="text"
             name="zip"
             placeholder="Property Zip Code"
-            v-model="zip"
+            v-model="form.zip"
           />
-        
+          <div
+            class="input-errors"
+            v-for="(error,i) of errors.zip"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
       </div>
       <!-- Property Type -->
@@ -62,6 +87,13 @@
           v-on:input="changeType"
         />
       </div>
+        <div
+            class="input-errors"
+            v-for="(error,i) of errors.type"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
       <div id="verifyError">Verify your account</div>
 
       <button type="submit">next</button>
@@ -89,10 +121,14 @@ export default {
     return {
       stateDefaultSelect: "-Select-",
       typeDefaultSelect: "-Select-",
-      address: "",
-      city: "",
-      zip: "",
-      state: "",
+      form: {
+        address: "",
+        city: "",
+        zip: "",
+        state: "",
+        type:""
+      },
+      errors: {},
       propertyTypes: [
         { value: "Single-Family Residential" },
         { value: "2-4 Residential Unit" },
@@ -157,17 +193,10 @@ export default {
         { value: "Wisconsin" },
         { value: "Wyoming" },
       ],
-
       type: "",
     };
   },
-  validations() {
-    return {
-      address: { required },
-      city: { required },
-      zip: { required, numeric },
-    };
-  },
+
   watch: {
     $route(to, from) {
       this.$nextTick(this.showCheckedLoan);
@@ -175,40 +204,46 @@ export default {
   },
   methods: {
     async createRequest(event) {
-      // let isFormCorrect = await this.v$.$validate();
-      // if (isFormCorrect) {
-      //create new loan request
-      let newReq = {};
-      newReq.loanType = localStorage.getItem("loanType");
-      newReq.amount = localStorage.getItem("loanAmount");
-      newReq.propertyAddress = {};
-      newReq.propertyAddress.address = this.address;
-      newReq.propertyAddress.city = this.city;
-      newReq.propertyAddress.state = this.state;
-      newReq.propertyAddress.zip = this.zip;
-      newReq.propertyType = this.type;
-      localStorage.setItem("createProperty", JSON.stringify(newReq));
+      let errors = this.$Validator.checkForm(this.form);
+      this.errors = errors;
+      let isFormCorrect =
+        this.errors &&
+        Object.keys(this.errors).length === 0 &&
+        Object.getPrototypeOf(this.errors) === Object.prototype;
+        console.log( this.errors );
+      if (isFormCorrect) {
+        //create new loan request
+        let newReq = {};
+        newReq.loanType = localStorage.getItem("loanType");
+        newReq.amount = localStorage.getItem("loanAmount");
+        newReq.propertyAddress = {};
+        newReq.propertyAddress.address = this.form.address;
+        newReq.propertyAddress.city = this.form.city;
+        newReq.propertyAddress.state = this.form.state;
+        newReq.propertyAddress.zip = this.form.zip;
+        newReq.propertyType = this.form.type;
+        localStorage.setItem("createProperty", JSON.stringify(newReq));
 
-      let user = JSON.parse(localStorage.getItem("currentUser"));
-      if (!user) {
-        document.getElementById("verifyError").style.display = "block";
-        return;
+        let user = JSON.parse(localStorage.getItem("currentUser"));
+        if (!user) {
+          document.getElementById("verifyError").style.display = "block";
+          return;
+        }
+        newReq.loanerId = user._id;
+        await createRequest(newReq).then((newRequest) => {
+          localStorage.setItem("requestId", newRequest._id);
+        });
+        let activeRoute = document.querySelector(".nuxt-link-exact-active");
+        activeRoute.querySelector(".step-button").classList.add("complete");
+        let activeRouteImg = activeRoute.querySelector("img");
+        activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
+        this.$emit("updateRequestData", {
+          key: "steps",
+          value: "true",
+          step: "createProperty",
+        });
+        this.$router.replace({ path: "/createRequest/aboutProperty" });
       }
-      newReq.loanerId = user._id;
-      await createRequest(newReq).then((newRequest) => {
-        localStorage.setItem("requestId", newRequest._id);
-      });
-      let activeRoute = document.querySelector(".nuxt-link-exact-active");
-      activeRoute.querySelector(".step-button").classList.add("complete");
-      let activeRouteImg = activeRoute.querySelector("img");
-      activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
-      this.$emit("updateRequestData", {
-        key: "steps",
-        value: "true",
-        step: "createProperty",
-      });
-      this.$router.replace({ path: "/createRequest/aboutProperty" });
-      // }
     },
     customSelectColor(event) {
       event.srcElement.classList.add("checked");
@@ -226,10 +261,10 @@ export default {
       }
     },
     changeState(data) {
-      this.state = data;
+      this.form.state = data;
     },
     changeType(data) {
-      this.type = data;
+      this.form.type = data;
     },
     verifyNow: function () {
       // this.$store.commit("setState", { value: 2, state: "createAccountStep" });

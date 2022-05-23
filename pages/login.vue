@@ -10,17 +10,32 @@
       <form @submit.prevent="login">
         <label class="form-label">Email Address</label>
         <div class="wrap-input">
-          <input type="text" name="email" v-model="email" placeholder="Yourmail@gmail.com" autocomplete="on"/>
+          <input type="text" name="email" v-model="form.email" placeholder="Yourmail@gmail.com" autocomplete="on"/>
+           <div
+            class="input-errors"
+            v-for="(error,i) of errors.email"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
 
         <label class="form-label"> Password</label>
         <div class="wrap-input wrap-password">
-          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="password" placeholder="Password" autocomplete="on"/>
+          <input type="password" name="password" :id="'password_field' + 1" class="password-field" v-model="form.password" placeholder="Password" autocomplete="on"/>
           <img class="show-password" alt="edit icon" :src="require('~/assets/uploads/blue_show_password.svg')"
             @click="(event) => showPassword(event, 1)" />
                   
 
-        </div>  <p class="error-msg" id="emailError">Wrong password</p>
+        </div> 
+         <div
+            class="input-errors"
+            v-for="(error,i) of errors.password"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
+         <p class="error-msg" id="emailError">Wrong password</p>
         <p class="error-msg" id="userError">User not found</p>
         <NuxtLink to="/recetPassword" class="forgot-password">Forgot password?</NuxtLink>
 
@@ -38,8 +53,11 @@ export default {
   name: "login",
   data() {
     return {
-      password: "",
-      email: "",
+      form: {
+        password: "",
+        email: "",
+      },
+      errors: {},
     };
   },
   methods: {
@@ -56,26 +74,35 @@ export default {
       password.setAttribute("type", type);
     },
     async login() {
-      let email = this.email;
-      let password = this.password;
-      let self = this;
-      await this.$fire.auth
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          self.getLoginUser(email);
-        })
-        .catch((error) => {
-          this.errorCode = error.code;
-          this.errorMessage = error.message;
-          if (error.code == "auth/wrong-password") {
-            document.getElementById("emailError").classList.add("show");
-            document.getElementById("userError").classList.remove("show");
-          }
-          if (error.code == "auth/user-not-found") {
-            document.getElementById("userError").classList.add("show");
-            document.getElementById("emailError").classList.remove("show");
-          }
-        });
+      let errors = this.errors;
+      errors = this.$Validator.checkForm(this.form);
+      this.errors = errors;
+      if (
+        this.errors &&
+        Object.keys(this.errors).length === 0 &&
+        Object.getPrototypeOf(this.errors) === Object.prototype
+      ) {
+        let email = this.form.email;
+        let password = this.form.password;
+        let self = this;
+        await this.$fire.auth
+          .signInWithEmailAndPassword(email, password)
+          .then(() => {
+            self.getLoginUser(email);
+          })
+          .catch((error) => {
+            this.errorCode = error.code;
+            this.errorMessage = error.message;
+            if (error.code == "auth/wrong-password") {
+              document.getElementById("emailError").classList.add("show");
+              document.getElementById("userError").classList.remove("show");
+            }
+            if (error.code == "auth/user-not-found") {
+              document.getElementById("userError").classList.add("show");
+              document.getElementById("emailError").classList.remove("show");
+            }
+          });
+      }
     },
     async getLoginUser(email) {
       let self = this;
@@ -90,12 +117,15 @@ export default {
           state: "currentUser",
         });
         if (localStorage.getItem("createRequestData")) {
-          let createRequestStep =
-            JSON.parse(localStorage.getItem("createRequestData")).createRequestStep;
+          let createRequestStep = JSON.parse(
+            localStorage.getItem("createRequestData")
+          ).createRequestStep;
           self.$router.replace({
             path: "/createRequest/" + createRequestStep,
           });
-        } else {self.$router.replace("/loanerScreen");}
+        } else {
+          self.$router.replace("/loanerScreen");
+        }
       });
     },
   },
