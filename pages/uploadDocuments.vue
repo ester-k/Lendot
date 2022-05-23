@@ -3,7 +3,7 @@
     <!-- :back="backDetails" -->
     <Header  />
     <div class="upload-docs-container">
-      <div class="title">Upload Documents</div>
+      <div class="title">UPLOAD DOCUMENTS</div>
       <div class="sub-title">Upload the required documents</div>
       <div class="documents">
         <div v-for="(doc, index) of offer.documents" :key="index">
@@ -16,16 +16,14 @@
             <div class="upload-icon">
               <img :src="require('~/assets/uploads/upload_success.svg')" />
             </div>
-            <div class="upload-area-center">
-              <div class="name">{{ doc.name }}</div>
-              <div class="files">
-                <div
-                  v-for="(file, fileIndex) of doc.loanerDocs"
-                  :key="fileIndex"
-                  @click.stop="(event) => selectFile(event, index, fileIndex)"
-                >
-                  {{ file.name }}
-                </div>
+            <div class="name">{{ doc.name }}</div>
+            <div class="files">
+              <div
+                v-for="(file, fileIndex) of doc.loanerDocs"
+                :key="fileIndex"
+                @click.stop="(event) => selectFile(event, index, fileIndex)"
+              >
+                {{ file.name }}
               </div>
             </div>
             <div class="actions" :id="'actions' + index">
@@ -53,9 +51,7 @@
                 @change="(event) => uploadDoc(event, index)"
               />
             </div>
-            <div class="upload-area-center">
-              <div class="name">{{ doc.name }}</div>
-            </div>
+            <div class="name">{{ doc.name }}</div>
           </div>
           <div
             :id="'upload' + index"
@@ -278,7 +274,7 @@ export default {
   min-height: 89px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 17px;
 }
 .wrap-document .name {
@@ -300,6 +296,7 @@ export default {
 }
 .wrap-document .upload-icon {
   width: 58px;
+  margin-left: 33px;
 }
 .wrap-document:not(.existing-doc) .upload-icon {
   cursor: pointer;
@@ -307,6 +304,8 @@ export default {
 .wrap-document .actions {
   display: flex;
   justify-content: space-between;
+  margin-right: 33px;
+  margin-left: auto;
 }
 .wrap-document .actions img {
   cursor: pointer;
@@ -367,4 +366,105 @@ export default {
 .back-button {
   display: block;
 }
+
+@media screen and (max-width: 768px) {
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .sub-title {
+    font-size: 15px;
+  }
+
+  .upload-docs-container {
+    margin: 0;
+    padding: 45px 27px;
+  }
+
+  .upload-icon img {
+    transform: scale(0.6);
+  }
+
+  .wrap-document .upload-icon {
+    width: auto;
+    margin-left: 23px;
+  }
+
+  .wrap-document.existing-doc .name {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .wrap-document .actions {
+    margin-right: 20px;
+  }
+
+  .wrap-document {
+    min-height: 58px;
+    flex-wrap: wrap;
+  }
+
+  .wrap-document .name {
+    font-size: 12px;
+  }
+
+  .wrap-document .files {
+    order: 1;
+    padding: 0;
+    margin-bottom: 17px;
+    width: 100%;
+    padding: 0 9px;
+    gap: 10px 5px;
+  }
+
+  .wrap-document .files div {
+    margin: 0;
+    font-size: 10px;
+    padding: 0;
+    width: 133px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .upload-area .name {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .upload-area {
+    height: 128px;
+    padding: 17px;
+  }
+
+  .upload-area .upload-button {
+    margin-top: calc(40px - 18px );
+    font-size: 12px;
+    align-items: flex-start;
+    margin-right: 10px;
+  }
+
+  .upload-button p {
+    width: 162px;
+    text-align: center;
+  }
+
+  .upload-area img {
+    transform: scale(0.6);
+    margin-right: 7px;
+  }
+
+  .upload-button p:last-child {
+    margin-left: 30px;
+  }
+
+  .wrap-document .actions img {
+    transform: scale(0.6);
+    margin-left: 0;
+  }
+}
+
 </style>
