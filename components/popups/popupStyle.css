@@ -72,6 +72,14 @@
   width: 299px;
 }
 
+.popup.mobile{
+  display:none;
+}
+
+.popup.desktop{
+  display: flex;
+}
+
 @media screen and (max-width:1600px) {
   .close-popup {
     right: 0;
@@ -130,5 +138,13 @@
 
   .wrap-document .wrap-content {
     padding: 0 14px;
+  }
+
+  .popup.mobile{
+    display:flex;
+  }
+  
+  .popup.desktop{
+    display: none;
   }
 }

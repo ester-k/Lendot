@@ -132,17 +132,28 @@
       :source="source"
       :height="704"
       :width="500"
+      class="desktop"
+    />
+    <viewPdfMobile
+      v-if="openViewPdf"
+      :source="source"
+      class="mobile"
+      @closePdfPopup="openViewPdf=false"
     />
   </div>
 </template>
 <script>
 import viewPdf from "~/components/viewPdf.vue";
+import viewPdfMobile from "~/components/viewPdfMobile.vue";
 import $ from "jquery";
 
 export default {
   name: "viewCompleteRequest",
   props: ["loan"],
-  components: { viewPdf },
+  components: { 
+    viewPdf,
+    viewPdfMobile
+   },
   data() {
     return {
       source: "",
@@ -166,7 +177,8 @@ export default {
     $(document).on("click", function (event) {
       if (
         !event.target.closest(".vue-pdf-embed") &&
-        !event.target.closest(".wrap-document")
+        !event.target.closest(".wrap-document") && 
+        !event.target.closest(".pdf-popup-mobile")
       ) {
         vue.openViewPdf = false;
       } else {
