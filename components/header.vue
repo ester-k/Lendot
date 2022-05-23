@@ -10,7 +10,7 @@
       class="lendot-icon mobile"
       :src="require('~/assets/uploads/mobile_logo.png')"
     /></a>
-    <div class="blue-header"> <button class="fill-button back-button" @click="$router.go(-1)"><img   :src="require('~/assets/uploads/back_icon.svg')"> Back</button></div>
+    <div class="blue-header"> <button class="fill-button back-button" :class="{show:$nuxt.context.from.path=='/uploadDocuments'}" @click="back"><img   :src="require('~/assets/uploads/back_icon.svg')"> Back</button></div>
    </div>
 </template>
 
@@ -18,7 +18,13 @@
 export default {
   name: "Header",
   methods: {
-     },
+    back: function () {
+      this.$router.replace({ path: this.$nuxt.context.from.path });
+    },
+  },
+  created() {
+
+  }
 };
 </script>
 
@@ -41,14 +47,17 @@ export default {
 .fill-button {
   margin-right: 218px;
   width: 118px;
-height: 31px;
-font-weight: 500;;
+  height: 31px;
+  font-weight: 500;
 }
-.fill-button img{
-  margin-right:17px;
+.fill-button img {
+  margin-right: 17px;
 }
-.back-button{
-display: none;
+.back-button {
+  display: none;
+}
+.back-button.show {
+  display: block;
 }
 @media screen and (max-width: 768px) {
   .blue-header {

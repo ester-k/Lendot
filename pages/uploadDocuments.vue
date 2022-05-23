@@ -252,18 +252,14 @@ export default {
   },
 };
 </script>
-<style >
-.blue-header .back-button {
-    display: block;
-}
-</style>
+
 <style scoped>
 .upload-docs-container {
   max-width: 1200px;
   margin: auto;
   margin-top: 94px;
 }
-.back-button {
+.blue-header .back-button {
     display: block;
 }
 .title {

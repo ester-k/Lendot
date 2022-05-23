@@ -346,7 +346,9 @@ export default {
   font-size: 16px;
   text-decoration: underline;
 }
-
+.error-msg {
+    font-size: 16px;
+}
 .error-msg a {
   text-decoration: underline;
   color: var(--custom-pink);
