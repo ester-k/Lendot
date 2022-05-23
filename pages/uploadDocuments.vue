@@ -70,7 +70,7 @@
                   >choose file</a
                 >
               </p>
-              <p>only PDF format</p>
+              <p class="limit-msg">(only .pdf format, up to 5MB)</p>
             </div>
           </div>
         </div>
@@ -180,16 +180,16 @@ export default {
                 return res.data.doc;
               })
               .catch((err) => {
-                console.log(err.response);
+                if (err.response.data == "LIMIT_FIELD_VALUE")
+                  alert("This file size is not supported");
                 return false;
               });
-            self.offer = res;
-            console.log("add", self.offer);
+            if (res) self.offer = res;
           };
+          fileReader.readAsDataURL(this.file[0]);
+        } else {
+          alert("This format is not supported");
         }
-        fileReader.readAsDataURL(this.file[0]);
-      } else {
-        alert("upload pdf file");
       }
     },
     onDrop: function (event, index) {
@@ -226,8 +226,8 @@ export default {
       // event.target.setAttribute("data-open", "true");
     },
   },
-  mounted(){
-    let tawkToScript = document.createElement('script')
+  mounted() {
+    let tawkToScript = document.createElement("script");
     let inlineCode = document.createTextNode(`
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
       (function(){
@@ -247,7 +247,7 @@ export default {
           },2000);
       };
     `);
-    tawkToScript.appendChild(inlineCode); 
+    tawkToScript.appendChild(inlineCode);
     document.head.appendChild(tawkToScript);
   },
 };
@@ -260,7 +260,7 @@ export default {
   margin-top: 94px;
 }
 .blue-header .back-button {
-    display: block;
+  display: block;
 }
 .title {
   font-size: 29px;
@@ -370,9 +370,11 @@ export default {
 .back-button {
   display: block;
 }
+.limit-msg {
+  margin: 12px;
+}
 
 @media screen and (max-width: 768px) {
-
   .title {
     font-size: 20px;
     margin-bottom: 8px;
@@ -445,7 +447,7 @@ export default {
   }
 
   .upload-area .upload-button {
-    margin-top: calc(40px - 18px );
+    margin-top: calc(40px - 18px);
     font-size: 12px;
     align-items: flex-start;
     margin-right: 10px;
@@ -470,5 +472,4 @@ export default {
     margin-left: 0;
   }
 }
-
 </style>
