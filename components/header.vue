@@ -19,7 +19,9 @@ export default {
   name: "Header",
   methods: {
     back: function () {
-      this.$router.replace({ path: this.$nuxt.context.from.path });
+      // this.$router.replace({ path: this.$nuxt.context.from.path });
+      this.$router.replace({ path: "loanerScreen" });
+
     },
   },
   created() {
