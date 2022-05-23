@@ -1,9 +1,13 @@
 <template>
-  <div class="popup pdf-popup-mobile" >
+  <div class="pdf-popup-mobile" >
     <div class="blue-header">
+      <!--<img
+        :src="require('~/assets/uploads/open_document_menu.svg')"
+        alt="close menu"
+      /> -->
       <div class="close-pdf" @click="closePdfPopup">
         <img
-          :src="require('~/assets/uploads/close_menu_mobile.svg')"
+          :src="require('~/assets/uploads/close_document.svg')"
           alt="close menu"
         />
       </div>
@@ -42,8 +46,7 @@ export default {
 
 <style scoped>
 @media screen and (max-width: 768px) {
-  .popup {
-  
+  .pdf-popup-mobile {
     height: 100%;
     width: 100%;
     position: fixed;
@@ -53,7 +56,7 @@ export default {
     bottom: 0;
     background-color: #636363;
     z-index: 999;
-
+    display: block;
   }
   .view-pdf-popup {
     position: relative;

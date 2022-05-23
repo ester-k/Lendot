@@ -307,6 +307,7 @@ import {
 } from "~/services/request-service.js";
 // import VuePdfEmbed from "vue-pdf-embed";
 import viewPdf from "~/components/viewPdf.vue";
+import viewPdfMobile from "~/components/viewPdfMobile.vue";
 
 import { updateOfferStatus } from "~/services/offer-service.js";
 import { getOffersByLoanerRequest } from "~/services/request-service";
@@ -330,7 +331,7 @@ export default {
   },
   components: {
     viewPdf,
-    // VuePdfEmbed,
+    viewPdfMobile,
   },
   methods: {
     getLoans: async function () {
