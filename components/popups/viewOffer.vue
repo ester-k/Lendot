@@ -3,7 +3,6 @@
     <div class="placeholder"></div>
     <div class="inner-popup">
       <div class="content">
-      
         <div dir="ltr">
           <div class="close-popup" @click="$emit('closePopup')">
 
@@ -19,35 +18,31 @@
             />
           </div>
 
-          <h3 class="title" :class="{'open' : showMobile['propertyDetals'] }" @click="showMobile['propertyDetals'] = !showMobile['propertyDetals'];">Property Details</h3>
+           <h3 class="title" :class="{'open' : showMobile['propertyDetals'] }" @click="showMobile['propertyDetals'] = !showMobile['propertyDetals'];">Property Details</h3>
           <div class="row">
             <div class="loan-prop">
-              <!-- <p class="key">Address</p> -->
-              <p class="key">{{ loan.propertyType }}</p>
+              <p class="key">{{ offer.requestId.propertyType }}</p>
 
               <p class="value">
-                {{ loan.propertyAddress.state }},
-                {{ loan.propertyAddress.city }},
-                {{ loan.propertyAddress.address }}
+                {{ offer.requestId.propertyAddress.state }},
+                {{ offer.requestId.propertyAddress.city }},
+                {{ offer.requestId.propertyAddress.address }}
               </p>
             </div>
             <div class="loan-prop">
               <p class="key">Purchase Price</p>
-              <p class="value">{{ loan.price }}$</p>
+              <p class="value">{{ offer.requestId.price }}$</p>
             </div>
 
-            <!-- <div class="loan-prop">
-          <p class="key">Property Type</p>
-          <p class="value">{{ loan.propertyType }}</p>
-        </div> -->
+          
             <div class="loan-prop">
               <p class="key">Estimated After Completion Value</p>
-              <p class="value">{{ loan.estimated }}$</p>
+              <p class="value">{{ offer.requestId.estimated }}$</p>
             </div>
 
             <div class="loan-prop">
               <p class="key">Rehab / Construction Budget</p>
-              <p class="value">{{ loan.rehub }}$</p>
+              <p class="value">{{ offer.requestId.rehub }}$</p>
             </div>
           </div>
           <h3 class="title" :class="{'open' : showMobile['offerDetails'] }" @click="showMobile['offerDetails'] = !showMobile['offerDetails'];">Offer Details</h3>
@@ -56,32 +51,32 @@
               <p class="key">Lender's Name</p>
 
               <p class="value">
-                {{ loan.selectedOffer.lenderId.firstName }}
-                {{ loan.selectedOffer.lenderId.lastName }}
+                {{ offer.lenderId.firstName }}
+                {{offer.lenderId.lastName }}
               </p>
             </div>
             <div class="loan-prop">
               <p class="key">Loan Amount</p>
-              <p class="value">{{ loan.selectedOffer.amount }}$</p>
+              <p class="value">{{ offer.amount }}$</p>
             </div>
 
             <div class="loan-prop">
               <p class="key">Loan Term</p>
-              <p class="value">{{ loan.selectedOffer.term }}</p>
+              <p class="value">{{ offer.term }}</p>
             </div>
             <div class="loan-prop">
               <p class="key">Interest</p>
-              <p class="value">{{ loan.selectedOffer.interest }}%</p>
+              <p class="value">{{ offer.interest }}%</p>
             </div>
 
             <div class="loan-prop">
               <p class="key">Monthly Repayments</p>
-              <p class="value">{{ loan.selectedOffer.rehub }}$</p>
+              <p class="value">{{ offer.rehub }}$</p>
             </div>
           </div>
           <h3 class="title" :class="{'open' : showMobile['uploadedDocuments'] }" @click="showMobile['uploadedDocuments'] = !showMobile['uploadedDocuments'];">Uploaded Documents</h3>
           <div >
-            <div  v-for="(document, index) of loan.selectedOffer.documents" :key="index" class="row documents-list" :class="{'empty-row':!document.loanerDocs.length}">
+            <div  v-for="(document, index) of offer.documents" :key="index" class="row documents-list" :class="{'empty-row':!document.loanerDocs.length}">
                
                         <div
               class="wrap-document"
@@ -98,10 +93,7 @@
                 <p>{{ doc.name }}</p>
               </div>
               <div class="view" :id="'view-' + index">
-                <!-- <img
-                        alt="view icon"
-                        :src="require('~/assets/uploads/view_white_icon.svg')"
-                      /> -->
+              
                 View
               </div>
               <div :id="'view-' + index + '-pdf'"></div>
@@ -112,18 +104,18 @@
           <div class="row">
             <div class="loan-prop">
               <p class="key">Submit The Request</p>
-              <p class="value">{{ loan.createdDate }} | formatDate</p>
+              <p class="value">{{ offer.requestId.createdDate }} | formatDate</p>
             </div>
             <div class="loan-prop">
               <p class="key">Receiving The Loan</p>
-              <p class="value">{{ loan.selectedOffer.recivedDate }}</p>
+              <p class="value">{{ offer.recivedDate }}</p>
             </div>
 
             <div class="loan-prop">
               <p class="key">End Of Loan Repayment</p>
-              <p class="value">{{ loan.selectedOffer.endLoanDaye }}</p>
+              <p class="value">{{ offer.endLoanDaye }}</p>
             </div>
-          </div>
+          </div> <!---->
         </div>
       </div>
     </div>
@@ -148,8 +140,8 @@ import viewPdfMobile from "~/components/viewPdfMobile.vue";
 import $ from "jquery";
 
 export default {
-  name: "viewCompleteRequest",
-  props: ["loan"],
+  name: "ViewOffer",
+  props: ["offer"],
   components: {
     viewPdf,
     viewPdfMobile,

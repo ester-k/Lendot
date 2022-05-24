@@ -16,9 +16,8 @@
           <div class="tbody">
             <div v-for="(offer, i) of offers" :key="i">
               <div
-             
-                class="wrap-offer tr"
-                @click="(event) => openOffer(event, index, i)"
+                             class="wrap-offer tr"
+                @click="open(offer)"
                 :id="'offer' + i"
               >
                 <div class="loaner-name td">
@@ -51,7 +50,7 @@
                   </button>
                 </div>
               </div>
-              <div class="wrap-offer-container" :id="'offer' + i + '-view'">
+              <!-- <div class="wrap-offer-container" :id="'offer' + i + '-view'">
                 <div class="offer-title desktop">
 
                   <div class="loaner-name">
@@ -144,25 +143,34 @@
                   </div>
                 </div>
              
-          </div>
+          </div> -->
         </div>
        
       </div>
     </div>
       </tbody> 
     </table>
+
+      <ViewOffer
+      :offer="selectedOffer"
+      v-if="openOfferPopup"
+      @closePopup="openOfferPopup = false"
+    />
   </div>
 </template>
 
 <script>
 import { getAllOffers } from "~/services/offer-service";
+import ViewOffer from "~/components/popups/viewOffer.vue";
 
 export default {
   name: "",
   data() {
-    return { offers: [] };
+    return { offers: [] , openOfferPopup: false,seletedOffer:{}
+};
   },
-  methods: {
+  components: {ViewOffer}
+,  methods: {
     getOffers: async function () {
       getAllOffers().then((res) => (this.offers = res));
     },
@@ -172,6 +180,10 @@ export default {
         query: { request: requestId },
       });
     },
+    open(offer){
+      this.selectedOffer=offer
+    this.openOfferPopup=true
+    }
   },
   created() {
     this.getOffers();
@@ -221,11 +233,13 @@ export default {
   grid-template-columns: auto auto auto auto auto auto;
   max-width: 1190px;
 }
-.tr.wrap-offer.hide, .tr.wrap-offer.mobile {
+.tr.wrap-offer.hide,
+.tr.wrap-offer.mobile {
   display: none;
 }
-.offer-title.desktop, .offer-header.desktop{
-  display:flex;
+.offer-title.desktop,
+.offer-header.desktop {
+  display: flex;
 }
 .td {
   padding: 21px 16px;
@@ -242,7 +256,6 @@ export default {
   height: 24px;
   width: 115px;
 }
-
 
 /* opend offers iframe */
 .wrap-offer-container {
@@ -333,7 +346,6 @@ export default {
   display: none;
 }
 
-
 .offer-light-box.open .pdf-embed {
   max-height: 100%;
   height: 100%;
@@ -341,36 +353,48 @@ export default {
   margin: auto;
 }
 @media screen and (max-width: 768px) {
-  .tr.wrap-offer{
+  .tr.wrap-offer {
     grid-template-columns: auto auto;
     height: auto;
     padding: 17px 30px 24px 17px;
   }
-  
-  .tr.wrap-offer.mobile{
-    display:grid;
+
+  .tr.wrap-offer.mobile {
+    display: grid;
   }
 
-  .offer-title.desktop, .offer-header.desktop{
-    display:none;
+  .offer-title.desktop,
+  .offer-header.desktop {
+    display: none;
   }
 
-  .loaner-name.td, .actions.td {
+  .loaner-name.td,
+  .actions.td {
     grid-column: 1 / -1;
     color: var(--custom-pink);
     font-size: 11px;
   }
-  
+
   .thead {
     display: none;
   }
 
-  .td:nth-of-type(1):before { content: "Lender's Name"; }
-  .td:nth-of-type(2):before { content: "Annual Interest Rate"; }
-  .td:nth-of-type(3):before { content: "Upfront Fees"; }
-  .td:nth-of-type(4):before { content: "Underwriting Fee"; }
-  .td:nth-of-type(5):before { content: "Closing Timeline"; }
-  .td:before{
+  .td:nth-of-type(1):before {
+    content: "Lender's Name";
+  }
+  .td:nth-of-type(2):before {
+    content: "Annual Interest Rate";
+  }
+  .td:nth-of-type(3):before {
+    content: "Upfront Fees";
+  }
+  .td:nth-of-type(4):before {
+    content: "Underwriting Fee";
+  }
+  .td:nth-of-type(5):before {
+    content: "Closing Timeline";
+  }
+  .td:before {
     font-size: 11px;
     color: var(--custom-blue);
     font-weight: bold;
@@ -382,7 +406,7 @@ export default {
     padding: 0;
     padding-bottom: 16px;
   }
-  
+
   .td.actions {
     flex-direction: row;
     width: 100%;
@@ -394,7 +418,8 @@ export default {
     padding: 0 27px 36px;
   }
 
-  .accept-action, .decline-action {
+  .accept-action,
+  .decline-action {
     width: 121px;
     height: 25px;
   }
@@ -406,32 +431,24 @@ export default {
     font-weight: normal;
   }
 
-  
-
-  .loan-price{
+  .loan-price {
     margin-top: 48px;
     font-size: 15px;
     font-weight: bold;
     order: 1;
   }
 
-  .loan-section{
+  .loan-section {
     display: flex;
     flex-direction: column;
   }
 
-  .offers-table{
+  .offers-table {
     order: 3;
   }
 
-
-  .wrap-declined-offer .accept-action{
+  .wrap-declined-offer .accept-action {
     width: 100%;
   }
-
-
-  
-  
-
 }
 </style>
