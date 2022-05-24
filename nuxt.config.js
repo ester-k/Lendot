@@ -115,7 +115,7 @@ export default {
     //     redirect: {
     //         login: '/login',
     //         logout: '/',
-    //         home: '/loanerScreen',
+    //         home: '/loanerPanel',
     //         callback: '/login'
     //     },
     //     watchLoggedIn: true

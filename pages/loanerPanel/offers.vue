@@ -151,11 +151,7 @@
                     class="offer-light-box"
                     @click="(event) => closeView(event, i)"
                   >
-                    <!-- <vue-pdf-embed
-                      :source="offer.terms"
-                      :height="viewHeight"
-                      :viewWidth="viewWidth"
-                    /> -->
+                   
                   </div>
                 </div>
               </div>

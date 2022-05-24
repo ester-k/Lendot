@@ -9,7 +9,7 @@
         </div>
         <div  v-for="menueItem in menue">
           <div class="menu-item">
-            <NuxtLink :to="'/loanerScreen/' + menueItem.toLowerCase().split(' ').join('')" @click="closeMobileMenu">
+            <NuxtLink :to="'/loanerPanel/' + menueItem.toLowerCase().split(' ').join('')" @click="closeMobileMenu">
               <p  :class="{'active' : title.toLowerCase() == menueItem.toLowerCase() ? true : false }">{{menueItem}}</p>
             </NuxtLink>
           </div>
@@ -31,7 +31,7 @@
             <p class="full-name">{{ currentUser.username }}</p>
             <p class="user-email">{{ currentUser.email }}</p>
             <button class="border-button edit-profile"
-            @click="$router.replace({ path: '/loanerScreen/accountSettings' })">Edit Profile</button>
+            @click="$router.replace({ path: '/loanerPanel/accountSettings' })">Edit Profile</button>
             <button @click="logout" class="border-button logout"> Logout </button>
         </div>
     </div>

@@ -10,7 +10,7 @@
 // })
 
 export const state = () => ({
-    currentUser: {},
+    currentUser: JSON.parse(localStorage.getItem('currentUser')) || {},
     createAccountStep: 1,
     userRequests: new Array(),
     counter: 0
@@ -32,7 +32,7 @@ export const actions = {
             this.$router.push('/login')
         }
         // else {
-        //     this.$router.push('/loanerScreen')
+        //     this.$router.push('/loanerPanel')
         //     console.log("conect");
         // }
     }

@@ -10,6 +10,10 @@ const createOffer = async(newOffer) => {
     const response = await axios.post(`${apiTarget}/offer/createOffer`, newOffer);
     return response.data;
 }
+const getAllOffers = async() => {
+    const response = await axios.get(`${apiTarget}/offer/getAllOffers`);
+    return response.data;
+}
 const getOfferById = async(offerId) => {
     const response = await axios.get(`${apiTarget}/offer/getOfferById/${offerId}`);
     return response.data;
@@ -41,6 +45,7 @@ const updateOfferStatus = async(offerId, status) => {
 
 module.exports = {
     createOffer,
+    getAllOffers,
     getOfferById,
     getOffersByLender,
     getOffersByRequest,
