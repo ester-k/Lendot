@@ -274,13 +274,6 @@ export default {
   padding: 0;
 }
 
-.save-change {
-  font-size: 16px;
-  margin-left: 18px;
-  color: var(--custom-pink);
-  display: none;
-  cursor: pointer;
-}
 .save-change img {
   height: 16px;
 }

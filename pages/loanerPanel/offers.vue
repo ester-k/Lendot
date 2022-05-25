@@ -38,11 +38,20 @@
                 <div class="td" v-if="offer.rate">
                   {{ offer.rate.toLocaleString() }}%
                 </div>
+                  <div class="td" v-else>
+                 
+                </div>
                 <div class="td" v-if="offer.upfrontFee">
                   {{ offer.upfrontFee.toLocaleString() }}
                 </div>
+                 <div class="td" v-else>
+                 
+                </div>
                 <div class="td" v-if="offer.underwritingFee">
                   {{ offer.underwritingFee.toLocaleString() }}
+                </div>
+                 <div class="td" v-else>
+                 
                 </div>
                 <div class="td">{{ offer.closingTimeline }}</div>
                 <div class="td actions">
@@ -151,11 +160,7 @@
                     class="offer-light-box"
                     @click="(event) => closeView(event, i)"
                   >
-                    <!-- <vue-pdf-embed
-                      :source="offer.terms"
-                      :height="viewHeight"
-                      :viewWidth="viewWidth"
-                    /> -->
+                   
                   </div>
                 </div>
               </div>

@@ -1,6 +1,6 @@
  <template>
  <div class="header">
-      <a href="/loanerScreen">  <img
+      <a href="/loanerPanel">  <img
       alt="lendot logo"
       class="lendot-icon desktop"
       :src="require('~/assets/uploads/logo.svg')"
@@ -20,7 +20,7 @@ export default {
   methods: {
     back: function () {
       // this.$router.replace({ path: this.$nuxt.context.from.path });
-      this.$router.replace({ path: "loanerScreen" });
+      this.$router.replace({ path: "loanerPanel" });
 
     },
   },

@@ -227,7 +227,7 @@ export default {
           await updateRequest(updateLoan).then((updateLoan) => {
             // this.$store.state.createAccountStep = 1;
             if ($nuxt.$fire.auth.currentUser) {
-              this.$router.replace({ path: "/loanerScreen" });
+              this.$router.replace({ path: "/loanerPanel" });
               localStorage.removeItem("requestId");
               localStorage.removeItem("loanType");
               localStorage.removeItem("createProperty");

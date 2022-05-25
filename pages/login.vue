@@ -124,7 +124,7 @@ export default {
             path: "/createRequest/" + createRequestStep,
           });
         } else {
-          self.$router.replace("/loanerScreen");
+          self.$router.replace("/loanerPanel");
         }
       });
     },

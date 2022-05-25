@@ -5,22 +5,22 @@
     <div class="app-container">
       <div class="lender-menu">
         <div class="menu-item">
-          <NuxtLink to="/loanerScreen/actions">
+          <NuxtLink to="/loanerPanel/actions">
             <p class="">Actions</p>
           </NuxtLink>
         </div>
         <div class="menu-item">
-          <NuxtLink to="/loanerScreen/loans">
+          <NuxtLink to="/loanerPanel/loans">
             <p class="">Loans</p>
           </NuxtLink>
         </div>
         <div class="menu-item">
-          <NuxtLink to="/loanerScreen/offers">
+          <NuxtLink to="/loanerPanel/offers">
             <p class="">Offers</p>
           </NuxtLink>
         </div>
         <div class="menu-item">
-          <NuxtLink to="/loanerScreen/accountSettings">
+          <NuxtLink to="/loanerPanel/accountSettings">
             <p class="">Account Settings</p>
           </NuxtLink>
         </div>
@@ -54,7 +54,7 @@ import ProfileSidebar from "~/components/profileSidebar.vue";
 import { countMissingDocs } from "~/services/documents-service";
 
 export default {
-  name: "loanerScreen",
+  name: "loanerPanel",
   components: { ProfileSidebar },
   data() {
     return {
@@ -190,8 +190,7 @@ export default {
   },
   async created() {
  this.$popup.closePopup()
-     console.log(this.loanerId);
-     if (!localStorage.getItem("currentUser")) {
+    if (!localStorage.getItem("currentUser")) {
         this.$router.replace({path:"/login"});
       } 
     await getOffersByLoanerRequest(this.loanerId).then((res) => {
@@ -215,14 +214,14 @@ export default {
     localStorage.setItem("loansByAction", JSON.stringify(this.loansByAction));
 
     if (this.loans) {
-      if ($nuxt.$route.path == "/loanerScreen") {
+      if ($nuxt.$route.path == "/loanerPanel") {
         if (!this.actionsLength) {
           this.$router.replace({
-            path: "/loanerScreen/loans",
+            path: "/loanerPanel/loans",
           });
         } else
           this.$router.replace({
-            path: "/loanerScreen/actions",
+            path: "/loanerPanel/actions",
           });
       }
     }
