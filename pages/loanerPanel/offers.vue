@@ -38,11 +38,20 @@
                 <div class="td" v-if="offer.rate">
                   {{ offer.rate.toLocaleString() }}%
                 </div>
+                  <div class="td" v-else>
+                 
+                </div>
                 <div class="td" v-if="offer.upfrontFee">
                   {{ offer.upfrontFee.toLocaleString() }}
                 </div>
+                 <div class="td" v-else>
+                 
+                </div>
                 <div class="td" v-if="offer.underwritingFee">
                   {{ offer.underwritingFee.toLocaleString() }}
+                </div>
+                 <div class="td" v-else>
+                 
                 </div>
                 <div class="td">{{ offer.closingTimeline }}</div>
                 <div class="td actions">

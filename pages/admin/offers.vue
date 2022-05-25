@@ -3,9 +3,10 @@
       <table class="loans-table">
      <tbody>
       
-
         <div class="offers-table">
           <div class="thead">
+                        <div class="th">Status</div>
+
             <div class="th">Lender's Name</div>
             <div class="th">Annual Interest Rate</div>
             <div class="th">Upfront Fees</div>
@@ -16,134 +17,50 @@
           <div class="tbody">
             <div v-for="(offer, i) of offers" :key="i">
               <div
-                             class="wrap-offer tr"
+                class="wrap-offer tr"
                 @click="open(offer)"
                 :id="'offer' + i"
               >
+                 <div class="status td">
+                 {{ offer.status.name }}
+                </div>
                 <div class="loaner-name td">
                  {{ offer.lenderId.username }}
                 </div>
                 <div class="td" v-if="offer.rate">
                   {{ offer.rate.toLocaleString() }}%
                 </div>
+                <div class="td" v-else>
+                 
+                </div>
                 <div class="td" v-if="offer.upfrontFee">
                   {{ offer.upfrontFee.toLocaleString() }}
+                </div>
+                <div class="td" v-else>
+                 
                 </div>
                 <div class="td" v-if="offer.underwritingFee">
                   {{ offer.underwritingFee.toLocaleString() }}
                 </div>
+                <div class="td" v-else>
+                 
+                </div>
                 <div class="td">{{ offer.closingTimeline }}</div>
                 <div class="td actions">
+               
                   <button
+                  v-if="offer.status._id=='628dd0accf4800b07253e112'"
+                  @click.stop="approveOffer(offer,i)"
                     class="accept-action fill-button"
-                    id="acceptOffer"
+                    id="aproveOffer"
                    
                   >
-                    Accept
+                    Approve
                   </button>
-                  <button
-                    class="decline-action border-button"
-                    id="declineOffer"
-                    @click="declineOffer(index, i)"
-                  >
-                    Decline
-                  </button>
+                 
                 </div>
               </div>
-              <!-- <div class="wrap-offer-container" :id="'offer' + i + '-view'">
-                <div class="offer-title desktop">
-
-                  <div class="loaner-name">
-                    {{ offer.lenderId.username }}
-                  </div>
-                  <button class="fill-button selectOffer" @click="selectOffer">
-                    Select
-                  </button>
-                </div>
-                <div class="offer-header desktop">
-                  <div>
-                    <p>Annual Interest Rate</p>
-                    <p v-if="offer.rate">{{ offer.rate.toLocaleString() }}%</p>
-                  </div>
-                  |
-                  <div>
-                    <p>Upfront Fees</p>
-                    <p v-if="offer.upfrontFee">
-                      {{ offer.upfrontFee.toLocaleString() }}
-                    </p>
-                  </div>
-                  |
-
-                  <div>
-                    <p>Underwriting Fee</p>
-                    <p v-if="offer.underwritingFee">
-                      {{ offer.underwritingFee.toLocaleString() }}
-                    </p>
-                  </div>
-                  |
-                  <div>
-                    <p>Closing Timeline</p>
-                    <p>{{ offer.closingTimeline }} Days</p>
-                  </div>
-                </div>
-                <div class="wrap-offer tr mobile">
-                  <div class="loaner-name td">
-                  {{ offer.lenderId.username }}
-                  </div>
-                  <div class="td" v-if="offer.rate">
-                    {{ offer.rate.toLocaleString() }}%
-                  </div>
-                  <div class="td" v-if="offer.upfrontFee">
-                    {{ offer.upfrontFee.toLocaleString() }}
-                  </div>
-                  <div class="td" v-if="offer.underwritingFee">
-                    {{ offer.underwritingFee.toLocaleString() }}
-                  </div>
-                  <div class="td">{{ offer.closingTimeline }}</div>
-                  <div class="td actions">
-                    <button class="fill-button selectOffer">Select</button>
-                  </div>
-                </div>     
-                <div class="offerIframe" v-if="offer.terms">
-                  <div class="title">
-                    <div
-                      class="view"
-                      @click="
-                       openViewPdf = true;
-                       source = offer.terms
-                      "
-                    >
-                     <img
-                        alt="view icon"
-                        :src="require('~/assets/uploads/view_icon.svg')"
-                      />View
-                    </div>
-                    <a :href="offer.terms" download="download"
-                      ><div class="download">
-                        <img
-                          alt="view icon"
-                          :src="require('~/assets/uploads/download_icon.svg')"
-                        />Download File
-                      </div></a
-                    >
-                  </div>
-
-                  <vue-pdf-embed
-                    class="pdf-embed"
-                    :source="offer.terms"
-                    :height="704"
-                   
-                  />
-                  <div
-                    :id="'offer-view-' + i"
-                    class="offer-light-box"
-                    @click="(event) => closeView(event, i)"
-                  >
-                   
-                  </div>
-                </div>
-             
-          </div> -->
+        
         </div>
        
       </div>
@@ -160,19 +77,27 @@
 </template>
 
 <script>
-import { getAllOffers } from "~/services/offer-service";
+import { getAllOffers, updateOfferStatus } from "~/services/offer-service";
 import ViewOffer from "~/components/popups/viewOffer.vue";
 
 export default {
   name: "",
   data() {
-    return { offers: [] , openOfferPopup: false,seletedOffer:{}
-};
+    return { offers: [], openOfferPopup: false, seletedOffer: {} };
   },
-  components: {ViewOffer}
-,  methods: {
+  components: { ViewOffer },
+  methods: {
     getOffers: async function () {
-      getAllOffers().then((res) => (this.offers = res));
+      await getAllOffers().then((res) => (this.offers = res));
+    },
+    approveOffer: async function (offer, index) {
+      // offer.status._id = "628dd1a7cf4800b07253e113"; //approved
+     let res= await updateOfferStatus(offer._id, "628dd1a7cf4800b07253e113").then(
+        (res) => {
+         return res
+        }
+      );
+      this.offers[index].status = res.status;
     },
     createOffer(requestId) {
       this.$router.replace({
@@ -180,10 +105,10 @@ export default {
         query: { request: requestId },
       });
     },
-    open(offer){
-      this.selectedOffer=offer
-    this.openOfferPopup=true
-    }
+    open(offer) {
+      this.selectedOffer = offer;
+      this.openOfferPopup = true;
+    },
   },
   created() {
     this.getOffers();
@@ -230,7 +155,7 @@ export default {
   margin-top: 11px;
   cursor: pointer;
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto auto auto;
   max-width: 1190px;
 }
 .tr.wrap-offer.hide,

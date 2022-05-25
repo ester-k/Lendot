@@ -20,7 +20,7 @@
 
            <h3 class="title" :class="{'open' : showMobile['propertyDetals'] }" @click="showMobile['propertyDetals'] = !showMobile['propertyDetals'];">Property Details</h3>
           <div class="row">
-            <div class="loan-prop">
+            <div class="loan-prop" v-if="offer.requestId">
               <p class="key">{{ offer.requestId.propertyType }}</p>
 
               <p class="value">
@@ -29,18 +29,18 @@
                 {{ offer.requestId.propertyAddress.address }}
               </p>
             </div>
-            <div class="loan-prop">
+            <div class="loan-prop" v-if="offer.requestId">
               <p class="key">Purchase Price</p>
               <p class="value">{{ offer.requestId.price }}$</p>
             </div>
 
           
-            <div class="loan-prop">
+            <div class="loan-prop" v-if="offer.requestId">
               <p class="key">Estimated After Completion Value</p>
               <p class="value">{{ offer.requestId.estimated }}$</p>
             </div>
 
-            <div class="loan-prop">
+            <div class="loan-prop" v-if="offer.requestId">
               <p class="key">Rehab / Construction Budget</p>
               <p class="value">{{ offer.requestId.rehub }}$</p>
             </div>
@@ -102,7 +102,7 @@
           </div>
           <h3 class="title" :class="{'open' : showMobile['theProcess'] }" @click="showMobile['theProcess'] = !showMobile['theProcess'];">The Process</h3>
           <div class="row">
-            <div class="loan-prop">
+            <div class="loan-prop" v-if="offer.requestId">
               <p class="key">Submit The Request</p>
               <p class="value">{{ offer.requestId.createdDate }} | formatDate</p>
             </div>
@@ -115,7 +115,7 @@
               <p class="key">End Of Loan Repayment</p>
               <p class="value">{{ offer.endLoanDaye }}</p>
             </div>
-          </div> <!---->
+          </div> 
         </div>
       </div>
     </div>
