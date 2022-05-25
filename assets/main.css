@@ -229,3 +229,11 @@ table {
 .pointer {
     cursor: pointer;
 }
+
+.save-change {
+    font-size: 16px;
+    margin-left: 18px;
+    color: var(--custom-pink);
+    cursor: pointer;
+    display: none;
+}

@@ -12,6 +12,7 @@
             <p class="">Offers</p>
           </NuxtLink>
         </div>
+        
       </div>
           <NuxtChild />
 

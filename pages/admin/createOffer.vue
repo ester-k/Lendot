@@ -1,10 +1,12 @@
 <template>
   <div class="main-container">
+    <div id="created-success">The offer was successfully created</div>
 <div v-if="!requestExist">
   You must first <nuxt-link to="/admin/requests"> select a request</nuxt-link>
 </div>
 
 <div v-else>
+ 
     <div class="offer-details">
            <div class="inputs-flex">
         <div class="left-input">
@@ -91,20 +93,32 @@
         </div>
       </div>
       </div>
-    </div>
+    </div> 
 <div class="documents-container">
     <div class="title">Choose which documents you want to receive</div>
     <div class="documents-list">
+      <div class="flex" v-for="(input,index) of documents" :key="index">
+
          <input
-         v-for="(input,index) of documents" :key="index"
+        @blur="showSave(index)"
+        @focus="hideSave(index)"
               type="text"
               placeholder="doument name"
               v-model="documents[index]"
             />
+             <div class="save-change" :id="'save'+index"  @click="addDoc">
+          Saved..
+        </div>
+      </div>
     </div>
-    <button class="fill-button add-doc" @click="addDoc">add document</button>
+    <img
+    @click="addDocInput"
+                class="add-doc"
+                :src="require('~/assets/uploads/add_doc.svg')"
+              />
+    
 </div>
-<div class="terms-container">
+<div class="terms-container"  v-if="!offer.terms">
     <div class="title">Upload a terms document or loan detail document</div>
        <div
            
@@ -127,9 +141,32 @@
             </div>
           </div>
         <input hidden type="file" id="helper-input" @change="uploadTerms" />
-      <button @click="createOffer" >Create</button>
-
+   
     </div>
+      <div
+            class="wrap-document existing-doc"
+            v-else
+                       data-open="false"
+          >
+            <div class="upload-icon">
+              <img :src="require('~/assets/uploads/upload_success.svg')" />
+            </div>
+            <div class="name">{{ termsFileName }}</div>
+           
+            <div class="actions" :id="'actions' + index">
+              <img
+                :src="require('~/assets/uploads/delete_doc.svg')"
+              />
+              <!-- @click.stop="removeFile(index, file)" -->
+              <!-- <img
+                :src="require('~/assets/uploads/view_doc.svg')"
+                @click="viewFile.stop"
+              /> -->
+              
+            </div>
+          </div>
+             <button @click="createOffer" >Create</button>
+
   </div>
   </div>
 </template>
@@ -146,6 +183,7 @@ export default {
       requestExist: true,
       file: [],
       offer: { documents: [], requestId: "", terms: "" },
+      termsFileName: "",
       form: {
         rate: "",
         upfrontFee: "",
@@ -158,8 +196,15 @@ export default {
     getRequest: async function (requestId) {
       getRequestById(requestId).then((res) => (this.request = res));
     },
-    addDoc: function () {
+    addDocInput: function () {
       this.documents.push("");
+    },
+    addDoc: function () {},
+    showSave: function (index) {
+      document.getElementById("save" + index).style.display = "none";
+    },
+    hideSave: function (index) {
+      document.getElementById("save" + index).style.display = "block";
     },
     onDrop: function (event, index) {
       event.preventDefault();
@@ -183,9 +228,14 @@ export default {
           var fileReader = new FileReader();
           let uploadedFile = new Object();
           uploadedFile.type = this.file[0].type;
-          let userId=self.currentUser._id
-          debugger
-          uploadedFile.name = userId.substring(0, 3)+"_"+userId.slice( -3)+"_"+this.file[0].name
+          let userId = self.currentUser._id;
+          this.termsFileName = this.file[0].name;
+          uploadedFile.name =
+            userId.substring(0, 3) +
+            "_" +
+            userId.slice(-3) +
+            "_" +
+            this.file[0].name;
           fileReader.onload = async () => {
             let fileCode = fileReader.result;
             //send to S3
@@ -195,23 +245,7 @@ export default {
             formData.append("type", uploadedFile.type);
             // formData.append("name", this.offer.documents[index].name);
             formData.append("blob", uploadedFile.blob);
-
-            const axios = require("axios");
-            
-            let res = await axios
-              .post(`http://localhost:5000/uploadDoc/terms`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-              })
-              .then((res) => {
-                return res.data;
-              })
-              .catch((err) => {
-                if (err.response.data == "LIMIT_FIELD_VALUE")
-                  alert("This file size is not supported");
-                return false;
-              });
-            if (res) this.offer.terms = res.data;
-            console.log(this.offer);
+            this.offer.terms = formData;
           };
           fileReader.readAsDataURL(this.file[0]);
         } else {
@@ -224,7 +258,21 @@ export default {
       this.documents.forEach((doc, index) => {
         if (doc != "") self.offer.documents.push({ name: doc });
       });
-      debugger;
+      const axios = require("axios");
+      let res = await axios
+        .post(`http://localhost:5000/uploadDoc/terms`, self.offer.terms, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((res) => {
+          return res.data;
+        })
+        .catch((err) => {
+          if (err.response.data == "LIMIT_FIELD_VALUE")
+            alert("This file size is not supported");
+          return false;
+        });
+      if (res) this.offer.terms = res.data;
+      console.log(this.offer);
       this.offer.requestId = this.request._id;
       this.offer.lenderId = this.currentUser._id;
       this.offer.rate = this.form.rate;
@@ -233,9 +281,15 @@ export default {
       this.offer.closingTimeline = this.form.closingTimeline;
 
       console.log(this.offer);
-      createOffer(this.offer).then((res) => console.log(res));
-    },
-  },
+      createOffer(this.offer).then((res) => {
+        document.getElementById("created-success").style.display = "block"
+        setTimeout(removeV, 1000)
+        function removeV() {
+          self.$router.replace({path: "/admin/requests"})
+             
+        }
+    })
+  }},
   created() {
     if (this.$route.query.request) {
       this.getRequest(this.$route.query.request);
@@ -287,5 +341,66 @@ export default {
 }
 .inputs-flex div {
   width: 100%;
+}
+.documents-container {
+  margin: 20px 0;
+}
+.add-doc {
+  margin-top: 10px;
+}
+.wrap-document {
+  border: 1px solid var(--custom-blue);
+  border-radius: 11px;
+  min-height: 89px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 17px;
+}
+.wrap-document .name {
+  font-size: 18px;
+  font-weight: 500;
+}
+.wrap-document:not(.existing-doc) .name {
+  margin-bottom: 14px;
+}
+.wrap-document .upload-area-center {
+  width: 890px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.wrap-document.existing-doc .name {
+  font-weight: bold;
+  margin-right: 22px;
+}
+.wrap-document .upload-icon {
+  width: 58px;
+  margin-left: 33px;
+}
+.wrap-document:not(.existing-doc) .upload-icon {
+  cursor: pointer;
+}
+.wrap-document .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 33px;
+  margin-left: auto;
+}
+.wrap-document .actions img {
+  cursor: pointer;
+  margin-left: 11px;
+}
+#created-success{
+  display:none;
+     font-size: 30px;
+    background-color: white;
+    padding: 20px;
+    z-index: 9;
+    position: absolute;
+    top: 50px;
+    border: var(--custom-blue) 2px solid;
+    border-radius: 11px;
+box-shadow: 0px 7px 12px #00000029;
 }
 </style>
