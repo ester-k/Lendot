@@ -282,14 +282,14 @@ export default {
 
       console.log(this.offer);
       createOffer(this.offer).then((res) => {
-        document.getElementById("created-success").style.display = "block"
-        setTimeout(removeV, 1000)
+        document.getElementById("created-success").style.display = "block";
+        setTimeout(removeV, 1000);
         function removeV() {
-          self.$router.replace({path: "/admin/requests"})
-             
+          self.$router.replace({ path: "/admin/requests" });
         }
-    })
-  }},
+      });
+    },
+  },
   created() {
     if (this.$route.query.request) {
       this.getRequest(this.$route.query.request);
@@ -391,16 +391,16 @@ export default {
   cursor: pointer;
   margin-left: 11px;
 }
-#created-success{
-  display:none;
-     font-size: 30px;
-    background-color: white;
-    padding: 20px;
-    z-index: 9;
-    position: absolute;
-    top: 50px;
-    border: var(--custom-blue) 2px solid;
-    border-radius: 11px;
-box-shadow: 0px 7px 12px #00000029;
+#created-success {
+  display: none;
+  font-size: 30px;
+  background-color: white;
+  padding: 20px;
+  z-index: 9;
+  position: absolute;
+  top: 50px;
+  border: var(--custom-blue) 2px solid;
+  border-radius: 11px;
+  box-shadow: 0px 7px 12px #00000029;
 }
 </style>
