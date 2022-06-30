@@ -14,6 +14,10 @@ const deleteUser = async() => {
     const response = await axios.get(`${apiTarget}/user/deleteUser`);
     return response.data;
 }
+const getUserByEmail = async(email) => {
+    const response = await axios.get(`${apiTarget}/user/getUserByEmail/${email}`);
+    return response.data;
+}
 const getUsers = async() => {
     const response = await axios.get(`${apiTarget}/user/getUsers`);
     return response.data;
@@ -31,6 +35,7 @@ const updateUserStatus = async(email, isActive) => {
 module.exports = {
     createUser,
     deleteUser,
+    getUserByEmail,
     getUsers,
     updateUser,
     updateUserStatus

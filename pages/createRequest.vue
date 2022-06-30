@@ -4,7 +4,7 @@
     <div class="main-container ">
       <div class="request-steps">
         <div
-          v-if="!emailVerified || !finishAuthProcess"
+          v-if="!$nuxt.$fire.auth.currentUser"
           class="request-step about-you-step"
         >
           <NuxtLink to="/createRequest/createAccount" >
@@ -155,36 +155,37 @@ export default {
       // },
     },
     created: async function () {
-      // await this.confirmSignIn(this.url);
-      // if (!localStorage.getItem("createRequestData"))
-      //   localStorage.setItem(
-      //     "createRequestData",
-      //     JSON.stringify({
-      //       steps: {
-      //         createAccount: { complete: "false" },
-      //         aboutLoan: { complete: "false" },
-      //         createProperty: { complete: "false" },
-      //         aboutProperty: { complete: "false" },
-      //       },
-      //     })
-      //   );
-      // this.createRequestData = localStorage.getItem("createRequestData");
-      // this.createRequestStep = this.createRequestData.createRequestStep;
-      // if (window.location.pathname == "/createRequest") {
-      //   if (this.createRequestStep) {
-      //     this.$router.replace({
-      //       path: "/createRequest/" + this.createRequestStep,
-      //     });
-      //   } else {
-      //     if (this.emailVerified != true) {
-      //       this.$router.replace({
-      //         path: "/createRequest/createAccount",
-      //       });
-      //     } else
-      //       this.$router.replace({
-      //         path: "/createRequest/aboutLoan",
-      //       });
-      //   }
+      if (!localStorage.getItem("createRequestData")) {
+        localStorage.setItem(
+          "createRequestData",
+          JSON.stringify({
+            steps: {
+              createAccount: { complete: "false" },
+              aboutLoan: { complete: "false" },
+              createProperty: { complete: "false" },
+              aboutProperty: { complete: "false" },
+            },
+          })
+        );
+      }
+      this.createRequestData = localStorage.getItem("createRequestData");
+      this.createRequestStep = this.createRequestData.createRequestStep;
+      if ($nuxt.$route.path != "/createRequest") {
+        if (this.createRequestStep) {
+          this.$router.replace({
+            path: "/createRequest/" + this.createRequestStep,
+          });
+        } else {
+          // if (this.emailVerified != true) {
+          //   this.$router.replace({
+          //     path: "/createRequest/createAccount",
+          //   });
+          // } else
+          this.$router.replace({
+            path: "/createRequest/aboutLoan",
+          });
+        }
+      }
     },
   },
   computed: {
@@ -198,8 +199,7 @@ export default {
       let createRequestData = JSON.parse(
         localStorage.getItem("createRequestData")
       );
-      if (!createRequestData) 
-   {
+      if (!createRequestData) {
         createRequestData = {
           steps: {
             createAccount: { complete: "false", emailSend: "false" },
@@ -207,9 +207,12 @@ export default {
             createProperty: { complete: "false" },
             aboutProperty: { complete: "false" },
           },
-          createRequestStep: "aboutProperty",
+          createRequestStep: "aboutLoan",
         };
-         localStorage.setItem("createRequestData",JSON.stringify(createRequestData));
+        localStorage.setItem(
+          "createRequestData",
+          JSON.stringify(createRequestData)
+        );
       }
       return createRequestData;
     },
@@ -260,6 +263,12 @@ export default {
   display: flex;
   margin-top: 17px;
 }
+.verify-link.error {
+  background-color: #ec255a1a;
+  padding: 3px 5px 3px 10px;
+  width: max-content;
+  border-radius: 17px;
+}
 .verify-link p {
   margin-right: 10px;
   align-self: center;
@@ -284,6 +293,24 @@ export default {
   }
   .request-steps {
     top: -22.1px;
+  }
+
+  .main-content {
+    margin-top: 50px;
+  }
+
+  .next-btn {
+    padding-bottom: 71px;
+  }
+
+  label.form-label {
+    margin-bottom: 0;
+  }
+
+  .verify-link {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-bottom: 15px;
   }
 }
 </style>

@@ -19,7 +19,7 @@
     <a
      v-if="createAccountStep == 2"
       class="continue-request"
-      @click="this.$router.replace({ path: '/createRequest/aboutLoan' })"
+      @click="$router.replace({ path: '/createRequest/aboutLoan' })"
     >
       continue process and verify later.
     </a>
@@ -28,7 +28,7 @@
 
 <script>
 const actionCodeSettings = {
-  url: window.location.origin + "/createPassword/",
+  url: window.location.origin + "/createPassword",
   handleCodeInApp: true,
 };
 // import firebase from "firebase";
@@ -43,17 +43,20 @@ export default {
   },
   methods: {
     sendVerifyLink() {
-      // const fb = require("../main.js");
+
       let email = this.user.email;
-     this.$fire.auth
+      this.$fire.auth
         .sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
+        .then((response) => {
           localStorage.setItem("emailForSignIn", email);
           let data = JSON.parse(localStorage.getItem("createRequestData"));
           data.steps["createAccount"].emailSend = "true";
           localStorage.setItem("createRequestData", JSON.stringify(data));
           this.loaclEmailSend = true;
-          this.$store.state.createAccountStep = 3;
+          this.$store.commit("setState", {
+            value: 3,
+            state: "createAccountStep",
+          });
           localStorage.setItem("createAccountStep", 3);
           //   createUser(newUser);
         })
@@ -64,13 +67,15 @@ export default {
   },
   created() {
     if (!this.$store.state.currentUser)
-      this.$store.state.currentUser = JSON.parse(
-        localStorage.getItem("currentUser")
-      );
+      this.$store.commit("setState", {
+        value: JSON.parse(localStorage.getItem("currentUser")),
+        state: "currentUser",
+      });
     this.user = this.$store.state.currentUser || {};
     if (this.$store.state.createAccountStep == 3) {
       this.sendVerifyLink();
     }
+   
   },
   computed: {
     emailSend: function () {

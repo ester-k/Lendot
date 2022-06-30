@@ -1,10 +1,14 @@
 <template>
   <div class="main-container">
-        <div class="verify-link"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyNow">Verify Now</button></div>
 
     <img
-      class="len-title about-you-title"
-      :src="require('@/assets/uploads/about_property_title.svg')"
+      class="len-title about-you-title desktop"
+      :src="require('~/assets/uploads/create_property_title.svg')"
+    />
+     <img
+      class="len-title about-you-title mobile"
+      :src="require('~/assets/uploads/create_property_title_mobile.svg')"
     />
     <form @submit.prevent="createRequest" id="form">
       <!-- address -->
@@ -14,8 +18,15 @@
           type="text"
           name="address"
           placeholder="Address"
+          v-model="form.address"
         />
-       
+         <div
+            class="input-errors"
+            v-for="(error,i) of errors.address"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
       </div>
       <div class="flex-input">
         <div class="wrap-input left-input">
@@ -23,8 +34,15 @@
             type="text"
             name="city"
             placeholder="Property City"
+            v-model="form.city"
           />
-         
+           <div
+            class="input-errors"
+            v-for="(error,i) of errors.city"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
         <!-- state -->
         <div class="wrap-input left-input">
@@ -34,6 +52,13 @@
             :default="stateDefaultSelect"
             v-on:input="changeState"
           />
+            <div
+            class="input-errors"
+            v-for="(error,i) of errors.state"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
         <!-- zip -->
         <div class="wrap-input">
@@ -41,8 +66,15 @@
             type="text"
             name="zip"
             placeholder="Property Zip Code"
+            v-model="form.zip"
           />
-        
+          <div
+            class="input-errors"
+            v-for="(error,i) of errors.zip"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
         </div>
       </div>
       <!-- Property Type -->
@@ -55,6 +87,13 @@
           v-on:input="changeType"
         />
       </div>
+        <div
+            class="input-errors"
+            v-for="(error,i) of errors.type"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
       <div id="verifyError">Verify your account</div>
 
       <button type="submit">next</button>
@@ -67,7 +106,7 @@
 import useVuelidate from "@vuelidate/core";
 import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
 import { createRequest } from "~/services/request-service";
-// import { LoanRequest } from "../models/request";
+// import { LoanRequest } from "~/models/request";
 
 import Select from "~/components/select.vue";
 export default {
@@ -82,10 +121,14 @@ export default {
     return {
       stateDefaultSelect: "-Select-",
       typeDefaultSelect: "-Select-",
-      address: "",
-      city: "",
-      zip: "",
-      state: "",
+      form: {
+        address: "",
+        city: "",
+        zip: "",
+        state: "",
+        type:""
+      },
+      errors: {},
       propertyTypes: [
         { value: "Single-Family Residential" },
         { value: "2-4 Residential Unit" },
@@ -150,17 +193,10 @@ export default {
         { value: "Wisconsin" },
         { value: "Wyoming" },
       ],
-
       type: "",
     };
   },
-  validations() {
-    return {
-      address: { required },
-      city: { required },
-      zip: { required, numeric },
-    };
-  },
+
   watch: {
     $route(to, from) {
       this.$nextTick(this.showCheckedLoan);
@@ -168,18 +204,24 @@ export default {
   },
   methods: {
     async createRequest(event) {
-      let isFormCorrect = await this.v$.$validate();
+      let errors = this.$Validator.checkForm(this.form);
+      this.errors = errors;
+      let isFormCorrect =
+        this.errors &&
+        Object.keys(this.errors).length === 0 &&
+        Object.getPrototypeOf(this.errors) === Object.prototype;
+        console.log( this.errors );
       if (isFormCorrect) {
         //create new loan request
         let newReq = {};
         newReq.loanType = localStorage.getItem("loanType");
-        newReq.amount = localStorage.getItem("loanAmount")
+        newReq.amount = localStorage.getItem("loanAmount");
         newReq.propertyAddress = {};
-        newReq.propertyAddress.address = this.address;
-        newReq.propertyAddress.city = this.city;
-        newReq.propertyAddress.state = this.state;
-        newReq.propertyAddress.zip = this.zip;
-        newReq.propertyType = this.type;
+        newReq.propertyAddress.address = this.form.address;
+        newReq.propertyAddress.city = this.form.city;
+        newReq.propertyAddress.state = this.form.state;
+        newReq.propertyAddress.zip = this.form.zip;
+        newReq.propertyType = this.form.type;
         localStorage.setItem("createProperty", JSON.stringify(newReq));
 
         let user = JSON.parse(localStorage.getItem("currentUser"));
@@ -191,10 +233,10 @@ export default {
         await createRequest(newReq).then((newRequest) => {
           localStorage.setItem("requestId", newRequest._id);
         });
-        let activeRoute = document.querySelector(".router-link-active");
+        let activeRoute = document.querySelector(".nuxt-link-exact-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
         let activeRouteImg = activeRoute.querySelector("img");
-        activeRouteImg.src = require("@/assets/uploads/v_icon.svg");
+        activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
         this.$emit("updateRequestData", {
           key: "steps",
           value: "true",
@@ -219,21 +261,22 @@ export default {
       }
     },
     changeState(data) {
-      this.state = data;
+      this.form.state = data;
     },
     changeType(data) {
-      this.type = data;
+      this.form.type = data;
     },
-     verifyEmail:function(){
-      this.$store.state.createAccountStep=3;
+    verifyNow: function () {
+      // this.$store.commit("setState", { value: 2, state: "createAccountStep" });
       this.$router.replace({ path: "/createRequest/createAccount" });
-    }
+    },
   },
   created() {
-  this.$emit("updateRequestData", {
+    this.$emit("updateRequestData", {
       key: "createRequestStep",
       value: "createProperty",
-    });    let property = JSON.parse(localStorage.getItem("createProperty"));
+    });
+    let property = JSON.parse(localStorage.getItem("createProperty"));
     if (property) {
       this.address = property.propertyAddress.address;
       this.city = property.propertyAddress.city;
@@ -246,7 +289,6 @@ export default {
 </script>
 
 <style>
-
 .loan-purpose .purpose-type {
   color: var(--custom-blue);
   background-color: unset;

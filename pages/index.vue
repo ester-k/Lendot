@@ -1,9 +1,18 @@
 <template>
-  <div class="">      <NuxtLink to="/createRequest">create request></NuxtLink></div>
+
+  <div class=""> 
+  </div>
+
 </template>
 
 <script>
 export default {
   name: "IndexPage",
+  methods: {
+    
+  },
+  created() {     
+
+  },
 };
 </script>

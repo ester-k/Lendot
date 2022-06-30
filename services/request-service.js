@@ -10,7 +10,10 @@ const createRequest = async(newRequest) => {
     const response = await axios.post(`${apiTarget}/request/createRequest`, newRequest);
     return response.data;
 }
-
+const getAllRequests = async() => {
+    const response = await axios.get(`${apiTarget}/request/getAllRequests`);
+    return response.data;
+}
 const getRequestById = async(id) => {
     const response = await axios.get(`${apiTarget}/request/getRequestById/${id}`);
     return response.data;
@@ -20,7 +23,6 @@ const getRequestListByLoaner = async(loanerId) => {
     return response.data;
 }
 const getOffersByLoanerRequest = async(loanerId) => {
-    console.log("here");
     const response = await axios.get(`${apiTarget}/request/getOffersByLoanerRequest/${loanerId}`);
     return response.data;
 }
@@ -35,6 +37,7 @@ const updateRequest = async(request) => {
 }
 module.exports = {
     createRequest,
+    getAllRequests,
     getRequestById,
     getRequestListByLoaner,
     getRequestsWithAction,

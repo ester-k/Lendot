@@ -1,26 +1,35 @@
 <template>
   <div class="main-container">
-    <div class="verify-link"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+    <div class="verify-link" v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyNow">Verify Now</button></div>
 
     <div class="about-loan-container">
 
       <img
-        class="len-title about-you-title desktop"
+        class="len-title about-you-title about-loan-title"
         :src="require('~/assets/uploads/about_loan_title.svg')"
         alt="about the loan title"
       />
-         <img
-        class="len-title about-you-title mobile"
-        :src="require('~/assets/uploads/about_loan_title_mobile.svg')"
-        alt="about the loan title"
-      />
       <label class="form-label"> Loan Amount</label>
-      <div class="wrap-input loan-amount">
+      <div class="wrap-input ">
+                                <div class="input-amount">
+
         <input
           type="string"
-          name="loan amount"
+          name="amount"
+           v-model="form.amount"
+              data-valid="num"
         />
+                <p>$</p>
+
       </div>
+       <div
+            class="input-errors"
+            v-for="(error,i) of errors.amount"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
+          </div>
       <h3 class="sub-title">What type of loan are you looking for?</h3>
       <div class="loans-types">
         <div
@@ -53,23 +62,19 @@ window.$ = $;
 import useVuelidate from "@vuelidate/core";
 import { required, numeric } from "@vuelidate/validators";
 
-// import { LoanRequest } from "../models/request";
+// import { LoanRequest } from "~/models/request";
 import { getRequestById, updateRequest } from "~/services/request-service";
 
 export default {
   name: "aboutLoan",
-  setup() {
-    return { v$: useVuelidate() };
-  },
-  validations() {
-    return {
-      amount: { required, numeric },
-    };
-  },
+
   data() {
     return {
       show: true,
-      amount: "",
+      form: {
+        amount: "",
+      },
+      errors: {},
       loans: [
         {
           name: "Fix & Flip",
@@ -126,12 +131,26 @@ export default {
       if (event.isTrusted) {
         let loanType = $(event.srcElement).closest(".loan-type")[0];
         loanType = loanType.getAttribute("data-type");
-        let isFormCorrect = await this.v$.$validate();
-        if (loanType && isFormCorrect) {
+        let errors = this.$Validator.checkForm(this.form);
+        this.errors = errors;
+        let isFormCorrect =
+          this.errors &&
+          Object.keys(this.errors).length === 0 &&
+          Object.getPrototypeOf(this.errors) === Object.prototype;
+          console.log("isFormCorrect: " + isFormCorrect);
+        if (isFormCorrect) {
           //save loan property on local storage
           localStorage.setItem("loanType", loanType);
-          localStorage.setItem("loanAmount", this.amount);
-
+          localStorage.setItem("loanAmount", this.form.amount);
+          let activeRoute = document.querySelector(".nuxt-link-exact-active");
+          activeRoute.querySelector(".step-button").classList.add("complete");
+          let activeRouteImg = activeRoute.querySelector("img");
+          activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
+          this.$emit("updateRequestData", {
+            key: "steps",
+            value: "true",
+            step: "aboutLoan",
+          });
           this.$router.replace({ path: "/createRequest/createProperty" });
         }
         //update the request loan type
@@ -143,14 +162,13 @@ export default {
           let requestId = localStorage.getItem("requestId");
           await getRequestById(requestId).then(async (loanReq) => {
             //update the loan property
-            let updateLoan =  {};
+            let updateLoan = {};
             updateLoan = loanReq;
             updateLoan.loanType = loanType;
-            updateLoan.amount = this.amount;
+            updateLoan.amount = this.form.amount;
             await updateRequest(updateLoan).then((updateLoan) => {
               // localStorage.removeItem("requestId");
-              // this.$router.replace({ path: "/" });
-              console.log(updateLoan);
+           
             });
           });
         }
@@ -162,10 +180,10 @@ export default {
           .getAttribute("active-src");
       }
     },
-    verifyEmail:function(){
-      this.$store.state.createAccountStep=3;
+    verifyNow: function () {
+      // this.$store.commit("setState", { value: 2, state: "createAccountStep" });
       this.$router.replace({ path: "/createRequest/createAccount" });
-    }
+    },
   },
   created() {
     this.$emit("updateRequestData", {
@@ -176,7 +194,7 @@ export default {
       this.loanType = localStorage.getItem("loanType");
     }
     if (localStorage.getItem("loanAmount") != undefined) {
-      this.amount = localStorage.getItem("loanAmount");
+      this.form.amount = localStorage.getItem("loanAmount");
     }
     document.addEventListener("DOMContentLoaded", function (event) {
       //sign the selected loan
@@ -195,7 +213,7 @@ export default {
         if (!to.path.indexOf("createAccount") > 0)
           this.$router.replace({ path: "/" });
       } else {
-        let activeRoute = document.querySelector(".router-link-active");
+        let activeRoute = document.querySelector(".nuxt-link-exact-active");
         activeRoute.querySelector(".step-button").classList.add("complete");
         let activeRouteImg = activeRoute.querySelector("img");
         activeRouteImg.src = require("~/assets/uploads/v_icon.svg");
@@ -231,18 +249,18 @@ export default {
   cursor: pointer;
 }
 .loan-amount {
-      margin-bottom: 10px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    border: solid 1px var(--custom-blue);
-    border-radius: 11px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
+  margin-bottom: 10px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border: solid 1px var(--custom-blue);
+  border-radius: 11px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
 }
-.loan-amount input{
-  outline:none;
-  border:unset
+.loan-amount input {
+  outline: none;
+  border: unset;
 }
 .wrap-type {
   border: 1.5px solid var(--custom-blue);
@@ -273,19 +291,22 @@ export default {
     margin-right: 13px;
   }
   .loan-type img {
-    height:50%
+    height: 50%;
   }
-  .loans-types{
-    justify-content:left;
+  .loans-types {
+    justify-content: left;
   }
-  .wrap-type{
-    height:65px;
+  .wrap-type {
+    height: 65px;
   }
-  .loan-type p{
-  font-size:12px;
+  .loan-type p {
+    font-size: 12px;
   }
-  .sub-title{
-    font-size:13px
+  .sub-title {
+    font-size: 13px;
+  }
+  .about-loan-title {
+    width: 170px;
   }
 }
 </style>

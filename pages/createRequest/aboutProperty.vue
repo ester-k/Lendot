@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-        <div class="verify-link"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyEmail">Verify Now</button></div>
+        <div class="verify-link"  v-if="!$nuxt.$fire.auth.currentUser"><p>To Complete The Process You Need To Verify The Email</p><button @click="verifyNow">Verify Now</button></div>
 
     <img
       class="len-title about-you-title desktop"
@@ -40,19 +40,41 @@
               type="date"
               name="close date"
               class="date-input"
+              v-model="form.date"
             />
+              <div
+            class="input-errors"
+            v-for="(error,i) of errors.date"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
           </div>
         </div>
         <!-- price -->
         <div>
           <label class="form-label">Purchase Price</label>
 
-          <div class="wrap-input left-input">
+          <div class="wrap-input left-input ">
+            <div class="input-amount">
             <input
               type="text"
-              name="purchase price"
+              name="price"
               placeholder="Enter A Number"
+              v-model="form.price"
+              data-valid="num"
             />
+           
+          <p>$</p>
+
+          </div>
+             <div
+            class="input-errors"
+            v-for="(error,i) of errors.price"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
+          </div>
           </div>
         </div>
       </div>
@@ -61,69 +83,80 @@
         <div class="left-input">
           <label class="form-label"> Rehab/Construction Budget</label>
 
-          <div class="wrap-input">
-            <input
-              type="text"
-              name="rehab"
-              placeholder="Enter A Number"
-            />
-         
+          <div class="wrap-input ">
+            <div class="input-amount">
+
+              <input
+                type="text"
+                name="rehab"
+                placeholder="Enter A Number"
+                v-model="form.rehab"
+                data-valid="num"
+              />
+            
+               <p>$</p>
+                       
+             </div> 
+          
+           <div
+            class="input-errors"
+            v-for="(error,i) of errors.rehab"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
           </div>
         </div>
-
+ </div>
         <div>
           <label class="form-label">Estimated After Completion Value:</label>
 
           <div class="wrap-input left-input">
+                        <div class="input-amount">
+
             <input
               type="text"
               name="estimated"
               placeholder="Enter A Number"
+              v-model="form.estimated"
+               data-valid="num"
             />
            
+          <p>$</p>
+
+          </div>   <div
+            class="input-errors"
+            v-for="(error,i) of errors.estimated"
+            :key="i"
+          >
+            <div class="input-error-msg">{{ error}}</div>
           </div>
         </div>
       </div>
-      <!-- credit score -->
-      <label class="form-label"> Credit Score</label>
-      <div class="wrap-input">
-        <Select
-          class="lendot-select"
-          :options="creditScores"
-          :default="defaultSelect"
-          v-on:input="changeCredit"
-        />
       </div>
-  <!-- <recaptcha /> -->
 
-      <!-- <ReCaptcha /> -->
-      <button type="submit" @click="recaptcha">Send</button>
+      <button type="submit" >Send</button>
     </form>
   </div>
 </template>
 
 <script>
-// import ReCaptcha from "~/components/reCaptcha.vue";
-//vuelidate
-import useVuelidate from "@vuelidate/core";
-import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
-// import { LoanRequest } from "../models/request";
+// import { LoanRequest } from "~/models/request";
 import { getRequestById, updateRequest } from "~/services/request-service";
 // import Select from "~/components/select.vue";
 export default {
   name: "aboutProperty",
   // components: { ReCaptcha, Select },
-  setup() {
-    return { v$: useVuelidate() };
-  },
 
   data() {
     return {
       defaultSelect: "-Select-",
-      address: "",
-      city: "",
-      zip: "",
-      state: "",
+      form: {
+        date: "",
+        price: "",
+        rehab: "",
+        estimated: "",
+      },
+      errors: {},
       propertyTypes: [
         { value: "Single-Family Residential" },
         { value: "2-4 Residential Unit" },
@@ -136,34 +169,10 @@ export default {
         { value: "Other" },
       ],
       purpose: "purchase",
-      date: "",
-      price: "",
-      rehab: "",
-      estimated: "",
-      creditScores: [
-        { value: "Under 550" },
-        { value: "551-600" },
-        { value: "601-650" },
-        { value: "651-700" },
-        { value: "701-750" },
-        { value: "751-800" },
-        { value: "800+" },
-      ],
       loanPurpose: "purchase",
-      propertyType: "",
-      credit: "",
-      score: "",
-      type: "",
     };
   },
-  validations() {
-    return {
-      date: { required },
-      price: { required, numeric },
-      rehab: { required, numeric },
-      estimated: { required, numeric },
-    };
-  },
+
   watch: {
     $route(to, from) {
       this.$nextTick(this.showCheckedLoan);
@@ -187,35 +196,51 @@ export default {
       }
     },
     async sendRequest() {
+      try {
+        const token = await this.$recaptcha.execute("login");
+
+        // send token to server alongside your form data
+      } catch (error) {
+        console.log("Login error:", error);
+      }
       //get the loan request
       let requestId = localStorage.getItem("requestId");
-      let isFormCorrect = await this.v$.$validate();
+      let errors = this.$Validator.checkForm(this.form);
+      this.errors = errors;
+      let isFormCorrect =
+        this.errors &&
+        Object.keys(this.errors).length === 0 &&
+        Object.getPrototypeOf(this.errors) === Object.prototype;
       if (isFormCorrect) {
-        let updateLoan = {}
-        updateLoan.purpose = this.loanPurpose;
-        updateLoan.closeDate = this.date;
-        updateLoan.price = this.price;
-        updateLoan.rehab = this.rehab;
-        updateLoan.estimated = this.estimated;
-        updateLoan.credit = this.credit;
+        let updateLoan = {};
+        updateLoan.purpose = this.form.loanPurpose;
+        updateLoan.closeDate = this.form.date;
+        updateLoan.price = this.form.price;
+        updateLoan.rehab = this.form.rehab;
+        updateLoan.estimated = this.form.estimated;
+
         await getRequestById(requestId).then(async (loanReq) => {
           //update the loan property
           // let updateLoan = new LoanRequest();
           updateLoan._id = loanReq._id;
           updateLoan.status = "623c434201cfc93560df213e"; //wating for offers
           await updateRequest(updateLoan).then((updateLoan) => {
-            localStorage.removeItem("requestId");
-            localStorage.removeItem("loanType");
-            localStorage.removeItem("createProperty");
-            localStorage.removeItem("createRequestData");
-            localStorage.setItem("finishAuthProcess", "true");
             // this.$store.state.createAccountStep = 1;
-            this.$router.replace({ path: "/loanerScreen" });
+            if ($nuxt.$fire.auth.currentUser) {
+              this.$router.replace({ path: "/loanerPanel" });
+              localStorage.removeItem("requestId");
+              localStorage.removeItem("loanType");
+              localStorage.removeItem("createProperty");
+              localStorage.removeItem("createRequestData");
+              localStorage.setItem("finishAuthProcess", "true");
+              document.querySelector(".verify-link").classList.remove("error");
+            } else {
+              document.querySelector(".verify-link").classList.add("error");
+            }
           });
         });
       }
     },
-
     showCheckedLoan() {
       let loanType = localStorage.getItem("loanType");
       let loans = document.querySelectorAll(".loan-type");
@@ -227,13 +252,9 @@ export default {
         if (loan) loan.click(event);
       }
     },
-    changeCredit(data) {
-      this.credit = data;
-    },
-     verifyEmail:function(){
-      this.$store.state.createAccountStep=3;
+    verifyNow: function () {
       this.$router.replace({ path: "/createRequest/createAccount" });
-    }
+    },
   },
   created() {
     this.$emit("updateRequestData", {
@@ -247,12 +268,12 @@ export default {
     },
   },
   async mounted() {
-  try {
-    await this.$recaptcha.init()
-  } catch (e) {
-    console.error(e);
-  }
-}
+    try {
+      await this.$recaptcha.init();
+    } catch (e) {
+      console.error(e);
+    }
+  },
 };
 </script>
 
@@ -306,8 +327,11 @@ export default {
   .inputs-flex {
     display: block;
   }
-  button[type="submit"]{
-    margin-top:32px;
+  button[type="submit"] {
+    margin-top: 35px;
+  }
+  .main-container form {
+    padding-bottom: 71px;
   }
 }
 </style>

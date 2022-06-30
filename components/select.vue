@@ -88,13 +88,14 @@ export default {
 
 .lendot-select .items {
   color: var(--custom-blue);
-  overflow: hidden;
   left: 0;
   right: 0;
   z-index: 1;
   background: white;
   position: relative;
   box-shadow: 0px 7px 12px #00000029;
+  max-height: 214px;
+  overflow: auto;
 }
 
 .lendot-select .items div {

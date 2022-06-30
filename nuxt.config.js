@@ -7,7 +7,10 @@ let path =
 
 dotenv.config({ path })
 export default {
-
+    env: {
+        API_URL: process.env.NODE_ENV === 'production' ?
+            "https://lendot-staging-akav9.ondigitalocean.app" : "http://localhost:5000",
+    },
 
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
@@ -25,15 +28,24 @@ export default {
             { name: 'format-detection', content: 'telephone=no' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-        ]
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            {
+                rel: "stylesheet",
+                href: "https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&&display=swap",
+            },
+        ],
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: ['~/assets/main.css', '~/assets/mainMobile.css'],
-
+    script: [{
+        src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js',
+        src: "https://cdn.jsdelivr.net/npm/vue-demi",
+        src: "https://cdn.jsdelivr.net/npm/@vuelidate/core",
+        src: "https://cdn.jsdelivr.net/npm/@vuelidate/validators",
+    }],
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['~/plugins/service.js', '~/plugins/Vuelidate.js'],
+    plugins: ['~/plugins/service.js', '~/plugins/Vuelidate.js', '~/plugins/vue-pdf-embed.js', '~/plugins/popups.js', '~/plugins/validator.js'],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -43,13 +55,10 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-        '@nuxtjs/axios', ['@nuxtjs/recaptcha', {
-            hideBadge: true,
-
+        '@nuxtjs/axios', '@nuxtjs/auth-next', ['@nuxtjs/recaptcha', {
+            hideBadge: false,
             siteKey: '6Le3b5gfAAAAAGwcMbMTR52xBd3UCVw_ICS9t_ez',
             version: 3,
-
-
         }],
         ['@nuxtjs/firebase',
             {
@@ -63,7 +72,17 @@ export default {
                     appId: "1:346751308376:web:96aca7f424011b606bb02d"
                 },
                 services: {
-                    auth: true
+                    auth: {
+                        persistence: 'local', // default
+                        initialize: {
+                            // onAuthStateChangedMutation: 'ON_AUTH_STATE_CHANGED_MUTATION',
+                            onAuthStateChangedAction: 'onAuthStateChangedAction',
+                            subscribeManually: false
+                        },
+                        ssr: false, // default
+                        // emulatorPort: 9099,
+                        emulatorHost: 'http://localhost',
+                    }
                 }
             }
         ]
@@ -71,16 +90,39 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-        vendor: [
-            'vuelidate'
-        ]
+
     },
     server: {
-        port: 3000,
+        port: 8080, // default: 3000
+        host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost' // default: localhost
     },
     publicRuntimeConfig: {
         axios: {
             baseURL: "http://localhost:5000"
         }
     },
+    router: {
+        middleware: ['authRouer']
+    },
+
+    // auth: {
+    //     strategies: {
+    //         local: {
+    //             endpoints: {
+
+    //                 logout: { url: '/*logout api*/', method: 'post' },
+    //                 user: false,
+    //             }
+    //         },
+    //     },
+    //     redirect: {
+    //         login: '/login',
+    //         logout: '/',
+    //         home: '/loanerPanel',
+    //         callback: '/login'
+    //     },
+    //     watchLoggedIn: true
+    //         // Options
+    // }
+
 }

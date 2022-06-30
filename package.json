@@ -10,6 +10,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@nuxtjs/auth-next": "5.0.0-1648802546.c9880dc",
         "@nuxtjs/axios": "^5.13.6",
         "@nuxtjs/composition-api": "^0.32.0",
         "@nuxtjs/firebase": "^8.2.2",
@@ -40,5 +41,11 @@
         "babel-jest": "^27.4.4",
         "jest": "^27.4.4",
         "vue-jest": "^3.0.4"
+    },
+    "config": {
+        "nuxt": {
+            "host": "0.0.0.0",
+            "port": "8080"
+        }
     }
 }

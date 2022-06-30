@@ -1,0 +1,150 @@
+.popup {
+  z-index: 997;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #00000069;
+  display: flex;
+}
+
+.inner-popup {
+  font-size: 16px;
+  color: black;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 10px;
+  background-color: white;
+  width: 1200px;
+  margin: auto;
+  box-sizing: border-box;
+  position: relative;
+  padding: 7px 0
+}
+
+.inner-popup .content {
+  max-height: 80vh;
+  overflow-y: auto;
+  direction: rtl;
+  padding: 40px 40.5px 0px 49.5px;
+}
+
+.popup .title {
+  color: var(--custom-pink);
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 50px;
+}
+
+.popup .row {
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  grid-row-gap: 50px;
+  margin-right: 10px;
+}
+
+.popup .key {
+  margin-bottom: 4px;
+  color: var(--custom-blue);
+}
+
+.popup .value {
+  font-weight: bold;
+}
+
+.popup .horizonal-hr {
+  background-color: #707070;
+  margin-top: 27.5px;
+  margin-bottom: 48.5px;
+}
+
+.close-popup {
+  text-align: right;
+  position: absolute;
+  right: -30px;
+  top: calc(-8px - 21.5px);
+  cursor: pointer;
+}
+
+.placeholder {
+  width: 299px;
+}
+
+.popup.mobile{
+  display:none;
+}
+
+.popup.desktop{
+  display: flex;
+}
+
+@media screen and (max-width:1600px) {
+  .close-popup {
+    right: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .inner-popup {
+    width: 100%;
+    margin: auto 17px;
+    font-size: 13px;
+  }
+
+  .close-popup {
+    top: calc(-10px - 14.5px);
+    right: 10px;
+  }
+
+  .loan-prop {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .loan-prop:first-child,
+  .popup .row:last-child .loan-prop {
+    width: 100%;
+  }
+
+  .placeholder {
+    display: none;
+  }
+
+  .inner-popup .content {
+    padding: 35px 19px;
+  }
+
+  .popup .value {
+    color: var(--custom-blue);
+  }
+
+  .popup .key {
+    margin-bottom: 0;
+  }
+
+  .popup .title {
+    margin-bottom: 14px;
+    font-size: 15px;
+    position: relative;
+  }
+
+  .popup .row:last-child .loan-prop {
+    width: 100%;
+  }
+
+  .wrap-document .wrap-content {
+    padding: 0 14px;
+  }
+
+  .popup.mobile{
+    display:flex;
+  }
+  
+  .popup.desktop{
+    display: none;
+  }
+}
