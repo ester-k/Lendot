@@ -6,7 +6,7 @@
 </div>
 
 <div v-else>
- 
+ terms:{{offer.terms}}
     <div class="offer-details">
            <div class="inputs-flex">
         <div class="left-input">
@@ -153,11 +153,11 @@
             </div>
             <div class="name">{{ termsFileName }}</div>
            
-            <div class="actions" :id="'actions' + index">
+            <div class="actions" >
               <img
                 :src="require('~/assets/uploads/delete_doc.svg')"
+                @click.stop="removeFile()"
               />
-              <!-- @click.stop="removeFile(index, file)" -->
               <!-- <img
                 :src="require('~/assets/uploads/view_doc.svg')"
                 @click="viewFile.stop"
@@ -165,6 +165,7 @@
               
             </div>
           </div>
+            <p class="error-msg" id="missingDetails">All field is required</p>
              <button @click="createOffer" >Create</button>
 
   </div>
@@ -245,7 +246,9 @@ export default {
             formData.append("type", uploadedFile.type);
             // formData.append("name", this.offer.documents[index].name);
             formData.append("blob", uploadedFile.blob);
+            
             this.offer.terms = formData;
+            console.log(this.offer.terms);
           };
           fileReader.readAsDataURL(this.file[0]);
         } else {
@@ -258,9 +261,10 @@ export default {
       this.documents.forEach((doc, index) => {
         if (doc != "") self.offer.documents.push({ name: doc });
       });
+      console.log(self.offer.terms);
       const axios = require("axios");
       let res = await axios
-        .post(`http://localhost:5000/uploadDoc/terms`, self.offer.terms, {
+        .post(`${process.env.API_URL}/uploadDoc/terms`, self.offer.terms, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
@@ -272,22 +276,35 @@ export default {
           return false;
         });
       if (res) this.offer.terms = res.data;
-      console.log(this.offer);
-      this.offer.requestId = this.request._id;
-      this.offer.lenderId = this.currentUser._id;
-      this.offer.rate = this.form.rate;
-      this.offer.upfrontFee = this.form.upfrontFee;
-      this.offer.underwritingFee = this.form.underwritingFee;
-      this.offer.closingTimeline = this.form.closingTimeline;
+      if (
+        this.offer.term &&
+        this.offer.documents.length &&
+        this.form.rate != "" &&
+        this.form.upfrontFee != "" &&
+        this.form.underwritingFee != "" &&
+        this.form.closingTimeline != ""
+      ) {
+        this.offer.requestId = this.request._id;
+        this.offer.lenderId = this.currentUser._id;
+        this.offer.rate = this.form.rate;
+        this.offer.upfrontFee = this.form.upfrontFee;
+        this.offer.underwritingFee = this.form.underwritingFee;
+        this.offer.closingTimeline = this.form.closingTimeline;
 
-      console.log(this.offer);
-      createOffer(this.offer).then((res) => {
-        document.getElementById("created-success").style.display = "block";
-        setTimeout(removeV, 1000);
-        function removeV() {
-          self.$router.replace({ path: "/admin/requests" });
-        }
-      });
+        createOffer(this.offer).then((res) => {
+          document.getElementById("created-success").style.display = "block";
+          setTimeout(removeV, 1100);
+          function removeV() {
+            self.$router.replace({ path: "/admin/requests" });
+          }
+        });
+      } else {
+        document.getElementById("missingDetails").style.display = "block";
+      }
+    },
+    removeFile() {
+      debugger
+      this.offer.terms = null;
     },
   },
   created() {
@@ -306,6 +323,9 @@ export default {
 </script>
 
 <style>
+.main-container{
+  margin-top:100px
+}
 .upload-area {
   border: 1px dashed var(--custom-blue);
   height: 216px;
