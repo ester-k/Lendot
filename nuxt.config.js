@@ -7,7 +7,10 @@ let path =
 
 dotenv.config({ path })
 export default {
-
+    env: {
+        API_URL: process.env.NODE_ENV === 'production' ?
+            "https://lendot-staging-akav9.ondigitalocean.app" : "http://localhost:5000",
+    },
 
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
